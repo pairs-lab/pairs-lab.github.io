@@ -20,7 +20,7 @@ LAB = json.loads((ROOT / "data/lab.json").read_text(encoding="utf-8"))
 PAPERS = json.loads((ROOT / "data/publications.json").read_text(encoding="utf-8"))
 NEWS = sorted(json.loads((ROOT / "data/news.json").read_text(encoding="utf-8")), key=lambda n: n["date"], reverse=True)
 PAGES = [("", "Home"), ("research", "Research"), ("publications", "Publications"), ("projects", "Projects"),
-         ("datasets", "Datasets"), ("news", "News"), ("people", "Member"), ("join", "Join Us")]
+         ("datasets", "Datasets & Resources"), ("news", "News"), ("people", "Member"), ("join", "Join Us")]
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
 HIDDEN_STATUS = {"", "accepted", "published", "preprint"}
@@ -320,13 +320,19 @@ def projects():
 
 
 def datasets():
-    body = (page_head("Datasets", "Research datasets released by the lab.", "Open research")
-            + f'<div class="shell"><section class="section notice" id="datasets"><p class="kicker">Dataset releases</p><h2>Coming soon</h2>'
+    robots = [{**m, "group": "Robot", "role": m.get("category", "Platform"), "slug": slugify(m["name"]), "bio_text": m.get("description", ""),
+               "image": m.get("image") or "images/people/default.svg"} for m in LAB.get("robots", [])]
+    machines = (carousel(robots, LAB["short_name"] + " robots and research infrastructure", "../", profiles=False) if robots else
+                '<p class="notice">Our robot platforms, sensors and computing infrastructure will be listed here soon.</p>')
+    body = (page_head("Datasets & Resources", "Research datasets, robot platforms and infrastructure of the lab.", "Open research")
+            + f'<div class="shell"><section class="section" id="datasets">{section_head("Datasets", kicker="01 / Data")}'
+            f'<div class="notice"><p class="kicker">Dataset releases</p><h3>Coming soon</h3>'
             f'<p>Dataset download links will be listed here when available. For resources associated with an existing paper, see its project page and repository.</p>'
             f'<div class="chips"><a class="chip-link" href="mailto:{esc(LAB["email"])}?subject=Research%20dataset%20inquiry">Ask about research data {EXT}</a>'
-            f'<a class="chip-link" href="../publications/">Code is linked from each publication {ARROW}</a><a class="chip-link" href="{esc(LAB["github"])}">GitHub organization {EXT}</a></div></section>'
-            f'<p class="muted section-tight">Please consult each repository for its license, usage instructions and citation information.</p></div>')
-    render("datasets", "Datasets", "Research datasets from PAIRS Lab.", body)
+            f'<a class="chip-link" href="../publications/">Code is linked from each publication {ARROW}</a><a class="chip-link" href="{esc(LAB["github"])}">GitHub organization {EXT}</a></div></div>'
+            f'<p class="muted">Please consult each repository for its license, usage instructions and citation information.</p></section>'
+            f'<section class="section resources-panel" id="resources">{section_head("Robots & Research Infrastructure", kicker="02 / The platforms")}{machines}</section></div>')
+    render("datasets", "Datasets & Resources", "Research datasets, robot platforms and infrastructure of PAIRS Lab.", body)
 
 
 def news():
@@ -393,16 +399,11 @@ def people():
               'aria-autocomplete="list" aria-expanded="false" aria-controls="member-search-results">'
               '<div class="member-search-popup" hidden><div id="member-search-results" role="listbox" aria-label="Members"></div>'
               '<p class="member-search-empty" role="status" hidden>No matching members. Try another name.</p></div></div>')
-    robots = [{**m, "group": "Robot", "role": m.get("category", "Platform"), "slug": slugify(m["name"]), "bio_text": m.get("description", ""),
-               "image": m.get("image") or "images/people/default.svg"} for m in LAB.get("robots", [])]
-    machines = (carousel(robots, LAB["short_name"] + " robots and research infrastructure", "../", profiles=False) if robots else
-                '<p class="notice">Our robot platforms, sensors and computing infrastructure will be listed here soon.</p>')
     awards = LAB["student_awards"]
     body = f'''<section class="members-page"><div class="shell">
 <header class="members-intro"><h1>Member</h1><p>Meet the faculty, students and alumni of {esc(LAB["short_name"])}.</p></header>
 <div class="member-tabs" role="tablist" aria-label="Choose directory">
 <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-people" data-tab="people">People</button>
-<button type="button" role="tab" aria-selected="false" aria-controls="panel-machines" data-tab="machines">Robots &amp; Infrastructure</button>
 <button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
 </div>
 <section class="member-panel" id="panel-people" role="tabpanel" data-panel="people">
@@ -410,12 +411,8 @@ def people():
 {search}
 {carousel(current, LAB["short_name"] + " people", "../")}
 </section>
-<section class="member-panel" id="panel-machines" role="tabpanel" data-panel="machines">
-<div class="panel-heading"><p class="kicker">02 / The platforms</p><h2>Robots &amp; Research Infrastructure</h2></div>
-{machines}
-</section>
 <section class="member-panel" id="panel-alumni" role="tabpanel" data-panel="alumni">
-<div class="panel-heading"><p class="kicker">03 / Alumni</p><h2>Alumni</h2></div>
+<div class="panel-heading"><p class="kicker">02 / Alumni</p><h2>Alumni</h2></div>
 {carousel(alumni, LAB["short_name"] + " alumni", "../")}
 </section>
 <section class="notice"><h2>Student awards</h2><p>{esc(awards["title"])}:</p><ul>{"".join(f"<li>{esc(x)}</li>" for x in awards["items"])}</ul><a class="text-link" href="../join/">Join the lab {ARROW}</a></section>

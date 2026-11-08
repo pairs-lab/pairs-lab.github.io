@@ -29,7 +29,7 @@ Commit the generated HTML together with the data change.
   `images/people/`), optional `url`, `note` and `bio`. A profile page is created at `people/<name-slug>/`.
   Without `bio`, the page shows a short factual line and the member's lab publications.
 - **Robots & infrastructure:** add entries to `robots` in `data/lab.json` with `name`, `category`,
-  `description`, `image` and optional `url`. The tab at `people/#machines` shows them.
+  `description`, `image` and optional `url`. They appear on `datasets/#resources`.
 - **Publication media:** `image`, or `video` plus `poster`, paths relative to the site root.
 
 ## Deploy

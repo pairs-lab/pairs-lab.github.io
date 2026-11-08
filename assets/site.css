@@ -50,7 +50,7 @@ button { font: inherit; }
 .brand { display: inline-flex; align-items: center; flex: none; }
 .brand img { width: auto; height: 48px; }
 .site-nav { display: flex; flex-wrap: wrap; gap: 2px; }
-.site-nav a { padding: 8px 11px; color: var(--text); font-size: 0.95rem; font-weight: 600; text-decoration: none; }
+.site-nav a { padding: 8px 9px; color: var(--text); font-size: 0.95rem; font-weight: 600; text-decoration: none; }
 .site-nav a:hover { color: var(--accent); }
 .site-nav a[aria-current="page"] { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
 .nav-toggle { display: none; width: 42px; height: 42px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; }
@@ -181,7 +181,7 @@ pre { overflow-x: auto; margin: 8px 0 0; padding: 12px; border-radius: 6px; back
 .members-page { padding: 64px 0 24px; background: linear-gradient(180deg, var(--accent-soft) 0%, #fff 520px); }
 .members-intro h1 { margin-bottom: 16px; color: var(--accent-strong); font-size: clamp(2.6rem, 6vw, 4.4rem); letter-spacing: -0.03em; }
 .members-intro p { max-width: 56ch; color: var(--muted); font-size: 1.08rem; }
-.member-tabs { display: grid; grid-template-columns: repeat(3, 1fr); margin: 36px 0 48px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: var(--shadow); }
+.member-tabs { display: grid; grid-template-columns: repeat(2, 1fr); margin: 36px 0 48px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: var(--shadow); }
 .member-tabs button { padding: 16px; border: 0; border-bottom: 3px solid transparent; background: #fff; color: var(--muted); font-weight: 700; cursor: pointer; }
 .member-tabs button + button { border-left: 1px solid var(--line); }
 .member-tabs button.is-active { color: var(--ink); background: var(--accent-soft); border-bottom-color: var(--accent); }

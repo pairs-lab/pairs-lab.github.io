@@ -204,14 +204,14 @@
     var openBySlug = function (slug) {
       carousels.forEach(function (c) {
         c.details.forEach(function (d, i) {
-          if (d.id === slug) { showTab(c.panel.dataset.panel); c.go(i); opened = true; }
+          if (d.id === slug) { if (c.panel) showTab(c.panel.dataset.panel); c.go(i); opened = true; }
         });
       });
     };
     var hash = decodeURIComponent(window.location.hash.slice(1));
     if (tabs.some(function (t) { return t.dataset.tab === hash; })) { showTab(hash); opened = true; }
     else if (hash) openBySlug(hash);
-    if (!opened) showTab("people");
+    if (!opened && tabs.length) showTab("people");
 
     // ---- member search (combobox) ----
     var box = document.querySelector("[data-member-search]");
