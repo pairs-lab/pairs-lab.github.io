@@ -139,7 +139,7 @@
       "id": "perception-navigation",
       "title": "Robust Perception and Autonomous Navigation",
       "summary": "Perception that holds up in hard conditions, connected to safe navigation.",
-      "description": "Perception that keeps working under poor lighting, clutter and sensor noise, connected to safe decisions. We work on illumination-robust visual front-ends, multisensor fusion for localization and obstacle avoidance, semantic-aware path planning for UAVs, and social navigation with motion prediction around people.",
+      "description": "Perception that keeps working under poor lighting, clutter and sensor noise, connected to safe decisions. We work on illumination-robust visual front-ends, multisensor fusion for localization and obstacle avoidance, semantic-aware path planning for UAVs, swarms of drones and robots that navigate together, and social navigation with motion prediction around people.",
       "image": "images/research/social-navigation.png",
       "topics": [
         "Navigation",
@@ -220,13 +220,13 @@
           },
           {
             "col": 1,
-            "name": "Aerial autonomy",
-            "short": "Aerial autonomy",
-            "thumb": "reliable-uav",
-            "desc": "UAVs that localize, plan and explore on their own.",
+            "name": "Swarm robotics",
+            "short": "Swarm robotics",
+            "thumb": "swarm",
+            "desc": "Teams of drones and robots that explore and navigate together.",
             "papers": [
-              "Reliable UAV",
-              "Semantic exploration"
+              "SOLARIS",
+              "OSDAG"
             ]
           },
           {
