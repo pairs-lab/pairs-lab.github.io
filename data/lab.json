@@ -251,20 +251,26 @@
   ],
   "people": [
     {
-      "group": "Faculty",
+      "group": "Staff",
       "members": [
         {
           "name": "Thanh Nguyen Canh",
           "image": "images/people/thanh.jpg",
           "url": "https://thanhnguyencanh.github.io/",
           "note": "Lecturer, Robotics Department, VNU-UET",
-          "bio": "Thanh Nguyen Canh is a lecturer in the Robotics Department at the University of Engineering and Technology, Vietnam National University (VNU-UET), and a Ph.D. candidate at the Japan Advanced Institute of Science and Technology (JAIST), working on 3D active semantic SLAM, robot perception, navigation and learning."
+          "bio": "Thanh Nguyen Canh is a lecturer in the Robotics Department at the University of Engineering and Technology, Vietnam National University (VNU-UET), and a Ph.D. candidate at the Japan Advanced Institute of Science and Technology (JAIST), working on 3D active semantic SLAM, robot perception, navigation and learning.",
+          "role": "Lecturer"
         }
       ],
-      "role": "Faculty"
+      "role": "Staff"
     },
     {
-      "group": "Master students",
+      "group": "PhD Students",
+      "role": "PhD Student",
+      "members": []
+    },
+    {
+      "group": "Master Students",
       "members": [
         {
           "name": "Pham Thi My Le",
@@ -287,7 +293,7 @@
       "role": "Master's Student"
     },
     {
-      "group": "Undergraduate students",
+      "group": "Undergraduate Students",
       "members": [
         {
           "name": "Nguyen Duc Khanh Huyen",

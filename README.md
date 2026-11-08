@@ -25,7 +25,7 @@ Commit the generated HTML together with the data change.
 ## Common tasks
 
 - **Hero photo:** save it as `images/vnu-campus.jpg` (about 2000 px wide), then rebuild.
-- **New member:** add an entry under `people` in `data/lab.json` with `name`, `image` (square photo in
+- **New member:** add an entry to the right group (Staff, PhD Students, Master Students, Undergraduate Students, Alumni) under `people` in `data/lab.json` with `name`, `image` (square photo in
   `images/people/`), optional `url`, `note` and `bio`. A profile page is created at `people/<name-slug>/`.
   Without `bio`, the page shows a short factual line and the member's lab publications.
 - **Robots & infrastructure:** add entries to `robots` in `data/lab.json` with `name`, `category`,

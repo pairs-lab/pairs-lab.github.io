@@ -372,7 +372,7 @@ def member_records():
                 words = [" ".join(w if w[:2].isupper() else w.lower() for w in t.split()) for t in topics]
                 listed = words[0] if len(words) == 1 else ", ".join(words[:-1]) + " and " + words[-1]
                 bio += f' {len(papers)} lab publication{"s" if len(papers) > 1 else ""} on {listed}.'
-            records.append({**m, "group": g["group"], "role": g["role"], "slug": slugify(m["name"]), "papers": papers,
+            records.append({**m, "group": g["group"], "role": m.get("role") or g["role"], "slug": slugify(m["name"]), "papers": papers,
                             "bio_text": bio, "image": m.get("image") or "images/people/default.svg"})
     return records
 
@@ -384,7 +384,7 @@ def carousel(records, label, prefix, profiles=True):
     dots = "".join(f'<button type="button" data-dot aria-label="Show {esc(r["name"])}"></button>' for r in records)
     details = ""
     for r in records:
-        if r["group"] == "Faculty":
+        if r["group"] == "Staff":
             heading = f'<h2 class="carousel-lead-title"><span>{esc(r["role"])}:</span> {esc(r["name"])}</h2>'
         else:
             heading = f'<p class="carousel-role">{esc(r["role"])}</p><h2>{esc(r["name"])}</h2>'
@@ -400,6 +400,21 @@ def carousel(records, label, prefix, profiles=True):
             f'<div class="carousel-details" aria-live="polite">{details}</div>')
 
 
+def directory(records):
+    """Plain grouped list of current members (Staff, PhD, Master, Undergraduate) that links to each profile."""
+    sections = ""
+    for g in LAB["people"]:
+        members = [r for r in records if r["group"] == g["group"]]
+        if not members:
+            continue
+        cards = "".join(
+            f'<a class="dir-card" href="{esc(r["slug"])}/"><img src="../{esc(r["image"])}" alt="" width="72" height="72" loading="lazy" decoding="async">'
+            f'<span><strong>{esc(r["name"])}</strong><small>{esc(r["role"])}</small></span></a>' for r in members)
+        sections += (f'<section class="dir-group" id="group-{slugify(g["group"])}"><h3>{esc(g["group"])} <span>{len(members)}</span></h3>'
+                     f'<div class="dir-grid">{cards}</div></section>')
+    return f'<div class="directory"><h2 class="dir-title">Directory</h2>{sections}</div>'
+
+
 def people():
     records = member_records()
     current = [r for r in records if r["group"] != "Alumni"]
@@ -411,15 +426,16 @@ def people():
               '<p class="member-search-empty" role="status" hidden>No matching members. Try another name.</p></div></div>')
     awards = LAB["student_awards"]
     body = f'''<section class="members-page"><div class="shell">
-<header class="members-intro"><h1>Members</h1><p>Meet the faculty, students and alumni of {esc(LAB["short_name"])}.</p></header>
+<header class="members-intro"><h1>Members</h1><p>Meet the staff, students and alumni of {esc(LAB["short_name"])}.</p></header>
 <div class="member-tabs" role="tablist" aria-label="Choose directory">
 <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-people" data-tab="people">People</button>
 <button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
 </div>
 <section class="member-panel" id="panel-people" role="tabpanel" data-panel="people">
-<div class="panel-heading"><p class="kicker">01 / Faculty &amp; students</p><h2>People</h2></div>
+<div class="panel-heading"><p class="kicker">01 / Staff &amp; students</p><h2>People</h2></div>
 {search}
 {carousel(current, LAB["short_name"] + " people", "../")}
+{directory(current)}
 </section>
 <section class="member-panel" id="panel-alumni" role="tabpanel" data-panel="alumni">
 <div class="panel-heading"><p class="kicker">02 / Alumni</p><h2>Alumni</h2></div>
