@@ -506,9 +506,15 @@ def people():
         profile(r)
 
 
+PROFILE_LINKS = [("website", "Personal website"), ("scholar", "Google Scholar"), ("orcid", "ORCID"), ("github", "GitHub")]
+
+
 def profile(r):
     prefix = "../../"
-    link = f'<a class="chip-link" href="{esc(r["url"])}">{"Personal website" if "scholar.google" not in r["url"] else "Google Scholar"} {EXT}</a>' if r.get("url") else ""
+    if r.get("links"):
+        link = "".join(f'<a class="chip-link" href="{esc(r["links"][k])}">{label} {EXT}</a>' for k, label in PROFILE_LINKS if r["links"].get(k))
+    else:
+        link = f'<a class="chip-link" href="{esc(r["url"])}">{"Personal website" if "scholar.google" not in r["url"] else "Google Scholar"} {EXT}</a>' if r.get("url") else ""
     topics = "".join(f'<span class="tag">{esc(t)}</span>' for t, _ in Counter(t for p in r["papers"] for t in p["topics"]).most_common(6))
     papers = "".join(paper_card(p, prefix, compact=True) for p in sorted(r["papers"], key=lambda p: (-p["year"], TYPE_ORDER[p["type"]])))
     pubs = (f'<section class="section-tight">{section_head("Lab publications")}<div class="paper-list compact">{papers}</div></section>' if papers else "")

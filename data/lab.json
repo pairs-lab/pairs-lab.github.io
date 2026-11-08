@@ -583,7 +583,13 @@
         {
           "name": "Thang Tran Viet",
           "image": "images/people/thang-2.jpg",
-          "url": "https://scholar.google.com.vn/citations?hl=en&authuser=1&user=YUrt870AAAAJ"
+          "url": "https://tranthang27.github.io/",
+          "links": {
+            "website": "https://tranthang27.github.io/",
+            "scholar": "https://scholar.google.com/citations?user=YUrt870AAAAJ&hl=en",
+            "orcid": "https://orcid.org/0009-0003-4442-9271",
+            "github": "https://github.com/TranThang27"
+          }
         },
         {
           "name": "Phuc Dinh Van",
