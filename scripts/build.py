@@ -205,7 +205,7 @@ def render(slug, title, description, body):
 <div><a class="footer-logo" href="{route("", prefix)}"><img src="{prefix}images/brand/pairs-lab-horizontal.png" width="164" height="48" alt="{esc(LAB["short_name"])}"></a>
 <p>{esc(LAB["name"])}<br><a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a>, <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a></p></div>
 <div><p class="footer-label">Visit</p><p>Room {esc(office["room"])}, {esc(office["building"])}<br>{esc(office["city"])}</p><a href="{esc(office["maps_url"])}">Google Maps {EXT}</a></div>
-<div><p class="footer-label">Connect</p><p><a href="mailto:{esc(LAB["email"])}">{esc(LAB["email"])}</a><br><a href="{esc(LAB["github"])}">GitHub {EXT}</a><br><a href="{route("join", prefix)}">Join us {ARROW}</a></p></div>
+<div><p class="footer-label">Connect</p><p><a href="mailto:{esc(LAB["email"])}">{esc(LAB["email"])}</a><br><a href="{esc(LAB["github"])}">GitHub {EXT}</a><br><a href="{esc(LAB["youtube"])}">YouTube {EXT}</a><br><a href="{route("join", prefix)}">Join us {ARROW}</a></p></div>
 </div><div class="shell footer-bottom">© {datetime.date.today().year} {esc(LAB["short_name"])}</div></footer>
 </body>
 </html>
