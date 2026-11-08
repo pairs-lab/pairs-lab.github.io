@@ -144,6 +144,8 @@ html:not(.js) .hero-arrow, html:not(.js) .hero-dots { display: none; }
 .status { padding: 1px 8px; border-radius: 999px; color: #7a5a00; background: #fdf3d6; font-size: 0.78rem; font-weight: 600; }
 .chip-link { display: inline-flex; gap: 4px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--accent); background: #fff; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
 .chip-link:hover { border-color: var(--accent); background: var(--accent-soft); }
+.chip-link.is-empty { color: #a7b4c2; border-style: dashed; background: transparent; cursor: default; }
+.chip-link.is-empty:hover { border-color: var(--line); background: transparent; }
 details { margin-top: 10px; font-size: 0.92rem; }
 summary { color: var(--accent); font-weight: 600; cursor: pointer; }
 details p { margin: 8px 0 0; }

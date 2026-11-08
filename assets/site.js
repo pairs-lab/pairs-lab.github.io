@@ -104,7 +104,7 @@
       var words = query.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
       var shown = 0;
       papers.forEach(function (paper) {
-        var ok = (type.value === "all" || paper.dataset.type === type.value) &&
+        var ok = (type.value === "all" || (type.value === "review" ? paper.dataset.review === "1" : paper.dataset.type === type.value && paper.dataset.review === "0")) &&
           (year.value === "all" || paper.dataset.year === year.value) &&
           (!topic || paper.dataset.topics.split("|").indexOf(topic) !== -1) &&
           words.every(function (w) { return paper.dataset.search.indexOf(w) !== -1; });

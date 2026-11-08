@@ -22,8 +22,10 @@
     "image": "images/research/iraf-slam.png",
     "video": "",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/IRAF-SLAM/",
-      "code": "https://github.com/thanhnguyencanh/IRAF-SLAM"
+      "paper": "https://doi.org/10.1109/ecmr65884.2025.11163050",
+      "arxiv": "https://arxiv.org/abs/2507.07752",
+      "code": "https://github.com/pairs-lab/IRAF-SLAM",
+      "website": "https://thanhnguyencanh.github.io/IRAF-SLAM/"
     }
   },
   {
@@ -48,9 +50,10 @@
     "image": "",
     "video": "https://thanhnguyencanh.github.io/images/s3m/mp4/sim.mp4",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/S3M_SLAM/",
-      "paper": "https://arxiv.org/abs/2401.08134",
-      "code": "https://github.com/thanhnguyencanh/S3M_SLAM"
+      "paper": "https://doi.org/10.1109/sii58957.2024.10417379",
+      "arxiv": "https://arxiv.org/abs/2401.08134",
+      "code": "https://github.com/thanhnguyencanh/S3M_SLAM",
+      "website": "https://thanhnguyencanh.github.io/S3M_SLAM/"
     }
   },
   {
@@ -74,9 +77,10 @@
     "image": "",
     "video": "https://thanhnguyencanh.github.io/images/ppm/mp4/video_demo.mp4",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/probabilistic_semantic_mapping/",
-      "paper": "https://arxiv.org/abs/2401.08132",
-      "code": "https://github.com/thanhnguyencanh/probabilistic_semantic_mapping"
+      "paper": "https://doi.org/10.1109/iccais59597.2023.10382351",
+      "arxiv": "https://arxiv.org/abs/2401.08132",
+      "code": "https://github.com/thanhnguyencanh/probabilistic_semantic_mapping",
+      "website": "https://thanhnguyencanh.github.io/probabilistic_semantic_mapping/"
     }
   },
   {
@@ -101,8 +105,10 @@
     "image": "",
     "video": "https://thanhnguyencanh.github.io/images/mulDF/demo.mp4",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/MulDF/",
-      "paper": "https://arxiv.org/abs/2212.13218"
+      "paper": "https://doi.org/10.1109/iccais56082.2022.9990495",
+      "arxiv": "https://arxiv.org/abs/2212.13218",
+      "code": "",
+      "website": "https://thanhnguyencanh.github.io/MulDF/"
     }
   },
   {
@@ -127,9 +133,10 @@
     "image": "images/research/esrpcb.png",
     "video": "",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/ESRPCB/",
-      "paper": "https://www.sciencedirect.com/science/article/abs/pii/S0952197625015490",
-      "code": "https://github.com/thanhnguyencanh/ESRPCB"
+      "paper": "https://doi.org/10.1016/j.engappai.2025.111547",
+      "arxiv": "https://arxiv.org/abs/2506.13476",
+      "code": "https://github.com/pairs-lab/ESRPCB",
+      "website": "https://thanhnguyencanh.github.io/ESRPCB/"
     },
     "source_note": "Title and author order follow the primary paper: https://arxiv.org/abs/2506.13476. All original website authors and full abstract are retained."
   },
@@ -143,7 +150,7 @@
       "Nak Young Chong"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "Autonomous Robots",
     "status": "2nd revision",
     "topics": [
@@ -151,9 +158,14 @@
       "Human–robot interaction"
     ],
     "abstract": "Robotic manipulation through learning from demonstration aims to enable robots to acquire various actions efficiently. Unlike traditional learning from observation-action pairs, which is time-consuming and requires proficiency in coding. Our approach is inspired by the way humans learn and imitate actions in a more flexible and efficient manner by simply \"watching\" and \"repeating\" the actions. Inspired by this, we propose a \"Human-to-Robot\" imitation learning pipeline, which enables robots to learn diverse actions from video demonstrations. Specifically, we explicitly represent each step as two key tasks: (1) understanding the demonstration video and (2) learning the demonstrated manipulations. First, the video description is achieved by focusing on two essential commonsense properties: action understanding and object understanding. We utilize deep Convolutional Neural Networks (CNNs) and Large Vision Models (VLMs) to extract meaningful features related to these properties. Then, for execution, we develop a robot manipulation system built upon a Language Vision-conditioned architectures and Deep Reinforcement Learning. Experiments with real-world video demonstrations. The results show the robustness and adaptability of the two frameworks in various scenarios using a real robotic arm UR5.",
-    "image": "",
+    "image": "images/publications/human-to-robot.jpg",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2602.19184",
+      "code": "https://github.com/pairs-lab/LfD4hri",
+      "website": ""
+    },
     "cv_reference": "P2",
     "source_note": "Submitted manuscript authors, venue and year follow the latest owner CV; abstract is retained from the original website."
   },
@@ -177,9 +189,10 @@
     "image": "images/research/traffic-signal-rl.png",
     "video": "",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/DRL4Three-wayTSC/",
-      "paper": "https://www.researchsquare.com/article/rs-3128875/v1",
-      "code": "https://github.com/thanhnguyencanh/DRL4Three-wayTSC"
+      "paper": "",
+      "arxiv": "",
+      "code": "https://github.com/pairs-lab/DRL4Three-wayTSC",
+      "website": "https://thanhnguyencanh.github.io/DRL4Three-wayTSC/"
     }
   },
   {
@@ -204,8 +217,10 @@
     "image": "",
     "video": "https://thanhnguyencanh.github.io/images/DAR/mp4/ObsAvd.mp4",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/DualArmRobot/",
-      "paper": "https://www.sciencedirect.com/science/article/pii/S2215098624001496"
+      "paper": "https://doi.org/10.1016/j.jestch.2024.101763",
+      "arxiv": "",
+      "code": "",
+      "website": "https://thanhnguyencanh.github.io/DualArmRobot/"
     }
   },
   {
@@ -229,8 +244,10 @@
     "image": "",
     "video": "https://thanhnguyencanh.github.io/images/RealiableLocalization/mp4/RGB%20Image.mp4",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/ReliableLocalize/",
-      "paper": "https://arxiv.org/abs/2411.01816"
+      "paper": "https://doi.org/10.23919/iccas63016.2024.10773342",
+      "arxiv": "https://arxiv.org/abs/2411.01816",
+      "code": "",
+      "website": "https://thanhnguyencanh.github.io/ReliableLocalize/"
     }
   },
   {
@@ -253,9 +270,10 @@
     "image": "images/research/social-navigation.png",
     "video": "",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/SGan-TEB/",
-      "paper": "https://arxiv.org/abs/2411.01814",
-      "code": "https://github.com/thanhnguyencanh/SGan-TEB"
+      "paper": "https://doi.org/10.23919/iccas63016.2024.10773156",
+      "arxiv": "https://arxiv.org/abs/2411.01814",
+      "code": "https://github.com/pairs-lab/SGan-TEB",
+      "website": "https://thanhnguyencanh.github.io/SGan-TEB/"
     }
   },
   {
@@ -279,9 +297,10 @@
     "image": "images/research/m-calib.png",
     "video": "",
     "links": {
-      "website": "https://thanhnguyencanh.github.io/MonoCalibNet/",
-      "paper": "https://www.researchsquare.com/article/rs-4019542/v1",
-      "code": "https://github.com/thanhnguyencanh/MonoCalibNet"
+      "paper": "https://doi.org/10.14313/jamris-2025-025",
+      "arxiv": "",
+      "code": "https://github.com/pairs-lab/MonoCalibNet",
+      "website": "https://thanhnguyencanh.github.io/MonoCalibNet/"
     }
   },
   {
@@ -296,7 +315,7 @@
       "Nak Young Chong"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "IEEE Transactions on Multimedia",
     "status": "under review",
     "topics": [
@@ -304,9 +323,14 @@
       "Computer vision"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/con-dso.jpg",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2605.27952",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "P8"
   },
   {
@@ -320,7 +344,7 @@
       "Xiem HoangVan"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "Robotics and Autonomous Systems",
     "status": "under review",
     "topics": [
@@ -331,7 +355,12 @@
     "abstract": "",
     "image": "",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "P7"
   },
   {
@@ -345,7 +374,7 @@
       "Xiem HoangVan"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "Autonomous Robots",
     "status": "under review",
     "topics": [
@@ -354,9 +383,14 @@
       "Survey"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/collaborative-gaussian-splatting-slam-survey.jpg",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2510.23988",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "P3",
     "source_note": "CV marks Thanh Nguyen Canh and P. N. Xuan as equal contributors."
   },
@@ -382,8 +416,10 @@
     "image": "",
     "video": "images/demos/bpda-gmm.mp4",
     "links": {
-      "paper": "https://arxiv.org/abs/2606.04618",
-      "code": "https://github.com/pairs-lab/BPDA-SLAM"
+      "paper": "https://doi.org/10.1109/lra.2026.3726389",
+      "arxiv": "https://arxiv.org/abs/2606.04618",
+      "code": "https://github.com/pairs-lab/BPDA-SLAM",
+      "website": ""
     },
     "cv_reference": "J8",
     "source_note": "Title and full five-author list follow https://arxiv.org/abs/2606.04618. CV lists this under journals with two authors; no journal acceptance status is supplied.",
@@ -406,10 +442,13 @@
       "Super-resolution"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/e2dsr.jpg",
     "video": "",
     "links": {
-      "paper": "https://rev-jec.org/index.php/rev-jec/article/view/427"
+      "paper": "https://doi.org/10.21553/rev-jec.427",
+      "arxiv": "",
+      "code": "",
+      "website": ""
     },
     "cv_reference": "J7"
   },
@@ -431,10 +470,13 @@
       "Survey"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/semantic-visual-slam-survey.jpg",
     "video": "",
     "links": {
-      "paper": "https://www.sciencedirect.com/science/article/pii/S0921889026002071"
+      "paper": "https://doi.org/10.1016/j.robot.2026.105535",
+      "arxiv": "https://arxiv.org/abs/2510.00783",
+      "code": "",
+      "website": ""
     },
     "cv_reference": "J5",
     "source_note": "Title and full four-author list follow official JAIST records: https://www.jaist.ac.jp/jisedai/results.html. Published 16 May 2026; CV omits Haolan Zhang."
@@ -457,10 +499,13 @@
       "Computer vision"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/sr-slam.jpg",
     "video": "",
     "links": {
-      "paper": "https://www.sciencedirect.com/science/article/pii/S0921889025004038"
+      "paper": "https://doi.org/10.1016/j.robot.2025.105306",
+      "arxiv": "https://arxiv.org/abs/2509.01111",
+      "code": "",
+      "website": ""
     },
     "cv_reference": "J4",
     "source_note": "Publication year (March 2026) and full five-author list follow official JAIST records: https://www.jaist.ac.jp/jisedai/results2025.html. CV lists 2025 and omits Lijun Wang."
@@ -487,7 +532,12 @@
     "abstract": "Translating video demonstrations into executable robot commands remains challenging because existing methods often fail to identify which objects are functionally involved in the demonstrated action. As a result, they may generate commands that are linguistically plausible but operationally ambiguous. We propose an object-centric video understanding framework that decouples action recognition from object identification to generate precise, grammar-free manipulation commands. Our approach integrates Temporal Shift Modules (TSM) for efficient spatio-temporal action classification with a novel Object Selection algorithm that identifies task-relevant objects through trajectory-based role classification, blur detection, and overlap minimization. The selected objects are then processed by Vision-Language Models (VLMs) for robust category recognition and zero-shot generalization. Evaluated on a modified Something-Something V2 dataset, our method achieves 86.79% action classification accuracy and BLEU-4 scores of 0.337 on standard objects and 0.261 on novel objects. These results improve over the strongest task-specific baseline by 80.2% and 143.9%, respectively. Larger gains are observed in METEOR and CIDEr, reaching 157.9% and 171.7% on novel objects. Across all semantic metrics, our approach consistently outperforms task-specific methods and remains competitive with, or surpasses, large general-purpose VLMs while retaining a modular, object-centric design.",
     "image": "",
     "video": "images/demos/video2command.mp4",
-    "links": {},
+    "links": {
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2606.16470",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "C17",
     "poster": "images/demos/video2command.jpg"
   },
@@ -514,7 +564,10 @@
     "image": "",
     "video": "images/demos/wavesync.mp4",
     "links": {
-      "code": "https://github.com/pairs-lab/WaveSync"
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2606.16600",
+      "code": "https://github.com/pairs-lab/WaveSync",
+      "website": ""
     },
     "cv_reference": "C17",
     "poster": "images/demos/wavesync.jpg"
@@ -540,6 +593,9 @@
     "image": "",
     "video": "images/demos/osdag.mp4",
     "links": {
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2606.15255",
+      "code": "https://github.com/pairs-lab/osdag",
       "website": "https://thanhnguyencanh.github.io/LLM_DAG4MultiRobot/"
     },
     "cv_reference": "C17",
@@ -562,9 +618,14 @@
       "Reinforcement learning"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/hybrid-td3.jpg",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "https://doi.org/10.1109/case69030.2026.11704359",
+      "arxiv": "https://arxiv.org/abs/2603.01302",
+      "code": "https://github.com/pairs-lab/HybrAJ",
+      "website": ""
+    },
     "cv_reference": "C16"
   },
   {
@@ -586,17 +647,20 @@
       "Computer vision"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/il-slam.jpg",
     "video": "",
     "links": {
-      "paper": "https://ieeexplore.ieee.org/document/11391948"
+      "paper": "https://doi.org/10.1109/roboticcc68732.2025.00022",
+      "arxiv": "https://arxiv.org/abs/2509.02972",
+      "code": "",
+      "website": ""
     },
     "cv_reference": "C15",
     "source_note": "Venue and full author names follow official JAIST records: https://www.jaist.ac.jp/jisedai/results2025.html. CV abbreviates the venue as IRC."
   },
   {
     "id": "humanoid-gesture-voice-interaction",
-    "title": "Development of a Humanoid Robot Prototype and Gesture and Voice-Based Interaction Approach",
+    "title": "Development of a Humanoid Robot Prototype for Multimodal Human-Robot Interaction",
     "authors": [
       "Thang Tran Viet",
       "Phuc Dinh Van",
@@ -607,7 +671,7 @@
     ],
     "year": 2025,
     "type": "conference",
-    "venue": "International Conference on Advances in Information and Communication Technology (RIVF)",
+    "venue": "RIVF International Conference on Computing and Communication Technologies (RIVF)",
     "topics": [
       "Human–robot interaction",
       "Humanoid robotics"
@@ -615,7 +679,12 @@
     "abstract": "",
     "image": "",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "https://doi.org/10.1109/rivf68649.2025.11364526",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "C14",
     "source_note": "Title and author list follow the CV. Official JAIST records list a RIVF 2025 work titled Development of a Humanoid Robot Prototype for Multimodal Human-Robot Interaction with a different author list; no merge or link is assumed."
   },
@@ -639,7 +708,12 @@
     "abstract": "",
     "image": "",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "https://doi.org/10.1007/978-3-032-11903-2_19",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "C13"
   },
   {
@@ -665,7 +739,12 @@
     "abstract": "",
     "image": "",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "https://doi.org/10.1007/978-3-032-11903-2_3",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "C12"
   },
   {
@@ -686,9 +765,14 @@
       "Semantic SLAM"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/adaptive-prior-scene-object-slam.jpg",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "https://doi.org/10.1109/rcar65431.2025.11139743",
+      "arxiv": "https://arxiv.org/abs/2507.21709",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "C10"
   },
   {
@@ -710,7 +794,12 @@
     "abstract": "",
     "image": "",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "C9"
   },
   {
@@ -733,7 +822,12 @@
     "abstract": "",
     "image": "",
     "video": "",
-    "links": {},
+    "links": {
+      "paper": "https://doi.org/10.1109/icsse61472.2024.10608973",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
     "cv_reference": "C6"
   },
   {
@@ -754,10 +848,13 @@
       "Navigation"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/fusion-lidar-inertial-encoder.jpg",
     "video": "",
     "links": {
-      "paper": "https://arxiv.org/abs/2407.11870"
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2407.11870",
+      "code": "",
+      "website": ""
     },
     "cv_reference": "C5"
   },
@@ -776,11 +873,13 @@
       "Security"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/malicious-vehicle-detection.jpg",
     "video": "",
     "links": {
-      "paper": "https://arxiv.org/abs/2401.08135",
-      "code": "https://www.kaggle.com/code/nguyncnhthanh/blackhole-attack-rivf-2023"
+      "paper": "https://doi.org/10.1109/rivf60135.2023.10471804",
+      "arxiv": "https://arxiv.org/abs/2401.08135",
+      "code": "https://www.kaggle.com/code/nguyncnhthanh/blackhole-attack-rivf-2023",
+      "website": ""
     },
     "cv_reference": "C2"
   },
@@ -794,7 +893,7 @@
       "Nak Young Chong"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "IEEE Transactions on Robotics (T-RO)",
     "status": "under review",
     "topics": [
@@ -804,7 +903,10 @@
     ],
     "abstract": "Keyframe visual-inertial SLAM weights every feature by a content-blind covariance, commits its initialization on a timer, and takes metric scale from excitation alone. UC-SLAM, built on ORB-SLAM3, tests a replacement for each under a registered protocol. Foundation-model metric depth enters through a log-depth factor with a per-keyframe log-scale chain designed to absorb the network's scene-dependent bias. Among the systems rerun on EuRoC and TUM-VI, UC-SLAM has the lowest monocular-inertial mean error in all five environments, with three changes adopted after the benchmark by a registered test. One caps a scale refinement of ORB-SLAM3, whose rows run without it. The magistrale lead rests on one sequence. The same depth fed to ORB-SLAM3 as RGB-D is worse on every EuRoC sequence. On OpenLORIS-Scene, a ground robot added later, UC-SLAM passes 20 of 200 runs and VINS-Fusion 120. A learned anisotropic feature covariance and an initializer that commits on marginal uncertainty gave no gain and were dropped. Neither ORB-SLAM3 nor UC-SLAM reports a consistent posterior, and the Vicon reference is too coarse for the test. The code is available at https://anonymous.4open.science/r/uc-slam/.",
     "links": {
-      "code": "https://github.com/pairs-lab/uc-slam"
+      "paper": "",
+      "arxiv": "",
+      "code": "https://github.com/pairs-lab/uc-slam",
+      "website": ""
     },
     "video": "images/demos/uc-slam.mp4",
     "poster": "images/demos/uc-slam.jpg"
@@ -818,7 +920,7 @@
       "Nak Young Chong"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "IEEE Robotics and Automation Letters (RA-L)",
     "status": "under review",
     "topics": [
@@ -828,7 +930,10 @@
     ],
     "abstract": "A visual localizer should tell a robot where the camera is and how much to trust that answer, because the pose is fused into a Bayesian state estimator. Recent semantic 3D Gaussian Splatting (3DGS) localizers are accurate but return a single pose with no confidence, while uncertainty-aware mapping methods quantify map reliability but do not localize. We present USGLoc, an evidential localizer built on one principle: the map's own uncertainty drives every stage and survives to the output. Each primitive of an evidential semantic Gaussian map carries a Dempster-Shafer belief over open-vocabulary semantics with an explicit vacuity mass, and the query is encoded into the same space. Vacuity gates 2D-3D semantic matching, which turns retrieval ambiguity into a pose mixture; it gates the correspondences of a render-and-match correction; and it weights the rendering residual per pixel. A tempered Laplace approximation turns each refined hypothesis into a covariance, giving a Gaussian-mixture posterior on SE(3) that condenses to one Gaussian for a filter. Without an external pose prior, USGLoc localizes to 0.83 cm/0.26° on average on 7Scenes and 0.62 cm/0.26° on 12Scenes. The poses it trusts most are the most accurate in our comparison: 0.30 cm on its most-confident tenth of the 7Scenes queries, against 0.46 cm for a strong scene-coordinate baseline ranked by a PnP covariance. The tempered covariance is close to nominal at the 68% level and over-confident in the tails.",
     "links": {
-      "code": "https://github.com/pairs-lab/usgloc"
+      "paper": "",
+      "arxiv": "",
+      "code": "https://github.com/pairs-lab/usgloc",
+      "website": ""
     },
     "video": "images/demos/usgloc.mp4",
     "poster": "images/demos/usgloc.jpg"
@@ -843,7 +948,7 @@
       "Nak Young Chong"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "IEEE Robotics and Automation Letters (RA-L)",
     "status": "submitted",
     "topics": [
@@ -853,7 +958,10 @@
     ],
     "abstract": "A robot that reuses a semantic map must know how much evidence supports each part of it and when this evidence is out of date. We present a probabilistic open-vocabulary field for 3D Gaussian Splatting that addresses both. Each Gaussian holds a von Mises-Fisher posterior over the direction of its vision-language feature, and each keyframe counts as at most one observation. The sufficient statistics give two uncertainties: an epistemic one, the weighted number of views, and an aleatoric one, the agreement of the views, which does not shrink when evidence is scarce. A feature residual detects change, with a label-free threshold from the map's own mapping pass. A flagged Gaussian is reset and rejoins the robust map only once its observed depth matches its position. With few views, the epistemic uncertainty ranks the errors that more views fix (6/6 Replica test scenes); with many views, the aleatoric one ranks the errors that remain (6/6 Replica, 8/8 ScanNet). On ten real scenes in which an object was removed, the reset lowers the share of the object's former pixels that still answer its class from 34% (averaging) to 21%. The field matches averaging the same features, is better calibrated than trained maps, and builds its semantic layer two orders of magnitude faster. As a ranker of stale Gaussians, our field read over the whole update matches the strongest baseline (AP 64.6 vs 64.7) but trails it when both are fused with depth (81.0 vs 84.9).",
     "links": {
-      "code": "https://github.com/pairs-lab/uags"
+      "paper": "",
+      "arxiv": "",
+      "code": "https://github.com/pairs-lab/uags",
+      "website": ""
     },
     "video": "images/demos/uags.mp4",
     "poster": "images/demos/uags.jpg"
@@ -867,7 +975,7 @@
       "Nak Young Chong"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "IEEE Robotics and Automation Letters (RA-L)",
     "status": "submitted",
     "topics": [
@@ -877,7 +985,10 @@
     ],
     "abstract": "Lifelong object maps must estimate whether an object remains at its previously observed location after it leaves view. Existing persistence filters rely on class-based survival priors, making them difficult to apply reliably in open-vocabulary settings. We introduce HiPer, a hierarchical persistence filter that derives persistence beliefs directly from data rather than semantic categories. For a new object, HiPer retrieves visually and geometrically similar training instances and estimates an initial survival rate from their observed histories, without requiring class labels. This estimate initializes a conjugate Beta belief over the object's survival probability, which is updated in closed form using detections and missed observations under Rosen’s persistence-filter framework. When an object is re-identified at a new location, its persistence belief is transferred with the object, enabling the map to learn object-specific mobility over time. Experiments on 120 held-out simulated sequences show that HiPer outperforms all compared methods. Retrieval-based priors outperform CLIP-derived label priors, and object-specific online learning provides further gains. Results on 47 held-out 3RScan environments demonstrate that the proposed retrieval-based prior also outperforms state-of-the-art baselines in real-world settings.",
     "links": {
-      "code": "https://github.com/pairs-lab/HiPer"
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2611.07662",
+      "code": "https://github.com/pairs-lab/HiPer",
+      "website": ""
     },
     "video": "images/hero/semantic-slam.mp4",
     "poster": "images/hero/semantic-slam.jpg"
@@ -892,7 +1003,7 @@
       "Nak Young Chong"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "journal",
     "venue": "IEEE Transactions on Robotics (T-RO)",
     "status": "under review",
     "topics": [
@@ -901,7 +1012,12 @@
       "Navigation"
     ],
     "abstract": "A robot that navigates from a semantic map inherits every silent error of the network that built it. Existing evidential mapping methods summarize this risk as a single classification-derived scalar, and they stop at a labeled map. A planner then cannot tell why a cell is unreliable, or how it may be used. We present HESFM. It separates a structural semantic map from a functional affordance layer, and threads one evidential signal between them, from pixel to plan. This echoes the neuroimaging distinction between structural connectivity (diffusion tensor imaging) and functional connectivity (fMRI). An Evidential Deep Learning (EDL) head replaces the segmentation softmax. It yields a per-pixel Dirichlet in a single forward pass, which gives calibrated class probabilities and a vacuity scalar. We decompose each cell's uncertainty into four physical sources (evidential, coherence, geometric, and temporal). Dempster-Shafer combination recombines them into a vacuity, together with a conflict mass that rises at class boundaries. We measure this decomposition rather than assume it, and the measurement is two-sided. Adding sources raises map accuracy slightly (52.2 -> 52.7 mIoU) while costing the fused vacuity as a detector of wrong labels (28.4 -> 26.9 AUPRC). The evidential source alone remains the better scalar, and the three non-evidential sources are far weaker on their own (11.5 to 13.8 AUPRC), so the decomposition earns its place as diagnosis rather than as a single number. [...]",
-    "links": {},
+    "links": {
+      "paper": "",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
     "video": "images/demos/hesfm.mp4",
     "poster": "images/demos/hesfm.jpg"
   },
@@ -917,7 +1033,7 @@
       "Xiem HoangVan"
     ],
     "year": 2026,
-    "type": "preprint",
+    "type": "conference",
     "venue": "IEEE International Conference on Robotics and Automation (ICRA)",
     "status": "submitted",
     "topics": [
@@ -926,8 +1042,10 @@
     ],
     "abstract": "Retrieving a target from clutter requires deciding whether to grasp the target, remove a blocker, or defer. Existing methods typically commit to a single obstruction graph or removal strategy, ignoring uncertainty across alternative scene interpretations. They also rely on miscalibrated vision-language model (VLM) predictions and can produce pairwise obstruction relations that are jointly inconsistent. Moreover, current approximations provide no guarantees about the impact of discarded hypotheses on the final decision. We propose CPOR-Grasp, a calibrated probabilistic obstruction-reasoning framework that propagates uncertainty from pairwise evidence to action decisions. CPOR-Grasp calibrates and fuses VLM, depth, and amodal-mask cues to estimate obstruction probabilities, induces a distribution over valid obstruction graphs, and marginalizes over these graphs to compute the likelihood that the target is accessible or that a given blocker should be removed. To make inference tractable, it retains only the highest-probability graphs and derives a total-variation bound on the discarded probability mass, enabling certified decisions, adaptive stopping, and principled deferral. On synthetic and real UNOBench scenes, CPOR-Grasp outperforms state-of-the-art baselines. Calibration error decreases from 0.1416 to 0.0185 on the Gemini Robotics backbone, while graph truncation matches exact inference on 99.74\\% of decisions using 56 times fewer graphs. In real-world experiments, CPOR-Grasp achieves a 77.8\\% average success rate, surpassing SOTA baselines.",
     "links": {
-      "paper": "https://arxiv.org/abs/2609.18718",
-      "code": "https://github.com/pairs-lab/cpor-grasp"
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2609.18718",
+      "code": "https://github.com/pairs-lab/cpor-grasp",
+      "website": ""
     },
     "image": "images/demos/cpor-grasp.gif"
   },
@@ -941,9 +1059,9 @@
       "Thanh Nguyen Canh"
     ],
     "year": 2026,
-    "type": "preprint",
-    "venue": "arXiv preprint arXiv:2606.22670",
-    "status": "",
+    "type": "conference",
+    "venue": "International Conference on Control, Automation, Robotics and Vision (ICARCV)",
+    "status": "preprint",
     "topics": [
       "SLAM",
       "Semantic SLAM",
@@ -953,8 +1071,12 @@
     ],
     "abstract": "Autonomous exploration in unknown environments requires unmanned aerial vehicles (UAVs) to efficiently generate informative trajectories while simultaneously constructing accurate maps. Although many existing exploration methods rely on geometric information, they often lack semantic awareness, resulting in suboptimal exploration efficiency and limited environmental understanding. To address this limitation, this paper proposes a semantic-aware exploration framework that adds semantic information to a roadmap-based exploration strategy. The proposed method builds on the Dynamic Exploration Planner (DEP), which incrementally constructs a Probabilistic Roadmap (PRM), and augments this roadmap with a semantic layer. A semantic reward function is introduced to prioritize regions containing meaningful objects and structures, enabling the UAV to focus on areas with higher information value. Furthermore, the roadmap is continuously updated to support efficient frontier selection and path planning during exploration. The proposed framework is implemented in ROS Noetic and Gazebo using an RGB-D sensor for simultaneous acquisition of geometric and semantic information. Experimental results in multiple simulated environments demonstrate that the proposed approach achieves exploration coverage rates between 90% and 94% while reducing exploration time and travel distance compared with conventional geometry-based exploration methods.",
     "links": {
-      "paper": "https://arxiv.org/abs/2606.22670"
-    }
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2606.22670",
+      "code": "",
+      "website": ""
+    },
+    "image": "images/publications/semantic-aware-uav-exploration.jpg"
   },
   {
     "id": "continuous-semantic-mapping",
@@ -966,17 +1088,21 @@
       "Thanh Nguyen Canh"
     ],
     "year": 2026,
-    "type": "preprint",
-    "venue": "arXiv preprint arXiv:2606.22672",
-    "status": "",
+    "type": "conference",
+    "venue": "International Conference on Control, Automation, Robotics and Vision (ICARCV)",
+    "status": "preprint",
     "topics": [
       "SLAM",
       "Semantic SLAM"
     ],
     "abstract": "Continuous semantic mapping allows autonomous robots to understand both the spatial structure and the semantic content of complex environments. However, most existing methods process the entire space, treat voxels as independent units, and do not keep the semantic labels consistent over time. This leads to high computational cost and reduced robustness in dynamic scenes. This paper proposes a semantic mapping method that brings spatial and temporal relationships into the semantic inference process. The method adjusts the inference range according to the local semantic uncertainty and fuses labels over time to improve map stability and computational efficiency. Experiments on the SemanticKITTI dataset show that the proposed method improves mapping accuracy by about 12% and reaches an mIoU of 54.92%, which is 13.18 percentage points higher than spatial-only mapping. These results show that spatiotemporal reasoning is effective for continuous semantic mapping in autonomous robotic systems.",
     "links": {
-      "paper": "https://arxiv.org/abs/2606.22672"
-    }
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2606.22672",
+      "code": "",
+      "website": ""
+    },
+    "image": "images/publications/continuous-semantic-mapping.jpg"
   },
   {
     "id": "sr-platform",
@@ -989,7 +1115,7 @@
     ],
     "year": 2026,
     "type": "preprint",
-    "venue": "arXiv preprint arXiv:2605.14700",
+    "venue": "arXiv preprint",
     "status": "",
     "topics": [
       "Agentic robotics",
@@ -998,8 +1124,12 @@
     ],
     "abstract": "Generating robot simulation environments remains a major bottleneck in simulation-based robot learning. Constructing a training-ready MuJoCo scene typically requires expertise in 3D asset modeling, MJCF specification, spatial layout, collision avoidance, and robot-model integration. We present SR-Platform, a production-deployed agentic system that converts free-form natural language descriptions into executable, physically valid MuJoCo environments. SR-Platform decomposes scene synthesis into four stages: an LLM-based orchestrator that converts user intent into a structured scene plan; an asset forge that retrieves cached assets or generates new 3D geometry through LLM-to-CadQuery synthesis; a layout architect that assigns object poses and verifies industrial constraints; and a bridge layer that assembles the final MJCF scene and merges the selected robot model. The system is deployed as a nine-service Docker stack with WebSocket progress streaming, MinIO-backed mesh storage, Qdrant-based semantic asset retrieval, Redis job state, and InfluxDB telemetry. Using 30 days of production telemetry covering 611 successful LLM calls, SR-Platform generates five-object scenes with a median end-to-end latency of approximately 50 s, while cache-accelerated scenes complete in approximately 30-40 s. The asset forge shows an 11.3% first-attempt retry rate with automatic recovery, and cached asset retrieval removes per-object LLM calls for previously generated object types. These results show that agentic scene synthesis can reduce the manual effort required to create diverse robot training environments, enabling users to produce executable MuJoCo scenes from plain English prompts in under one minute.",
     "links": {
-      "paper": "https://arxiv.org/abs/2605.14700"
-    }
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2605.14700",
+      "code": "",
+      "website": ""
+    },
+    "image": "images/publications/sr-platform.jpg"
   },
   {
     "id": "safeguard-asf",
@@ -1012,7 +1142,7 @@
     ],
     "year": 2026,
     "type": "preprint",
-    "venue": "arXiv preprint arXiv:2603.25353",
+    "venue": "arXiv preprint",
     "status": "",
     "topics": [
       "Agentic robotics",
@@ -1021,7 +1151,11 @@
     ],
     "abstract": "The rise of unmanned ``dark factories'' operating without human presence demands autonomous safety systems capable of detecting and responding to multiple hazard types. We present SafeGuard ASF (Agentic Security Fleet), a comprehensive framework deploying humanoid robots for autonomous hazard detection in industrial environments. Our system integrates multi-modal perception (RGB-D imaging), a ReAct-based agentic reasoning framework, and learned locomotion policies on the Unitree G1 humanoid platform. We address three critical hazard scenarios: fire and smoke detection, abnormal temperature monitoring in pipelines, and intruder detection in restricted zones. Our perception pipeline achieves 94.2% mAP for fire or smoke detection with 127ms latency. We train multiple locomotion policies, including dance motion tracking and velocity control, using Unitree RL Lab with PPO, demonstrating stable convergence within 80,000 training iterations. We validate our system in both simulation and real-world environments, demonstrating autonomous patrol, human detection with visual perception, and obstacle avoidance capabilities. The proposed ToolOrchestra action framework enables structured decision-making through perception, reasoning, and actuation tools.",
     "links": {
-      "paper": "https://arxiv.org/abs/2603.25353"
-    }
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2603.25353",
+      "code": "",
+      "website": ""
+    },
+    "image": "images/publications/safeguard-asf.jpg"
   }
 ]

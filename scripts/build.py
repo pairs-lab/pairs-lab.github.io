@@ -25,7 +25,7 @@ PAGES = [("", "Home"), ("research", "Research"), ("publications", "Publications"
          ("datasets", "Datasets & Resources"), ("news", "News"), ("people", "Members"), ("join", "Join Us")]
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
-HIDDEN_STATUS = {"", "accepted", "published", "preprint"}
+HIDDEN_STATUS = {"", "accepted", "published"}
 REV = hashlib.sha256((ROOT / "assets/site.css").read_bytes() + (ROOT / "assets/site.js").read_bytes()).hexdigest()[:10]
 ARROW = '<span aria-hidden="true">→</span>'
 EXT = '<span aria-hidden="true">↗</span>'
@@ -82,17 +82,36 @@ def by_type_then_order(papers):
 
 # ---------- publications ----------
 
+def in_review(p):
+    return p.get("status", "") not in HIDDEN_STATUS or p["type"] == "preprint"
+
+
 def citation(p):
-    kind, field = {"journal": ("article", "journal"), "conference": ("inproceedings", "booktitle"),
-                   "preprint": ("unpublished", "note")}[p["type"]]
-    return (f'@{kind}{{{p["id"]},\n  title = {{{p["title"]}}},\n  author = {{{" and ".join(p["authors"])}}},\n'
-            f'  {field} = {{{p["venue"]}}},\n  year = {{{p["year"]}}}\n}}')
+    head = f'title = {{{p["title"]}}},\n  author = {{{" and ".join(p["authors"])}}},\n'
+    arxiv = p["links"].get("arxiv", "")
+    if in_review(p):  # not published yet: cite the arXiv version, never claim the target venue
+        note = f'  note = {{{"Preprint" if p["type"] == "preprint" else p["status"].capitalize() + ", " + p["venue"]}}},\n'
+        eprint = f'  eprint = {{{arxiv.rsplit("/", 1)[-1]}}},\n  archivePrefix = {{arXiv}},\n' if arxiv else ""
+        return f'@misc{{{p["id"]},\n  {head}{eprint}{note}  year = {{{p["year"]}}}\n}}'
+    kind, field = {"journal": ("article", "journal"), "conference": ("inproceedings", "booktitle")}[p["type"]]
+    doi = p["links"].get("paper", "")
+    doi_line = f'  doi = {{{doi.split("doi.org/", 1)[1]}}},\n' if "doi.org/" in doi else ""
+    return f'@{kind}{{{p["id"]},\n  {head}  {field} = {{{p["venue"]}}},\n{doi_line}  year = {{{p["year"]}}}\n}}'
+
+
+LINK_SLOTS = [("paper", "Paper"), ("arxiv", "arXiv"), ("code", "Code"), ("website", "Project")]
 
 
 def links(p):
-    labels = {"website": "Project", "paper": "Paper", "code": "Code"}
-    return "".join(f'<a class="chip-link" href="{esc(u)}">{labels.get(k, k.title())} {EXT}</a>'
-                   for k, u in p["links"].items() if u)
+    """Always four slots in the same order; a missing link shows as a greyed-out placeholder."""
+    out = ""
+    for key, label in LINK_SLOTS:
+        url = p["links"].get(key, "")
+        if url:
+            out += f'<a class="chip-link" href="{esc(url)}">{label} {EXT}</a>'
+        else:
+            out += f'<span class="chip-link is-empty" aria-disabled="true" title="Not available yet">{label}</span>'
+    return out
 
 
 def media(p, prefix):
@@ -122,7 +141,7 @@ def paper_card(p, prefix, compact=False):
         extra += f'<details><summary>BibTeX</summary><pre><code>{esc(citation(p))}</code></pre></details>'
     pic = media(p, prefix)
     search = esc(" ".join([p["title"], *p["authors"], p["venue"], str(p["year"]), *p["topics"]]).lower())
-    return (f'<article class="paper{"" if pic else " no-media"}" id="{esc(p["id"])}" data-type="{p["type"]}" '
+    return (f'<article class="paper{"" if pic else " no-media"}" id="{esc(p["id"])}" data-type="{p["type"]}" data-review="{1 if in_review(p) else 0}" '
             f'data-year="{p["year"]}" data-topics="{esc("|".join(p["topics"]))}" data-search="{search}">'
             + (f'<div class="paper-media">{pic}</div>' if pic else "")
             + f'<div class="paper-body"><p class="paper-meta"><span class="badge badge-{p["type"]}">{TYPE_LABEL[p["type"]]}</span>'
@@ -292,7 +311,7 @@ def topic_card(f, prefix):
         pic = f'<img src="{esc(prefix + p["image"])}" alt="" loading="lazy" decoding="async">'
     else:
         pic = '<span class="topic-placeholder" aria-hidden="true"></span>'
-    url = p["links"].get("website") or p["links"].get("paper") or p["links"].get("code") or f'{prefix}publications/#{p["id"]}'
+    url = p["links"].get("website") or p["links"].get("paper") or p["links"].get("arxiv") or p["links"].get("code") or f'{prefix}publications/#{p["id"]}'
     return (f'<article class="topic-card"><div class="topic-media{" is-figure" if not video and not p.get("video") else ""}">{pic}'
             f'<span class="topic-label">{esc(f["label"])}</span></div><div class="topic-copy"><p class="topic-attribution">{esc(f["attribution"])}</p>'
             f'<h3>{esc(f["title"])}</h3><p>{esc(f["text"])}</p><a class="topic-link" href="{esc(url)}">Explore {esc(f["cta"])} {EXT}</a></div></article>')
@@ -335,7 +354,7 @@ def publications():
     buttons = "".join(f'<button type="button" class="topic" data-topic="{esc(t)}" aria-pressed="false">{esc(t)}</button>' for t in topics)
     toolbar = (f'<form class="filters" id="paper-filters" role="search" hidden>'
                f'<label class="sr-only" for="paper-q">Search publications</label><input id="paper-q" type="search" placeholder="Search title, author, venue or topic…" autocomplete="off">'
-               f'<label class="sr-only" for="paper-type">Type</label><select id="paper-type"><option value="all">All types</option><option value="journal">Journal articles</option><option value="conference">Conference papers</option><option value="preprint">Preprints</option></select>'
+               f'<label class="sr-only" for="paper-type">Type</label><select id="paper-type"><option value="all">All types</option><option value="journal">Journal articles</option><option value="conference">Conference papers</option><option value="review">Under review &amp; preprints</option></select>'
                f'<label class="sr-only" for="paper-year">Year</label><select id="paper-year"><option value="all">All years</option>{"".join(f"<option>{y}</option>" for y in years)}</select>'
                f'<div class="topic-row">{buttons}</div></form>'
                f'<p class="results" id="paper-count" role="status">{len(PAPERS)} publications</p>')
