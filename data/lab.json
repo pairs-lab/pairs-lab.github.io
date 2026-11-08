@@ -32,7 +32,10 @@
         "Semantic SLAM",
         "Active SLAM",
         "Gaussian splatting"
-      ]
+      ],
+      "video": "images/hero/semantic-slam.mp4",
+      "poster": "images/hero/semantic-slam.jpg",
+      "hero_text": "We build maps that carry meaning and uncertainty, so robots can localize, reason about objects and explore on their own over long missions."
     },
     {
       "id": "perception-navigation",
@@ -46,7 +49,10 @@
         "Sensor fusion",
         "UAVs",
         "Image enhancement"
-      ]
+      ],
+      "video": "images/hero/perception-navigation.mp4",
+      "poster": "images/hero/perception-navigation.jpg",
+      "hero_text": "We make perception hold up under poor light, clutter and sensor noise, and connect it to safe navigation for UAVs and mobile robots."
     },
     {
       "id": "robot-learning",
@@ -60,7 +66,10 @@
         "Reinforcement learning",
         "Humanoid robotics",
         "Manipulation"
-      ]
+      ],
+      "video": "images/hero/robot-learning.mp4",
+      "poster": "images/hero/robot-learning.jpg",
+      "hero_text": "We teach robots from human demonstrations and interaction, and build humanoid and manipulation systems that work naturally with people."
     },
     {
       "id": "agentic-industrial",
@@ -81,7 +90,10 @@
         "Machine vision",
         "Robot calibration",
         "Defect detection"
-      ]
+      ],
+      "video": "images/hero/agentic-industrial.mp4",
+      "poster": "images/hero/agentic-industrial.jpg",
+      "hero_text": "We build robots that plan and coordinate tasks as agents with humans and other robots, and vision systems for industrial inspection."
     }
   ],
   "research_interests": "We are also interested in lifelong SLAM, robot dynamics learning, model-based reinforcement learning and learning from demonstration. Modeling uncertainty in map representations and robot dynamics is central to our interests in safe, active planning and control.",

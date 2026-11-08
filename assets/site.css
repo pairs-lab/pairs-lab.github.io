@@ -56,28 +56,35 @@ button { font: inherit; }
 .nav-toggle { display: none; width: 42px; height: 42px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; }
 .nav-toggle span { display: block; height: 2px; margin: 4px 0; background: var(--ink); }
 
-/* hero */
-.hero { position: relative; isolation: isolate; display: flex; align-items: flex-end; overflow: hidden; min-height: min(78vh, 680px); color: #fff; background: linear-gradient(135deg, #061a36, #0b55ad 70%, #00b4cc); }
-.hero-bg { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
-.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgba(6, 26, 54, 0.88) 0%, rgba(6, 26, 54, 0.55) 45%, rgba(6, 26, 54, 0.1) 100%); }
-.hero-inner { padding: 120px 0 72px; }
-.hero h1 { max-width: 16ch; color: #fff; }
-.hero-lead { max-width: 42ch; font-size: clamp(1.08rem, 1.8vw, 1.3rem); color: rgba(255, 255, 255, 0.92); }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-.button { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; color: #fff; background: var(--accent); font-weight: 650; text-decoration: none; transition: background 0.2s; }
+/* hero slider: campus slide + one video slide per research direction */
+.hero-slider { position: relative; overflow: hidden; height: clamp(480px, 74vh, 720px); color: #fff; background: linear-gradient(135deg, #061a36, #0b55ad 70%, #00b4cc); }
+.hero-slides, .hero-slide { position: absolute; inset: 0; }
+.hero-slide { display: flex; align-items: center; justify-content: center; isolation: isolate; padding: 0 72px; text-align: center; opacity: 0; visibility: hidden; transition: opacity 0.8s ease, visibility 0.8s; }
+.hero-slide.is-active { opacity: 1; visibility: visible; }
+html:not(.js) .hero-slide:first-child { opacity: 1; visibility: visible; }
+.hero-media { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+.hero-slide::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(6, 26, 54, 0.55), rgba(6, 26, 54, 0.62) 55%, rgba(6, 26, 54, 0.78)); }
+.hero-content { max-width: 920px; }
+.hero-slide h1, .hero-slide h2 { margin: 0 0 16px; color: #fff; font-size: clamp(2rem, 4.6vw, 3.6rem); font-weight: 800; letter-spacing: -0.02em; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35); }
+.hero-lead { max-width: 60ch; margin: 0 auto; color: rgba(255, 255, 255, 0.92); font-size: clamp(1rem, 1.6vw, 1.2rem); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35); }
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
+.hero-arrow { position: absolute; top: 50%; z-index: 5; display: grid; place-items: center; width: 48px; height: 48px; margin-top: -24px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 2rem; line-height: 1; cursor: pointer; transition: background 0.2s; }
+.hero-arrow:hover { background: rgba(255, 255, 255, 0.28); }
+.hero-prev { left: 16px; }
+.hero-next { right: 16px; }
+.hero-dots { position: absolute; bottom: 22px; left: 0; right: 0; z-index: 5; display: flex; justify-content: center; gap: 10px; }
+.hero-dots button { width: 10px; height: 10px; padding: 0; border: 1.5px solid rgba(255, 255, 255, 0.85); border-radius: 50%; background: transparent; cursor: pointer; }
+.hero-dots button[aria-current="true"] { width: 28px; border-radius: 6px; background: #fff; }
+html:not(.js) .hero-arrow, html:not(.js) .hero-dots { display: none; }
+.button { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 6px; color: #fff; background: var(--accent); font-weight: 650; text-decoration: none; transition: background 0.2s; }
 .button:hover { color: #fff; background: var(--accent-strong); }
 .button-ghost { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.85); }
 .button-ghost:hover { background: rgba(255, 255, 255, 0.14); }
 .button-light { color: var(--accent-strong); background: #fff; }
 .button-light:hover { color: var(--accent-strong); background: var(--cyan-soft); }
 
-/* intro + stats */
-.intro-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items: center; }
-.intro-text { margin: 0; font-size: 1.2rem; color: var(--ink); }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 0; }
-.stats div { padding: 18px 12px; border-top: 3px solid var(--cyan); background: var(--bg-alt); text-align: center; }
-.stats dt { color: var(--accent-strong); font-size: 2rem; font-weight: 800; line-height: 1; }
-.stats dd { margin: 6px 0 0; color: var(--muted); font-size: 0.86rem; }
+/* intro */
+.intro-text { max-width: 72ch; margin: 0 auto; color: var(--ink); font-size: 1.2rem; text-align: center; }
 
 /* section heads */
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
@@ -263,7 +270,7 @@ address { margin-bottom: 16px; font-style: normal; }
   :root { --shell: calc(100vw - 32px); --header-h: 64px; }
   .brand img { height: 40px; }
   .section { padding: 48px 0; }
-  .intro-grid, .two-col, .direction, .footer-grid, .profile-grid { grid-template-columns: 1fr; gap: 28px; }
+  .two-col, .direction, .footer-grid, .profile-grid { grid-template-columns: 1fr; gap: 28px; }
   .profile-photo { max-width: 240px; }
   .direction:nth-of-type(even) .direction-figure { order: 0; }
   .paper { grid-template-columns: 1fr; }
@@ -278,10 +285,10 @@ address { margin-bottom: 16px; font-style: normal; }
 @media (max-width: 540px) {
   body { font-size: 16px; }
   .direction-grid { grid-template-columns: 1fr; }
-  .stats dt { font-size: 1.6rem; }
   .news-item { grid-template-columns: 1fr; gap: 2px; }
   .section-head { flex-wrap: wrap; }
-  .hero-inner { padding: 96px 0 48px; }
+  .hero-slide { padding: 0 20px 40px; }
+  .hero-arrow { display: none; }
   .member-tabs { margin: 24px 0 32px; }
   .member-tabs button { padding: 12px 6px; font-size: 0.86rem; }
   .js .carousel { height: 340px; }

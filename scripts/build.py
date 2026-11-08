@@ -189,26 +189,45 @@ def news_items(items, prefix):
                    f'<p>{relink(n["html"], prefix)}</p></li>' for n in items)
 
 
+def hero_slider():
+    """Home hero like a lab landing page: campus slide, then one video slide per research direction."""
+    aff = LAB["affiliation"]
+    total = 1 + len(LAB["directions"])
+    campus = (f'<img class="hero-media" src="{esc(LAB["hero_image"])}" alt="" fetchpriority="high">'
+              if (ROOT / LAB["hero_image"]).is_file() else "")
+    slides = [f'<article class="hero-slide is-active" data-slide aria-roledescription="slide" aria-label="1 of {total}">{campus}'
+              f'<div class="hero-content"><p class="kicker kicker-light">{esc(LAB["short_name"])} · {esc(aff["institution_short"])}</p>'
+              f'<h1>{esc(LAB["name"])}</h1><p class="hero-lead">{esc(LAB["tagline"])}</p>'
+              f'<div class="hero-actions"><a class="button" href="research/">Research</a><a class="button button-ghost" href="join/">Join the Lab</a></div></div></article>']
+    for i, d in enumerate(LAB["directions"], 1):
+        media = ""
+        if d.get("video"):
+            media = (f'<video class="hero-media" muted loop playsinline preload="none" poster="{esc(d.get("poster", ""))}" aria-hidden="true">'
+                     f'<source src="{esc(d["video"])}" type="video/mp4"></video>')
+        slides.append(f'<article class="hero-slide" data-slide aria-roledescription="slide" aria-label="{i + 1} of {total}">{media}'
+                      f'<div class="hero-content"><p class="kicker kicker-light">Research direction 0{i}</p><h2>{esc(d["title"])}</h2>'
+                      f'<p class="hero-lead">{esc(d.get("hero_text", d["summary"]))}</p>'
+                      f'<div class="hero-actions"><a class="button" href="research/#{d["id"]}">Explore direction</a>'
+                      f'<a class="button button-ghost" href="research/">Research overview</a></div></div></article>')
+    dots = "".join(f'<button type="button" data-hero-dot aria-label="Show slide {i + 1}"></button>' for i in range(total))
+    return (f'<section class="hero-slider" data-hero aria-roledescription="carousel" aria-label="{esc(LAB["short_name"])} highlights">'
+            f'<div class="hero-slides">{"".join(slides)}</div>'
+            f'<button class="hero-arrow hero-prev" type="button" data-hero-prev aria-label="Previous slide">‹</button>'
+            f'<button class="hero-arrow hero-next" type="button" data-hero-next aria-label="Next slide">›</button>'
+            f'<div class="hero-dots">{dots}</div></section>')
+
+
 def home():
     aff = LAB["affiliation"]
-    hero_img = f'<img class="hero-bg" src="{esc(LAB["hero_image"])}" alt="" fetchpriority="high">' if (ROOT / LAB["hero_image"]).is_file() else ""
     by_id = {p["id"]: p for p in PAPERS}
-    count = lambda t: sum(p["type"] == t for p in PAPERS)
-    current = sum(len(g["members"]) for g in LAB["people"] if g["group"] != "Alumni")
     directions = "".join(
         f'<a class="direction-card" href="research/#{d["id"]}"><div class="direction-media"><img src="{esc(d["image"])}" alt="" decoding="async"></div>'
         f'<div class="direction-body"><span class="direction-num">0{i}</span><h3>{esc(d["title"])}</h3><p>{esc(d["summary"])}</p>'
         f'<span class="text-link">Explore direction {ARROW}</span></div></a>'
         for i, d in enumerate(LAB["directions"], 1))
-    body = f'''<section class="hero">{hero_img}<div class="shell hero-inner">
-<p class="kicker kicker-light">{esc(LAB["short_name"])} · {esc(aff["institution_short"])}</p>
-<h1>{esc(LAB["name"])}</h1>
-<p class="hero-lead">{esc(LAB["tagline"])}</p>
-<div class="hero-actions"><a class="button" href="research/">Our research</a><a class="button button-ghost" href="join/">Join the lab</a></div>
-</div></section>
-<section class="section intro"><div class="shell intro-grid">
+    body = hero_slider() + f'''
+<section class="section intro"><div class="shell">
 <p class="intro-text">{esc(LAB["short_name"])} is based in the <a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a> at the <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a>, Hanoi. We study how robots perceive, map and act in the real world: active and semantic SLAM, robust perception and autonomous navigation, robot learning and human–robot interaction, and agentic robotics and industrial vision.</p>
-<dl class="stats"><div><dt>{count("journal")}</dt><dd>journal articles</dd></div><div><dt>{count("conference")}</dt><dd>conference papers</dd></div><div><dt>{current}</dt><dd>current members</dd></div></dl>
 </div></section>
 <section class="section section-alt"><div class="shell">{section_head("Research directions", "research/", "Research overview")}<div class="direction-grid">{directions}</div></div></section>
 <section class="section"><div class="shell two-col">

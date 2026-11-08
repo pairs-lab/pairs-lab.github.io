@@ -15,6 +15,51 @@
     });
   }
 
+  // ---- home hero slider ----
+  var hero = document.querySelector("[data-hero]");
+  if (hero) {
+    var slides = $$("[data-slide]", hero);
+    var heroDots = $$("[data-hero-dot]", hero);
+    var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var current = 0, timer = null, paused = false;
+    var show = function (i) {
+      current = (i + slides.length) % slides.length;
+      slides.forEach(function (s, k) {
+        var on = k === current;
+        s.classList.toggle("is-active", on);
+        s.setAttribute("aria-hidden", String(!on));
+        $$("a, button", s).forEach(function (el) { el.tabIndex = on ? 0 : -1; });
+        var v = s.querySelector("video");
+        if (!v) return;
+        if (on && !still) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        else v.pause();
+      });
+      heroDots.forEach(function (d, k) { d.setAttribute("aria-current", String(k === current)); });
+    };
+    var schedule = function () {
+      clearTimeout(timer);
+      if (!still && !paused) timer = setTimeout(function () { show(current + 1); schedule(); }, 8000);
+    };
+    hero.querySelector("[data-hero-prev]").addEventListener("click", function () { show(current - 1); schedule(); });
+    hero.querySelector("[data-hero-next]").addEventListener("click", function () { show(current + 1); schedule(); });
+    heroDots.forEach(function (d, k) { d.addEventListener("click", function () { show(k); schedule(); }); });
+    hero.addEventListener("mouseenter", function () { paused = true; clearTimeout(timer); });
+    hero.addEventListener("mouseleave", function () { paused = false; schedule(); });
+    hero.addEventListener("focusin", function () { paused = true; clearTimeout(timer); });
+    hero.addEventListener("focusout", function () { paused = false; schedule(); });
+    var sx = null;
+    hero.addEventListener("pointerdown", function (e) { sx = e.clientX; });
+    hero.addEventListener("pointerup", function (e) {
+      if (sx === null) return;
+      var dx = e.clientX - sx;
+      sx = null;
+      if (Math.abs(dx) > 50) { show(current + (dx < 0 ? 1 : -1)); schedule(); }
+    });
+    document.addEventListener("visibilitychange", function () { if (document.hidden) clearTimeout(timer); else schedule(); });
+    show(0);
+    schedule();
+  }
+
   // ---- publication filters ----
   var form = document.getElementById("paper-filters");
   if (form) {
