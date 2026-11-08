@@ -15,6 +15,8 @@ import unicodedata
 from collections import Counter
 from pathlib import Path
 
+import make_direction_figures
+
 ROOT = Path(__file__).resolve().parents[1]
 LAB = json.loads((ROOT / "data/lab.json").read_text(encoding="utf-8"))
 PAPERS = json.loads((ROOT / "data/publications.json").read_text(encoding="utf-8"))
@@ -238,6 +240,12 @@ def home():
     render("", "Home", LAB["tagline"], body)
 
 
+def map_alt(d):
+    m = d["map"]
+    return (f'{d["title"]} research map. Core goal: {m["core"]}. Sub-problems: '
+            + "; ".join(f'{n["label"]}: {n["question"]}' for n in m["nodes"]) + ". Open questions: " + "; ".join(m["open"]) + ".")
+
+
 def topic_card(f, prefix):
     """One 'selected research' card: looping demo or figure, venue, title, two sentences, link."""
     p = next(x for x in PAPERS if x["id"] == f["paper"])
@@ -274,7 +282,9 @@ def research():
         programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ All directions</a>'
                      f'<p class="program-kicker"><span>0{i}</span>{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>'
                      f'<p class="program-copy">{esc(d["description"])}</p>'
-                     f'<div class="work-heading"><h3>Featured projects and demos</h3>'
+                     + (f'<figure class="direction-map"><img src="../images/directions/{d["id"]}.svg" alt="{esc(map_alt(d))}" width="1200" height="900" loading="lazy" decoding="async">'
+                        f'<figcaption>How the sub-problems in this direction connect, illustrated with results from our papers.</figcaption></figure>' if d.get("map") else "")
+                     + f'<div class="work-heading"><h3>Featured projects and demos</h3>'
                      f'<p>Published work and papers under review are marked; each card links its project, paper or code.</p></div>'
                      f'<div class="topic-grid">{cards}</div>'
                      f'<a class="text-link" href="../publications/?topic={esc(d["topics"][0])}">All related publications {ARROW}</a></article>')
@@ -322,16 +332,12 @@ def projects():
 def datasets():
     groups = {}
     for r in LAB.get("robots", []):
-        groups.setdefault(r.get("group", "Robots"), []).append(r)
+        groups.setdefault(r.get("group", "Robots"), []).append(
+            {**r, "role": r["category"], "slug": slugify(r["name"]), "bio_text": r["description"], "group": r.get("group", "Robots")})
     machines = ""
     for name, items in groups.items():
-        cards = "".join(
-            f'<article class="hw-card"><div class="hw-media{" is-contain" if r.get("fit") == "contain" else ""}">'
-            f'<img src="../{esc(r["image"])}" alt="{esc(r["name"])}" loading="lazy" decoding="async"></div>'
-            f'<div class="hw-body"><p class="hw-category">{esc(r["category"])}</p><h3>{esc(r["name"])}</h3><p>{esc(r["description"])}</p>'
-            + (f'<a class="text-link" href="{esc(r["url"])}">Learn more {EXT}</a>' if r.get("url") else "") + '</div></article>'
-            for r in items)
-        machines += f'<div class="hw-group"><h3 class="hw-group-title">{esc(name)} <span>{len(items)}</span></h3><div class="hw-grid">{cards}</div></div>'
+        machines += (f'<div class="hw-group"><h3 class="hw-group-title">{esc(name)} <span>{len(items)}</span></h3>'
+                     f'{carousel(items, LAB["short_name"] + " " + name.lower(), "../", profiles=False)}</div>')
     if not machines:
         machines = '<p class="notice">Our robot platforms, sensors and computing infrastructure will be listed here soon.</p>'
     body = (page_head("Datasets & Resources", "Research datasets, robot platforms and computing hardware of the lab.", "Open research")
@@ -379,7 +385,7 @@ def member_records():
 
 def carousel(records, label, prefix, profiles=True):
     cards = "".join(f'<button class="carousel-card" type="button" data-card aria-label="Show {esc(r["name"])}">'
-                    f'<span class="carousel-photo"><img src="{prefix}{esc(r["image"])}" alt="" loading="{"eager" if i < 6 else "lazy"}" decoding="async"></span>'
+                    f'<span class="carousel-photo{" is-contain" if r.get("fit") == "contain" else ""}"><img src="{prefix}{esc(r["image"])}" alt="" loading="{"eager" if i < 6 else "lazy"}" decoding="async"></span>'
                     f'<span class="carousel-name">{esc(r["name"])}</span></button>' for i, r in enumerate(records))
     dots = "".join(f'<button type="button" data-dot aria-label="Show {esc(r["name"])}"></button>' for r in records)
     details = ""
@@ -481,6 +487,7 @@ def main():
         for d in profiles.iterdir():
             if d.is_dir() and d.name not in keep:
                 shutil.rmtree(d)
+    make_direction_figures.main()
     for build in (home, research, publications, projects, datasets, news, people, join):
         build()
     print(f"Built {len(PAGES)} pages and {sum(len(g['members']) for g in LAB['people'])} member profiles from {len(PAPERS)} publications and {len(NEWS)} news items.")

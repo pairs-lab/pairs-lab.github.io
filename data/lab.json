@@ -70,7 +70,55 @@
           "cta": "USGLoc",
           "text": "USGLoc localizes a camera in a semantic 3D Gaussian Splatting map and reports how much to trust the pose, so the estimate can be fused into a Bayesian state estimator."
         }
-      ]
+      ],
+      "map": {
+        "core": "Maps that carry meaning and uncertainty",
+        "nodes": [
+          {
+            "label": "Semantic data association",
+            "question": "Which observation belongs to which object?",
+            "thumb": "bpda",
+            "papers": [
+              "BPDA-GMM",
+              "Adaptive-prior SLAM"
+            ]
+          },
+          {
+            "label": "Uncertainty-aware maps",
+            "question": "How far can the robot trust its pose and map?",
+            "thumb": "usgloc",
+            "papers": [
+              "USGLoc",
+              "UC-SLAM",
+              "SR-SLAM"
+            ]
+          },
+          {
+            "label": "Lifelong mapping",
+            "question": "Which objects stay, and which have moved?",
+            "thumb": "hiper",
+            "papers": [
+              "HiPer",
+              "UAGS"
+            ]
+          },
+          {
+            "label": "Active exploration",
+            "question": "Where should the robot look next?",
+            "thumb": "s3m",
+            "papers": [
+              "Semantic exploration",
+              "S3M",
+              "HESFM"
+            ]
+          }
+        ],
+        "open": [
+          "Calibrated beliefs over geometry and meaning together",
+          "Maps that stay correct over weeks, not minutes",
+          "Choosing views that reduce semantic uncertainty"
+        ]
+      }
     },
     {
       "id": "perception-navigation",
@@ -122,7 +170,53 @@
           "cta": "MulDF",
           "text": "Two depth cameras and a LiDAR are fused into one view around the robot, and a dynamic-window planner uses it to avoid obstacles in real corridors."
         }
-      ]
+      ],
+      "map": {
+        "core": "Perception that holds up, decisions that stay safe",
+        "nodes": [
+          {
+            "label": "Robust visual front-ends",
+            "question": "Can tracking survive poor light and low texture?",
+            "thumb": "iraf",
+            "papers": [
+              "IRAF-SLAM",
+              "IL-SLAM",
+              "Underwater"
+            ]
+          },
+          {
+            "label": "Multisensor fusion",
+            "question": "How should cameras, LiDAR, IMU and wheels be combined?",
+            "thumb": "muldf",
+            "papers": [
+              "MulDF",
+              "LiDAR-IMU-encoder"
+            ]
+          },
+          {
+            "label": "Localization-aware planning",
+            "question": "Can the robot plan where it can still localize?",
+            "thumb": "reliable-uav",
+            "papers": [
+              "Reliable UAV localization"
+            ]
+          },
+          {
+            "label": "Social navigation",
+            "question": "How can a robot move safely and politely around people?",
+            "thumb": "social-nav",
+            "papers": [
+              "SGan-TEB",
+              "Efficient HRI"
+            ]
+          }
+        ],
+        "open": [
+          "Failing gracefully when sensors degrade",
+          "Planning with perception uncertainty, not around it",
+          "Navigation that people find predictable"
+        ]
+      }
     },
     {
       "id": "robot-learning",
@@ -178,7 +272,53 @@
           "cta": "the project",
           "text": "Design, fabrication and structural optimization of a mobile dual-arm service robot built for navigation, manipulation and interaction with people."
         }
-      ]
+      ],
+      "map": {
+        "core": "Robots that learn from people and work with them",
+        "nodes": [
+          {
+            "label": "Learning from human video",
+            "question": "How does a human demo become robot actions?",
+            "thumb": "video2command",
+            "papers": [
+              "Video2Command",
+              "Human-to-Robot"
+            ]
+          },
+          {
+            "label": "Reinforcement learning",
+            "question": "How to keep policies stable in hybrid action spaces?",
+            "thumb": "rl",
+            "papers": [
+              "Hybrid TD3",
+              "DRL signal control"
+            ]
+          },
+          {
+            "label": "Manipulation in clutter",
+            "question": "Grasp the target, remove a blocker, or wait?",
+            "thumb": "cpor",
+            "papers": [
+              "CPOR-Grasp"
+            ]
+          },
+          {
+            "label": "Natural interaction",
+            "question": "Can gestures and speech stay in sync?",
+            "thumb": "dual-arm",
+            "papers": [
+              "WaveSync",
+              "LLM-based HRI",
+              "Dual-arm robot"
+            ]
+          }
+        ],
+        "open": [
+          "Generalizing from a few demos to new objects",
+          "Knowing when the robot is unsure, and asking",
+          "Interaction that adapts to each person"
+        ]
+      }
     },
     {
       "id": "agentic-industrial",
@@ -240,7 +380,53 @@
           "cta": "M-Calib",
           "text": "Object detection, post-processing and 3D calibration locate flat parts from a single 2D image, for low-cost industrial robot cells."
         }
-      ]
+      ],
+      "map": {
+        "core": "Agents that plan, coordinate and inspect",
+        "nodes": [
+          {
+            "label": "LLM task planning",
+            "question": "How does a goal become a graph of subtasks?",
+            "thumb": "osdag-sim",
+            "papers": [
+              "OSDAG",
+              "SR-Platform"
+            ]
+          },
+          {
+            "label": "Human–robot coordination",
+            "question": "Who does what, and when?",
+            "thumb": "osdag-real",
+            "papers": [
+              "OSDAG"
+            ]
+          },
+          {
+            "label": "Industrial safety agents",
+            "question": "Can robots find hazards with no people on site?",
+            "thumb": null,
+            "icon": "shield",
+            "papers": [
+              "SafeGuard ASF"
+            ]
+          },
+          {
+            "label": "Industrial vision",
+            "question": "Can low-cost cameras find tiny defects and locate parts?",
+            "thumb": "esrpcb",
+            "papers": [
+              "ESRPCB",
+              "M-Calib",
+              "E2DSR"
+            ]
+          }
+        ],
+        "open": [
+          "Agents that recover when a plan fails",
+          "Reliable vision on low-cost hardware",
+          "From simulation to the factory floor"
+        ]
+      }
     }
   ],
   "research_interests": "We are also interested in lifelong SLAM, robot dynamics learning, model-based reinforcement learning and learning from demonstration. Modeling uncertainty in map representations and robot dynamics is central to our interests in safe, active planning and control.",

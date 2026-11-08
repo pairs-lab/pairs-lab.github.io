@@ -31,6 +31,9 @@ Commit the generated HTML together with the data change.
 - **Robots & infrastructure:** add entries to `robots` in `data/lab.json` with `name`, `category`,
   `description`, `image` and optional `url`. They appear on `datasets/#resources`.
 - **Publication media:** `image`, or `video` plus `poster`, paths relative to the site root.
+- **Research maps:** edit `map` (core goal, four sub-problem nodes, open questions) of each direction in
+  `data/lab.json`; node thumbnails live in `images/directions/thumbs/`. The build redraws
+  `images/directions/<id>.svg` (`scripts/make_direction_figures.py`).
 
 ## Deploy
 
