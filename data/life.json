@@ -1,0 +1,14 @@
+[
+  {
+    "id": "party-2026",
+    "title": "Party 2026",
+    "date": "2026",
+    "place": "Hanoi, Vietnam",
+    "text": "The lab got together for dinner at a bia hơi restaurant in Hanoi.",
+    "photos": [
+      {"src": "images/life/party-2026-1.jpg", "alt": "PAIRS Lab members around a long dinner table in a yellow-walled bia hơi restaurant, several making V signs at the camera."},
+      {"src": "images/life/party-2026-2.jpg", "alt": "The lab dinner from a slightly different angle, members raising their glasses."},
+      {"src": "images/life/party-2026-3.jpg", "alt": "A third group photo of the lab dinner, members smiling at the camera."}
+    ]
+  }
+]

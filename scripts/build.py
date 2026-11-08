@@ -20,9 +20,10 @@ import make_direction_figures
 ROOT = Path(__file__).resolve().parents[1]
 LAB = json.loads((ROOT / "data/lab.json").read_text(encoding="utf-8"))
 PAPERS = json.loads((ROOT / "data/publications.json").read_text(encoding="utf-8"))
+LIFE = json.loads((ROOT / "data/life.json").read_text(encoding="utf-8"))
 NEWS = sorted(json.loads((ROOT / "data/news.json").read_text(encoding="utf-8")), key=lambda n: n["date"], reverse=True)
 PAGES = [("", "Home"), ("research", "Research"), ("publications", "Publications"), ("projects", "Projects"),
-         ("datasets", "Datasets & Resources"), ("news", "News"), ("people", "Members"), ("join", "Join Us")]
+         ("datasets", "Datasets & Resources"), ("news", "News"), ("life", "Lab Life"), ("people", "Members"), ("join", "Join Us")]
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
 HIDDEN_STATUS = {"", "accepted", "published"}
@@ -411,6 +412,19 @@ def datasets():
     render("datasets", "Datasets & Resources", "Research datasets, robot platforms and infrastructure of PAIRS Lab.", body)
 
 
+def life():
+    """Lab Life: one section per event (data/life.json), newest first, with a photo gallery."""
+    events = ""
+    for e in LIFE:
+        photos = "".join(f'<a class="gallery-item" href="../{esc(ph["src"])}"><img src="../{esc(fresh(ph["src"]))}" alt="{esc(ph["alt"])}" width="1600" height="1200" loading="lazy" decoding="async"></a>'
+                         for ph in e["photos"])
+        events += (f'<section class="life-event" id="{esc(e["id"])}"><div class="life-head"><p class="kicker">{esc(e["date"])} · {esc(e["place"])}</p>'
+                   f'<h2>{esc(e["title"])}</h2><p>{esc(e["text"])}</p></div><div class="gallery">{photos}</div></section>')
+    body = (page_head("Lab Life", "Dinners, celebrations and trips: the people of PAIRS Lab outside the lab.", "Beyond research")
+            + f'<div class="shell section">{events}</div>')
+    render("life", "Lab Life", "Gatherings and events of PAIRS Lab.", body)
+
+
 def news():
     years = sorted({n["date"][:4] for n in NEWS}, reverse=True)
     body = page_head("News", "Papers, awards and other updates from the lab.", "Lab updates") + '<div class="shell section">' + "".join(
@@ -554,7 +568,7 @@ def main():
             if d.is_dir() and d.name not in keep:
                 shutil.rmtree(d)
     make_direction_figures.main()
-    for build in (home, research, publications, projects, datasets, news, people, join):
+    for build in (home, research, publications, projects, datasets, news, life, people, join):
         build()
     print(f"Built {len(PAGES)} pages and {sum(len(g['members']) for g in LAB['people'])} member profiles from {len(PAPERS)} publications and {len(NEWS)} news items.")
 
