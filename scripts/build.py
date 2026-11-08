@@ -47,7 +47,7 @@ def name_key(name):
     return tuple(sorted(slugify(re.sub(r"([a-z])([A-Z])", r"\1 \2", name)).split("-")))
 
 
-MEMBERS = {name_key(m["name"]) for g in LAB["people"] for m in g["members"]}
+MEMBERS = {name_key(n) for g in LAB["people"] for m in g["members"] for n in [m["name"], *m.get("aliases", [])]}
 
 
 def route(slug, prefix):
@@ -238,19 +238,54 @@ def home():
     render("", "Home", LAB["tagline"], body)
 
 
+def topic_card(f, prefix):
+    """One 'selected research' card: looping demo or figure, venue, title, two sentences, link."""
+    p = next(x for x in PAPERS if x["id"] == f["paper"])
+    video = f.get("video") or (p.get("video") if p.get("poster") else "")
+    poster = f.get("poster") or p.get("poster", "")
+    if video:
+        src = video if video.startswith("http") else prefix + video
+        poster_attr = ' poster="' + esc(prefix + poster) + '"' if poster else ""
+        pic = (f'<video data-loop muted loop playsinline preload="none"{poster_attr} aria-hidden="true">'
+               f'<source src="{esc(src)}" type="video/mp4"></video>')
+    elif p.get("video"):
+        pic = (f'<video data-loop muted loop playsinline preload="metadata" aria-hidden="true">'
+               f'<source src="{esc(p["video"])}" type="video/mp4"></video>')
+    elif p.get("image"):
+        pic = f'<img src="{esc(prefix + p["image"])}" alt="" loading="lazy" decoding="async">'
+    else:
+        pic = '<span class="topic-placeholder" aria-hidden="true"></span>'
+    url = p["links"].get("website") or p["links"].get("paper") or p["links"].get("code") or f'{prefix}publications/#{p["id"]}'
+    return (f'<article class="topic-card"><div class="topic-media{" is-figure" if not video and not p.get("video") else ""}">{pic}'
+            f'<span class="topic-label">{esc(f["label"])}</span></div><div class="topic-copy"><p class="topic-attribution">{esc(f["attribution"])}</p>'
+            f'<h3>{esc(f["title"])}</h3><p>{esc(f["text"])}</p><a class="topic-link" href="{esc(url)}">Explore {esc(f["cta"])} {EXT}</a></div></article>')
+
+
 def research():
-    blocks = ""
+    focus = LAB["focus"]
+    choices = "".join(
+        f'<a class="research-choice" href="#{d["id"]}"><video data-loop muted loop playsinline preload="none" poster="../{esc(d["poster"])}" aria-hidden="true">'
+        f'<source src="../{esc(d["video"])}" type="video/mp4"></video><span class="choice-num">0{i}</span>'
+        f'<span class="choice-title">{esc(d["title"])}</span><span class="choice-arrow" aria-hidden="true">↘</span></a>'
+        for i, d in enumerate(LAB["directions"], 1))
+    programs = ""
     for i, d in enumerate(LAB["directions"], 1):
-        related = [p for p in sorted(PAPERS, key=lambda p: (-p["year"], TYPE_ORDER[p["type"]])) if set(p["topics"]) & set(d["topics"])]
-        work = "".join(f'<li><a href="../publications/#{esc(p["id"])}">{esc(p["title"])}</a><span>{esc(p["venue"])} · {p["year"]}</span></li>' for p in related[:6])
-        tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in d.get("tags", d["topics"]))
-        blocks += (f'<section class="direction" id="{d["id"]}"><div class="direction-text"><span class="direction-num">0{i}</span>'
-                   f'<h2>{esc(d["title"])}</h2><p>{esc(d["description"])}</p><div class="tags">{tags}</div>'
-                   f'<h3>Selected work</h3><ul class="work-list">{work}</ul>'
-                   f'<a class="text-link" href="../publications/?topic={esc(d["topics"][0])}">All related publications {ARROW}</a></div>'
-                   f'<div class="direction-figure"><img src="../{esc(d["image"])}" alt="" decoding="async"></div></section>')
-    body = (page_head("Research", "Perception, representation and learning for robots that operate in the real world.", "Research directions")
-            + f'<div class="shell">{blocks}<section class="section notice"><h2>Connected research interests</h2><p>{esc(LAB["research_interests"])}</p>'
+        cards = "".join(topic_card(f, "../") for f in d.get("featured", []))
+        programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ Research directions</a>'
+                     f'<p class="program-kicker"><span>0{i}</span>{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>'
+                     f'<p class="program-copy">{esc(d["description"])}</p>'
+                     f'<div class="work-heading"><h3>Selected research and lab demonstrations</h3>'
+                     f'<p>Published work and papers under review are marked; each card links its project, paper or code.</p></div>'
+                     f'<div class="topic-grid">{cards}</div>'
+                     f'<a class="text-link" href="../publications/?topic={esc(d["topics"][0])}">All related publications {ARROW}</a></article>')
+    paragraphs = "".join(f"<p>{esc(t)}</p>" for t in focus["paragraphs"])
+    body = (f'<header class="research-hero"><div class="shell"><p class="kicker">{esc(LAB["short_name"])}</p><h1>Research</h1></div></header>'
+            f'<section class="research-focus"><div class="shell focus-grid"><div><p class="kicker">Our focus on</p><h2>{esc(focus["title"])}</h2></div>'
+            f'<div class="focus-copy">{paragraphs}</div></div></section>'
+            f'<nav class="research-choices" id="research-directions" aria-label="Research directions"><div class="shell">'
+            f'<div class="choices-head"><p class="kicker">Research</p><button class="preview-toggle" type="button" data-preview-toggle hidden>Pause previews</button></div>'
+            f'<div class="choice-grid">{choices}</div></div></nav>'
+            f'<div class="shell">{programs}<section class="section notice"><h2>Connected research interests</h2><p>{esc(LAB["research_interests"])}</p>'
             f'<div class="chips"><a class="chip-link" href="../projects/">Projects {ARROW}</a><a class="chip-link" href="../publications/">Publications {ARROW}</a></div></section></div>')
     render("research", "Research", "Research directions of PAIRS Lab: active and semantic SLAM, robust perception and navigation, robot learning and human–robot interaction, agentic robotics and industrial vision.", body)
 
@@ -308,7 +343,8 @@ def member_records():
     records = []
     for g in LAB["people"]:
         for m in g["members"]:
-            papers = [p for p in PAPERS if name_key(m["name"]) in {name_key(a) for a in p["authors"]}]
+            keys = {name_key(n) for n in [m["name"], *m.get("aliases", [])]}
+            papers = [p for p in PAPERS if keys & {name_key(a) for a in p["authors"]}]
             topics = [t for t, _ in Counter(t for p in papers for t in p["topics"]).most_common(3)]
             if m.get("bio"):
                 bio = m["bio"]
@@ -317,7 +353,7 @@ def member_records():
             else:
                 bio = f'{m["name"]} is {"an" if g["role"][0] in "AEIOU" else "a"} {g["role"].lower()} at {LAB["short_name"]}, {LAB["affiliation"]["institution_short"]}.'
             if papers and not m.get("bio"):
-                words = [t if t[:2].isupper() else t.lower() for t in topics]
+                words = [" ".join(w if w[:2].isupper() else w.lower() for w in t.split()) for t in topics]
                 listed = words[0] if len(words) == 1 else ", ".join(words[:-1]) + " and " + words[-1]
                 bio += f' {len(papers)} lab publication{"s" if len(papers) > 1 else ""} on {listed}.'
             records.append({**m, "group": g["group"], "role": g["role"], "slug": slugify(m["name"]), "papers": papers,
@@ -432,7 +468,7 @@ def main():
                 shutil.rmtree(d)
     for build in (home, research, publications, projects, datasets, news, people, join):
         build()
-    print(f"Built {len(PAGES)} pages and {len(MEMBERS)} member profiles from {len(PAPERS)} publications and {len(NEWS)} news items.")
+    print(f"Built {len(PAGES)} pages and {sum(len(g['members']) for g in LAB['people'])} member profiles from {len(PAPERS)} publications and {len(NEWS)} news items.")
 
 
 if __name__ == "__main__":

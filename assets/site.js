@@ -60,6 +60,31 @@
     schedule();
   }
 
+  // ---- research page: autoplay muted previews while visible, with a pause toggle ----
+  var loops = $$("video[data-loop]");
+  if (loops.length) {
+    var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var stopped = calm;
+    var visible = new Set();
+    var sync = function (v) {
+      if (!stopped && visible.has(v)) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else v.pause();
+    };
+    var toggle = document.querySelector("[data-preview-toggle]");
+    if (toggle) {
+      toggle.hidden = false;
+      var label = function () { toggle.textContent = stopped ? "Play previews" : "Pause previews"; };
+      label();
+      toggle.addEventListener("click", function () { stopped = !stopped; label(); loops.forEach(sync); });
+    }
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target); sync(e.target); });
+      }, { threshold: 0.35 });
+      loops.forEach(function (v) { io.observe(v); });
+    }
+  }
+
   // ---- publication filters ----
   var form = document.getElementById("paper-filters");
   if (form) {

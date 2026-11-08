@@ -35,7 +35,42 @@
       ],
       "video": "images/hero/semantic-slam.mp4",
       "poster": "images/hero/semantic-slam.jpg",
-      "hero_text": "We build maps that carry meaning and uncertainty, so robots can localize, reason about objects and explore on their own over long missions."
+      "hero_text": "We build maps that carry meaning and uncertainty, so robots can localize, reason about objects and explore on their own over long missions.",
+      "kicker": "Maps that carry meaning",
+      "featured": [
+        {
+          "paper": "bayesian-probabilistic-data-association",
+          "label": "Simulation benchmark",
+          "attribution": "RA-L 2026",
+          "title": "Bayesian Data Association for Semantic SLAM",
+          "cta": "BPDA-GMM",
+          "text": "BPDA-GMM carries association evidence forward with Gaussian mixture models instead of hand-tuned null weights or fixed gates, so semantic landmarks stay consistent under perceptual aliasing."
+        },
+        {
+          "paper": "uc-slam",
+          "label": "EuRoC benchmark",
+          "attribution": "T-RO · under review",
+          "title": "Probabilistically Consistent Visual-Inertial SLAM",
+          "cta": "UC-SLAM",
+          "text": "UC-SLAM builds on ORB-SLAM3 with learned feature uncertainty and a foundation-model metric-depth factor, so features are weighted by content and metric scale does not rely on motion excitation alone."
+        },
+        {
+          "paper": "hiper",
+          "label": "Simulated homes",
+          "attribution": "RA-L · submitted",
+          "title": "Lifelong Open-Vocabulary Object Maps",
+          "cta": "HiPer",
+          "text": "HiPer learns hierarchical persistence beliefs from data rather than class-based priors, estimating whether each object is still in place after it leaves the robot's view."
+        },
+        {
+          "paper": "usgloc",
+          "label": "7-Scenes",
+          "attribution": "RA-L · under review",
+          "title": "Uncertainty-Aware Localization from Gaussian Splatting",
+          "cta": "USGLoc",
+          "text": "USGLoc localizes a camera in a semantic 3D Gaussian Splatting map and reports how much to trust the pose, so the estimate can be fused into a Bayesian state estimator."
+        }
+      ]
     },
     {
       "id": "perception-navigation",
@@ -52,7 +87,42 @@
       ],
       "video": "images/hero/perception-navigation.mp4",
       "poster": "images/hero/perception-navigation.jpg",
-      "hero_text": "We make perception hold up under poor light, clutter and sensor noise, and connect it to safe navigation for UAVs and mobile robots."
+      "hero_text": "We make perception hold up under poor light, clutter and sensor noise, and connect it to safe navigation for UAVs and mobile robots.",
+      "kicker": "Hold up in hard conditions",
+      "featured": [
+        {
+          "paper": "iraf-slam",
+          "label": "Method overview",
+          "attribution": "ECMR 2025",
+          "title": "Illumination-Robust Visual SLAM Front-End",
+          "cta": "IRAF-SLAM",
+          "text": "IRAF-SLAM enhances images under changing light and adapts feature culling, keeping visual SLAM tracking stable through sudden lighting changes, low texture and dynamic objects."
+        },
+        {
+          "paper": "reliable-uav-localization",
+          "label": "UAV perception",
+          "attribution": "ICCAS 2024",
+          "title": "Semantic-Aware Path Planning for Reliable UAV Localization",
+          "cta": "the project",
+          "text": "Real-time semantic segmentation from a monocular camera guides the UAV around texture-less areas such as lakes and high-rise buildings, where localization would otherwise fail."
+        },
+        {
+          "paper": "social-robot-navigation",
+          "label": "Method overview",
+          "attribution": "ICCAS 2024",
+          "title": "Social Navigation with Motion Prediction",
+          "cta": "SGan-TEB",
+          "text": "Human trajectory prediction is folded into Timed Elastic Band planning with social constraints, so a service robot moves safely and politely around people."
+        },
+        {
+          "paper": "multisensor-data-fusion",
+          "label": "Real-world demo",
+          "attribution": "ICCAIS 2022",
+          "title": "Multisensor Fusion for Obstacle Avoidance",
+          "cta": "MulDF",
+          "text": "Two depth cameras and a LiDAR are fused into one view around the robot, and a dynamic-window planner uses it to avoid obstacles in real corridors."
+        }
+      ]
     },
     {
       "id": "robot-learning",
@@ -69,7 +139,46 @@
       ],
       "video": "images/hero/robot-learning.mp4",
       "poster": "images/hero/robot-learning.jpg",
-      "hero_text": "We teach robots from human demonstrations and interaction, and build humanoid and manipulation systems that work naturally with people."
+      "hero_text": "We teach robots from human demonstrations and interaction, and build humanoid and manipulation systems that work naturally with people.",
+      "kicker": "Learn from people",
+      "featured": [
+        {
+          "paper": "decoupled-object-centric-video-understanding",
+          "label": "Real-robot demo",
+          "attribution": "ICCAS 2026",
+          "video": "images/hero/robot-learning.mp4",
+          "poster": "images/hero/robot-learning.jpg",
+          "title": "From Video Demonstrations to Robot Commands",
+          "cta": "Video2Command",
+          "text": "Object-centric video understanding separates action recognition from object grounding, turning human demonstration videos into robot commands that name the right objects."
+        },
+        {
+          "paper": "owavesync",
+          "label": "Humanoid simulation",
+          "attribution": "ICCAS 2026",
+          "video": "images/demos/wavesync-clip.mp4",
+          "poster": "images/demos/wavesync-clip.jpg",
+          "title": "Synchronized Co-Speech Gestures for Humanoids",
+          "cta": "WaveSync",
+          "text": "A language model splits dialogue into semantic gesture units, and constrained wavefront optimization keeps the humanoid's gestures in time with speech within its joint and actuator limits."
+        },
+        {
+          "paper": "cpor-grasp",
+          "label": "Grasp reasoning",
+          "attribution": "ICRA · submitted",
+          "title": "Calibrated Obstruction Reasoning for Grasping in Clutter",
+          "cta": "CPOR-Grasp",
+          "text": "Calibrated vision-language predictions and probabilistic reasoning over alternative obstruction graphs decide whether to grasp the target, remove a blocker, or wait."
+        },
+        {
+          "paper": "dual-arm-service-robot",
+          "label": "Real-world demo",
+          "attribution": "JESTECH 2024",
+          "title": "Dual-Arm Service Robot for Human–Robot Interaction",
+          "cta": "the project",
+          "text": "Design, fabrication and structural optimization of a mobile dual-arm service robot built for navigation, manipulation and interaction with people."
+        }
+      ]
     },
     {
       "id": "agentic-industrial",
@@ -78,6 +187,7 @@
       "description": "Robots that plan, schedule and coordinate tasks as agents, and vision systems for industry. Work includes online scheduling for multi-robot collaboration, monocular 3D object localization for industrial robot vision, and super-resolution methods for detecting tiny defects on printed circuit boards.",
       "image": "images/demos/osdag.jpg",
       "topics": [
+        "Agentic robotics",
         "Multi-robot collaboration",
         "Machine vision",
         "Robot calibration",
@@ -93,7 +203,44 @@
       ],
       "video": "images/hero/agentic-industrial.mp4",
       "poster": "images/hero/agentic-industrial.jpg",
-      "hero_text": "We build robots that plan and coordinate tasks as agents with humans and other robots, and vision systems for industrial inspection."
+      "hero_text": "We build robots that plan and coordinate tasks as agents with humans and other robots, and vision systems for industrial inspection.",
+      "kicker": "Plan, coordinate, inspect",
+      "featured": [
+        {
+          "paper": "osdag",
+          "label": "Human–robot collaboration",
+          "attribution": "ICCAS 2026",
+          "video": "images/hero/agentic-industrial.mp4",
+          "poster": "images/hero/agentic-industrial.jpg",
+          "title": "Online Scheduling for Multi-Robot Collaboration",
+          "cta": "OSDAG",
+          "text": "A language model plans long-horizon tasks as a dependency graph, and an online scheduler runs them in parallel across heterogeneous robots and people."
+        },
+        {
+          "paper": "safeguard-asf",
+          "label": "Preprint",
+          "attribution": "arXiv 2026",
+          "title": "Agentic Humanoid Robots for Industrial Safety",
+          "cta": "SafeGuard ASF",
+          "text": "A ReAct-style agent on a Unitree G1 humanoid combines RGB-D perception and learned locomotion to detect fire and smoke, abnormal pipeline temperatures and intruders in unmanned factories."
+        },
+        {
+          "paper": "esrpcb",
+          "label": "Method overview",
+          "attribution": "EAAI 2025",
+          "title": "Tiny PCB Defect Detection",
+          "cta": "ESRPCB",
+          "text": "Edge-guided super-resolution and ensemble learning recover detail in low-resolution images of printed circuit boards, separating tiny defects from noise."
+        },
+        {
+          "paper": "m-calib",
+          "label": "Method overview",
+          "attribution": "JAMRIS 2025",
+          "title": "Monocular 3D Localization for Industrial Robot Vision",
+          "cta": "M-Calib",
+          "text": "Object detection, post-processing and 3D calibration locate flat parts from a single 2D image, for low-cost industrial robot cells."
+        }
+      ]
     }
   ],
   "research_interests": "We are also interested in lifelong SLAM, robot dynamics learning, model-based reinforcement learning and learning from demonstration. Modeling uncertainty in map representations and robot dynamics is central to our interests in safe, active planning and control.",
@@ -121,7 +268,10 @@
       "members": [
         {
           "name": "Pham Thi My Le",
-          "image": "images/people/le.jpg"
+          "image": "images/people/le.jpg",
+          "aliases": [
+            "My Le Pham"
+          ]
         },
         {
           "name": "Quoc Bao Nguyen",
@@ -271,5 +421,12 @@
     "Robot Learning and Human–Robot Interaction",
     "Agentic Robotics and Industrial Vision"
   ],
-  "robots": []
+  "robots": [],
+  "focus": {
+    "title": "Robot Autonomy",
+    "paragraphs": [
+      "Robot autonomy means machines that perceive their surroundings, build and keep maps of the world, and decide how to act without constant human guidance.",
+      "PAIRS Lab builds the perception, mapping and learning that autonomous robots need outside the lab: maps that carry meaning and uncertainty, perception that holds up in hard conditions, robots that learn from people, and agents that plan and coordinate tasks. We test our methods on aerial robots, mobile robots, manipulators and humanoids."
+    ]
+  }
 }
