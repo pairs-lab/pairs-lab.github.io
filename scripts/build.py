@@ -230,7 +230,7 @@ def home():
     body = hero_slider() + f'''
 <section class="section intro"><div class="shell">
 <p class="intro-text">{esc(LAB["short_name"])} is based in the <a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a> at the <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a>, Hanoi. We study how robots perceive, map and act in the real world: active and semantic SLAM, robust perception and autonomous navigation, robot learning and human–robot interaction, and agentic robotics and industrial vision.</p>
-</div></section>
+{overview_figure("")}</div></section>
 <section class="section section-alt"><div class="shell">{section_head("Research directions", "research/", "Research overview")}<div class="direction-grid">{directions}</div></div></section>
 <section class="section"><div class="shell two-col">
 <div>{section_head("News", "news/", "All news")}<ul class="news-list">{news_items(NEWS[:5], "")}</ul></div>
@@ -242,8 +242,28 @@ def home():
 
 def map_alt(d):
     m = d["map"]
-    return (f'{d["title"]} research map. Core goal: {m["core"]}. Sub-problems: '
-            + "; ".join(f'{n["label"]}: {n["question"]}' for n in m["nodes"]) + ". Open questions: " + "; ".join(m["open"]) + ".")
+    return (f'{d["title"]} research overview. Core goal: {m["core"]}. Sub-areas: '
+            + "; ".join(f'{n["name"]}: {n["desc"]}' for n in m["nodes"]) + ". Open questions: " + "; ".join(m["open"]) + ".")
+
+
+def overview_alt():
+    ov = LAB["overview"]
+    steps = "; ".join(f'{i}. {d["title"]}: {ov["guides"][d["id"]]}' for i, d in enumerate(LAB["directions"], 1))
+    return (f'Research overview of {LAB["short_name"]}: four directions around robot autonomy. {steps}. Each direction feeds the next: '
+            + ", ".join(ov["flows"]) + ". Platforms: " + ", ".join(p["name"] for p in ov["platforms"])
+            + ". Applications: " + ", ".join(ov["applications"]) + ".")
+
+
+def svg_height(name):
+    head = (ROOT / f"images/directions/{name}.svg").read_text(encoding="utf-8")[:300]
+    return re.search(r'viewBox="0 0 \d+ (\d+)"', head).group(1)
+
+
+def overview_figure(prefix):
+    if not (ROOT / "images/directions/overview.svg").is_file():
+        return ""
+    return (f'<figure class="overview-map"><a href="{prefix}images/directions/overview.svg" title="Open full size"><img src="{prefix}images/directions/overview.svg" alt="{esc(overview_alt())}" width="1200" height="{svg_height("overview")}" loading="lazy" decoding="async"></a>'
+            f'<figcaption>How our four research directions fit together around robot autonomy: each one feeds the next, on our own robot platforms.</figcaption></figure>')
 
 
 def topic_card(f, prefix):
@@ -282,8 +302,8 @@ def research():
         programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ All directions</a>'
                      f'<p class="program-kicker"><span>0{i}</span>{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>'
                      f'<p class="program-copy">{esc(d["description"])}</p>'
-                     + (f'<figure class="direction-map"><img src="../images/directions/{d["id"]}.svg" alt="{esc(map_alt(d))}" width="1200" height="900" loading="lazy" decoding="async">'
-                        f'<figcaption>How the sub-problems in this direction connect, illustrated with results from our papers.</figcaption></figure>' if d.get("map") else "")
+                     + (f'<figure class="direction-map"><a href="../images/directions/{d["id"]}.svg" title="Open full size"><img src="../images/directions/{d["id"]}.svg" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async"></a>'
+                        f'<figcaption>The core sub-areas of this direction, illustrated with results from our papers.</figcaption></figure>' if d.get("map") else "")
                      + f'<div class="work-heading"><h3>Featured projects and demos</h3>'
                      f'<p>Published work and papers under review are marked; each card links its project, paper or code.</p></div>'
                      f'<div class="topic-grid">{cards}</div>'
@@ -291,7 +311,7 @@ def research():
     paragraphs = "".join(f"<p>{esc(t)}</p>" for t in focus["paragraphs"])
     body = (f'<header class="research-hero"><div class="shell"><p class="kicker">{esc(LAB["short_name"])}</p><h1>Research</h1></div></header>'
             f'<section class="research-focus"><div class="shell focus-grid"><div><p class="kicker">What drives us</p><h2>{esc(focus["title"])}</h2></div>'
-            f'<div class="focus-copy">{paragraphs}</div></div></section>'
+            f'<div class="focus-copy">{paragraphs}</div></div><div class="shell">{overview_figure("../")}</div></section>'
             f'<nav class="research-choices" id="research-directions" aria-label="Research directions"><div class="shell">'
             f'<div class="choices-head"><p class="kicker">Research</p><button class="preview-toggle" type="button" data-preview-toggle hidden>Pause previews</button></div>'
             f'<div class="choice-grid">{choices}</div></div></nav>'

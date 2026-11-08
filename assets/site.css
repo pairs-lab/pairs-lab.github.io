@@ -311,7 +311,10 @@ address { margin-bottom: 16px; font-style: normal; }
 .carousel-photo.is-contain img { object-fit: contain; object-position: center; padding: 14px; }
 
 /* research maps */
-.direction-map { margin: 32px 0 8px; }
+.direction-map, .overview-map { margin: 32px 0 8px; }
+.overview-map img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.overview-map figcaption { margin-top: 8px; color: var(--muted); font-size: 0.88rem; text-align: center; }
+.intro .overview-map { margin-top: 40px; }
 .direction-map img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 .direction-map figcaption { margin-top: 8px; color: var(--muted); font-size: 0.88rem; }
 

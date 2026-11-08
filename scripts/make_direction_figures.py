@@ -1,28 +1,27 @@
 #!/usr/bin/env python3
-"""Draw one 'research map' SVG per research direction from data/lab.json -> directions[].map.
+"""Draw the research-overview figures from data/lab.json (standard library only; build.py runs this).
 
-Layout: a hub with the direction's core goal, four sub-problem nodes (guiding question, a thumbnail of
-our own results, the papers that address it), and a band of open questions. Thumbnails in
-images/directions/thumbs/ are embedded, so each SVG is self-contained and works in an <img> tag.
-Standard library only. build.py runs this automatically.
+images/directions/overview.svg   The lab's four research directions as one cycle (what each feeds the
+                                 next), with our robot platforms and application areas.
+images/directions/<id>.svg       One map per direction: a hub (direction + core goal), its general
+                                 sub-areas in two named columns (each with a thumbnail of our results and
+                                 representative papers), and open questions.
+
+Thumbnails live in images/directions/thumbs/ and are embedded, so every SVG is self-contained.
 """
 
 import base64
 import html
-import math
 import json
+import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 THUMBS = ROOT / "images/directions/thumbs"
 OUT = ROOT / "images/directions"
-W, H = 1200, 900
 NAVY, ACCENT, CYAN, INK, MUTED, LINE, SOFT = "#063a7a", "#0b55ad", "#00b4cc", "#0a2342", "#5d7087", "#d9e2ec", "#f4f7fb"
 FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-NODE_W, NODE_H = 300, 352
-NODES = [(40, 28), (860, 28), (40, 410), (860, 410)]          # top-left, top-right, bottom-left, bottom-right
-HUB = (600, 395, 128)
-SHIELD = "M0,-34 L28,-24 L28,2 C28,22 14,34 0,40 C-14,34 -28,22 -28,2 L-28,-24 Z"
+W = 1200
 
 
 def esc(text):
@@ -40,99 +39,190 @@ def wrap(text, width):
     return lines + ([line] if line else [])
 
 
-def chip_width(label):
-    return int(len(label) * 7.2 + 22)
+def chip_w(label, size):
+    return int(len(label) * size * 0.64 + 22)
 
 
-def node_svg(i, x, y, node):
-    out = [f'<g id="node-{i + 1}">',
-           f'<rect x="{x}" y="{y}" width="{NODE_W}" height="{NODE_H}" rx="16" fill="#fff" stroke="{LINE}" stroke-width="1.5"/>']
-    ix, iy, iw, ih = x + 14, y + 14, NODE_W - 28, 152
-    out.append(f'<clipPath id="clip-{i}"><rect x="{ix}" y="{iy}" width="{iw}" height="{ih}" rx="10"/></clipPath>')
-    if node.get("thumb"):
-        data = base64.b64encode((THUMBS / f'{node["thumb"]}.jpg').read_bytes()).decode()
-        out.append(f'<image href="data:image/jpeg;base64,{data}" x="{ix}" y="{iy}" width="{iw}" height="{ih}" '
-                   f'preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-{i})"/>')
-    else:
-        out.append(f'<rect x="{ix}" y="{iy}" width="{iw}" height="{ih}" rx="10" fill="url(#placeholder)"/>')
-        out.append(f'<path d="{SHIELD}" transform="translate({ix + iw / 2},{iy + ih / 2 - 4})" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>')
-        out.append(f'<path d="M-12,2 L-3,11 L14,-8" transform="translate({ix + iw / 2},{iy + ih / 2 - 4})" fill="none" stroke="{CYAN}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>')
-    out.append(f'<circle cx="{ix + 22}" cy="{iy + 22}" r="16" fill="{NAVY}" stroke="#fff" stroke-width="2"/>'
-               f'<text x="{ix + 22}" y="{iy + 28}" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">{i + 1}</text>')
-    ty = y + 196
-    out.append(f'<text x="{x + 18}" y="{ty}" font-size="12.5" font-weight="800" letter-spacing="0.9" fill="{CYAN}">{esc(node["label"].upper())}</text>')
-    for k, line in enumerate(wrap(node["question"], 23)[:3]):
-        out.append(f'<text x="{x + 18}" y="{ty + 27 + k * 24}" font-size="19" font-weight="700" fill="{INK}">{esc(line)}</text>')
-    rows, used = 1, 0
-    for label in node["papers"]:  # count chip rows first so two rows still fit inside the card
-        w = chip_width(label)
-        if used and used + w > NODE_W - 32:
-            rows, used = rows + 1, 0
-        used += w + 8
-    cx, cy = x + 18, y + NODE_H - 44 - (rows - 1) * 30
-    for label in node["papers"]:
-        w = chip_width(label)
-        if cx + w > x + NODE_W - 14:
-            cx, cy = x + 18, cy + 30
-        out.append(f'<rect x="{cx}" y="{cy}" width="{w}" height="24" rx="12" fill="{SOFT}" stroke="{LINE}"/>'
-                   f'<text x="{cx + w / 2}" y="{cy + 16.5}" text-anchor="middle" font-size="12.5" font-weight="700" fill="{ACCENT}">{esc(label)}</text>')
-        cx += w + 8
-    out.append("</g>")
-    return "".join(out)
+def data_uri(name):
+    return "data:image/jpeg;base64," + base64.b64encode((THUMBS / f"{name}.jpg").read_bytes()).decode()
 
 
-def connector(x, y, right_side, top):
-    hx, hy, r = HUB
-    ax = x + NODE_W if not right_side else x
-    ay = y + NODE_H / 2
-    dx = -1 if right_side else 1
-    ex, ey = hx - dx * r * 0.82, hy + (-1 if top else 1) * r * 0.57
-    return (f'<path d="M{ax},{ay} C{ax + dx * 70},{ay} {ex - dx * 40},{ey} {ex},{ey}" fill="none" stroke="#b9c8da" stroke-width="2.5"/>'
-            f'<circle cx="{ax}" cy="{ay}" r="5" fill="{CYAN}"/><circle cx="{ex}" cy="{ey}" r="5" fill="{CYAN}"/>')
+class Canvas:
+    def __init__(self, height, title, desc):
+        self.h = height
+        self.parts = [f'<rect width="{W}" height="{height}" fill="#fff"/>']
+        self.defs = ['<radialGradient id="hub" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#0b55ad"/><stop offset="1" stop-color="#061a36"/></radialGradient>',
+                     f'<marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="{CYAN}"/></marker>']
+        self.title, self.desc, self.clip = title, desc, 0
+
+    def add(self, *chunks):
+        self.parts.extend(chunks)
+
+    def image(self, name, x, y, w, h, rx=10, circle=False):
+        self.clip += 1
+        cid = f"c{self.clip}"
+        shape = (f'<circle cx="{x + w / 2}" cy="{y + h / 2}" r="{w / 2}"/>' if circle else f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}"/>')
+        self.defs.append(f'<clipPath id="{cid}">{shape}</clipPath>')
+        self.add(f'<image href="{data_uri(name)}" x="{x}" y="{y}" width="{w}" height="{h}" preserveAspectRatio="xMidYMid slice" clip-path="url(#{cid})"/>')
+
+    def chips(self, x, y, labels, max_w, size=12, fill=SOFT, color=ACCENT):
+        """Lay chips left to right, wrapping rows; returns the number of rows used."""
+        cx, cy, rows = x, y, 1
+        for label in labels:
+            w = chip_w(label, size)
+            if cx > x and cx + w > x + max_w:
+                cx, cy, rows = x, cy + 30, rows + 1
+            self.add(f'<rect x="{cx}" y="{cy}" width="{w}" height="24" rx="12" fill="{fill}" stroke="{LINE}"/>'
+                     f'<text x="{cx + w / 2}" y="{cy + 16.5}" text-anchor="middle" font-size="{size}" font-weight="700" fill="{color}">{esc(label)}</text>')
+            cx += w + 8
+        return rows
+
+    def hub(self, cx, cy, r, title, sub, title_wrap=14, sub_wrap=22):
+        self.add(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#hub)"/>')
+        tl, sl = wrap(title, title_wrap), wrap(sub, sub_wrap)
+        block = len(tl) * 28 + 18 + len(sl) * 19
+        y = cy - block / 2 + 22
+        for line in tl:
+            self.add(f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">{esc(line)}</text>')
+            y += 28
+        self.add(f'<line x1="{cx - 28}" y1="{y - 12}" x2="{cx + 28}" y2="{y - 12}" stroke="{CYAN}" stroke-width="2.5" stroke-linecap="round"/>')
+        y += 10
+        for line in sl:
+            self.add(f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="14" font-weight="600" fill="#cfe3fb">{esc(line)}</text>')
+            y += 19
+
+    def ring(self, cx, cy, r, angles, dashed=True):
+        dash = ' stroke-dasharray="6 8"' if dashed else ""
+        self.add(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{CYAN}" stroke-width="2"{dash} opacity="0.75"/>')
+        for ang in angles:  # clockwise arrowheads
+            a = math.radians(ang)
+            px, py = cx + r * math.cos(a), cy + r * math.sin(a)
+            tx, ty = -math.sin(a), math.cos(a)
+            self.add(f'<path d="M{px - tx * 10},{py - ty * 10} L{px + tx * 2},{py + ty * 2}" stroke="{CYAN}" stroke-width="2.5" marker-end="url(#arrow)"/>')
+
+    def svg(self):
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {self.h}" width="{W}" height="{self.h}" font-family="{FONT}" role="img" aria-labelledby="t d">'
+                f'<title id="t">{esc(self.title)}</title><desc id="d">{esc(self.desc)}</desc><defs>{"".join(self.defs)}</defs>{"".join(self.parts)}</svg>')
 
 
-def figure(direction):
-    m = direction["map"]
-    hx, hy, r = HUB
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="{FONT}" role="img" aria-labelledby="t d">',
-             f'<title id="t">{esc(direction["title"])}: research map</title>',
-             f'<desc id="d">{esc(m["core"])}. Sub-problems: ' + "; ".join(esc(n["label"] + " (" + n["question"] + ")") for n in m["nodes"])
-             + ". Open questions: " + "; ".join(esc(q) for q in m["open"]) + ".</desc>",
-             '<defs><radialGradient id="hub" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#0b55ad"/><stop offset="1" stop-color="#061a36"/></radialGradient>'
-             '<linearGradient id="placeholder" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b55ad"/><stop offset="1" stop-color="#061a36"/></linearGradient>'
-             f'<marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="{CYAN}"/></marker></defs>',
-             f'<rect width="{W}" height="{H}" fill="#fff"/>']
-    for i, (x, y) in enumerate(NODES):
-        parts.append(connector(x, y, right_side=i % 2 == 1, top=i < 2))
-    # feedback loop around the hub: the sub-problems feed one another
-    parts.append(f'<circle cx="{hx}" cy="{hy}" r="{r + 26}" fill="none" stroke="{CYAN}" stroke-width="2" stroke-dasharray="6 8" opacity="0.7"/>')
-    for ang in (35, 125, 215, 305):
-        a = math.radians(ang)
-        px, py = hx + (r + 26) * math.cos(a), hy + (r + 26) * math.sin(a)
-        tx, ty = -math.sin(a), math.cos(a)
-        parts.append(f'<path d="M{px - tx * 10},{py - ty * 10} L{px + tx * 2},{py + ty * 2}" stroke="{CYAN}" stroke-width="2.5" marker-end="url(#arrow)"/>')
-    parts.append(f'<circle cx="{hx}" cy="{hy}" r="{r}" fill="url(#hub)"/>')
-    lines = wrap(m["core"], 16)
-    y0 = hy - (len(lines) - 1) * 14 + 18  # text block centred a little low, kicker sits just above it
-    parts.append(f'<text x="{hx}" y="{y0 - 34}" text-anchor="middle" font-size="12.5" font-weight="800" letter-spacing="1.5" fill="{CYAN}">CORE GOAL</text>')
-    for k, line in enumerate(lines):
-        parts.append(f'<text x="{hx}" y="{y0 + k * 28}" text-anchor="middle" font-size="23" font-weight="800" fill="#fff">{esc(line)}</text>')
-    for i, ((x, y), node) in enumerate(zip(NODES, m["nodes"])):
-        parts.append(node_svg(i, x, y, node))
-    by = 790
-    parts.append(f'<rect x="40" y="{by}" width="1120" height="92" rx="16" fill="{SOFT}" stroke="{LINE}"/>')
-    parts.append(f'<text x="64" y="{by + 40}" font-size="13" font-weight="800" letter-spacing="1.5" fill="{CYAN}">OPEN</text>'
-                 f'<text x="64" y="{by + 60}" font-size="13" font-weight="800" letter-spacing="1.5" fill="{CYAN}">QUESTIONS</text>')
-    for k, q in enumerate(m["open"][:3]):
-        qx = 190 + k * 325
-        parts.append(f'<circle cx="{qx + 14}" cy="{by + 46}" r="14" fill="#fff" stroke="{ACCENT}" stroke-width="2"/>'
-                     f'<text x="{qx + 14}" y="{by + 52}" text-anchor="middle" font-size="16" font-weight="800" fill="{ACCENT}">?</text>')
-        ql = wrap(q, 28)[:3]
-        y1 = by + 52 - (len(ql) - 1) * 9.5
-        for j, line in enumerate(ql):
-            parts.append(f'<text x="{qx + 38}" y="{y1 + j * 19}" font-size="15" font-weight="600" fill="{INK}">{esc(line)}</text>')
-    parts.append("</svg>")
-    return "".join(parts)
+def badge(c, x, y, number):
+    c.add(f'<circle cx="{x}" cy="{y}" r="15" fill="{NAVY}" stroke="#fff" stroke-width="2"/>'
+          f'<text x="{x}" y="{y + 5.5}" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">{number}</text>')
+
+
+def open_band(c, y, questions):
+    c.add(f'<rect x="24" y="{y}" width="{W - 48}" height="96" rx="16" fill="{SOFT}" stroke="{LINE}"/>'
+          f'<text x="48" y="{y + 43}" font-size="13" font-weight="800" letter-spacing="1.5" fill="{CYAN}">OPEN</text>'
+          f'<text x="48" y="{y + 62}" font-size="13" font-weight="800" letter-spacing="1.5" fill="{CYAN}">QUESTIONS</text>')
+    for k, q in enumerate(questions[:3]):
+        qx = 172 + k * 336
+        c.add(f'<circle cx="{qx + 14}" cy="{y + 48}" r="14" fill="#fff" stroke="{ACCENT}" stroke-width="2"/>'
+              f'<text x="{qx + 14}" y="{y + 54}" text-anchor="middle" font-size="16" font-weight="800" fill="{ACCENT}">?</text>')
+        lines = wrap(q, 30)[:3]
+        y1 = y + 54 - (len(lines) - 1) * 9.5
+        for j, line in enumerate(lines):
+            c.add(f'<text x="{qx + 38}" y="{y1 + j * 19}" font-size="15" font-weight="600" fill="{INK}">{esc(line)}</text>')
+
+
+def direction_figure(d):
+    m = d["map"]
+    CW, CH, GAP, TOP, IMG_H = 340, 272, 20, 64, 112
+    cols = [[n for n in m["nodes"] if n.get("col", 0) == k] for k in (0, 1)]
+    rows = max(len(c) for c in cols)
+    area = rows * CH + (rows - 1) * GAP
+    hx, hy, hr = W / 2, TOP + area / 2, 136
+    band_y = TOP + area + 28
+    desc = (f'{m["hub"]}: {m["core"]}. Sub-areas: ' + "; ".join(f'{n["name"]} ({n["desc"]})' for n in m["nodes"])
+            + ". Open questions: " + "; ".join(m["open"]) + ".")
+    c = Canvas(band_y + 96 + 24, f'{d["title"]}: research overview', desc)
+    xs = (24, W - 24 - CW)
+    number = 0
+    placed = []
+    for k, col in enumerate(cols):
+        x = xs[k]
+        c.add(f'<text x="{x + 4}" y="42" font-size="13" font-weight="800" letter-spacing="1.6" fill="{CYAN}">{esc(m["columns"][k].upper())}</text>'
+              f'<line x1="{x + 4}" y1="52" x2="{x + CW}" y2="52" stroke="{LINE}" stroke-width="1.5"/>')
+        offset = (area - (len(col) * CH + (len(col) - 1) * GAP)) / 2
+        for j, node in enumerate(col):
+            number += 1
+            placed.append((x, TOP + offset + j * (CH + GAP), node, number, k))
+    for x, y, node, n, k in placed:  # connectors first, so cards sit on top
+        ax, ay = (x + CW, y + CH / 2) if k == 0 else (x, y + CH / 2)
+        ang = math.atan2(ay - hy, ax - hx)
+        ex, ey = hx + hr * math.cos(ang), hy + hr * math.sin(ang)
+        dx = 1 if k == 0 else -1
+        c.add(f'<path d="M{ax},{ay} C{ax + dx * 70},{ay} {ex - dx * 50},{ey} {ex},{ey}" fill="none" stroke="#b9c8da" stroke-width="2.5"/>'
+              f'<circle cx="{ax}" cy="{ay}" r="5" fill="{CYAN}"/>')
+    c.ring(hx, hy, hr + 26, (35, 125, 215, 305))
+    c.hub(hx, hy, hr, m["hub"], m["core"])
+    for x, y, node, n, k in placed:
+        c.add(f'<rect x="{x}" y="{y}" width="{CW}" height="{CH}" rx="16" fill="#fff" stroke="{LINE}" stroke-width="1.5"/>')
+        c.image(node["thumb"], x + 12, y + 12, CW - 24, IMG_H)
+        badge(c, x + 32, y + 32, n)
+        ty = y + IMG_H + 40
+        for line in wrap(node["name"], 28)[:2]:
+            c.add(f'<text x="{x + 18}" y="{ty}" font-size="19" font-weight="800" fill="{INK}">{esc(line)}</text>')
+            ty += 23
+        ty += 1
+        for line in wrap(node["desc"], 39)[:2]:
+            c.add(f'<text x="{x + 18}" y="{ty}" font-size="14.5" fill="{MUTED}">{esc(line)}</text>')
+            ty += 19
+        c.chips(x + 16, y + CH - 38, node["papers"], CW - 32)
+    open_band(c, band_y, m["open"])
+    return c.svg()
+
+
+def overview_figure(lab):
+    ov = lab["overview"]
+    dirs = lab["directions"]
+    CW, CH, IMG_H = 352, 330, 121
+    pos = [(24, 24), (W - 24 - CW, 24), (W - 24 - CW, 24 + CH + 26), (24, 24 + CH + 26)]  # clockwise: TL, TR, BR, BL
+    hx, hy = W / 2, 24 + CH + 13
+    ring_r = 206
+    band_y = 24 + 2 * CH + 26 + 26
+    H = band_y + 150 + 24
+    desc = (f'{ov["hub"]} at {ov["sub"]}: ' + "; ".join(f'{i + 1}. {d["title"]} ({ov["guides"][d["id"]]})' for i, d in enumerate(dirs))
+            + ". Flows: " + "; ".join(f'{a} to {b}: {f}' for a, b, f in zip(range(1, 5), [2, 3, 4, 1], ov["flows"]))
+            + ". Platforms: " + ", ".join(p["name"] for p in ov["platforms"]) + ". Applications: " + ", ".join(ov["applications"]) + ".")
+    c = Canvas(H, f'{lab["short_name"]} research overview', desc)
+    for i, (x, y) in enumerate(pos):  # connectors tile -> ring
+        ax = x + CW if i in (0, 3) else x
+        ay = y + CH / 2
+        a = math.atan2(ay - hy, ax - hx)
+        ex, ey = hx + ring_r * math.cos(a), hy + ring_r * math.sin(a)
+        c.add(f'<line x1="{ax}" y1="{ay}" x2="{ex}" y2="{ey}" stroke="#b9c8da" stroke-width="2.5"/>'
+              f'<circle cx="{ax}" cy="{ay}" r="5" fill="{CYAN}"/><circle cx="{ex}" cy="{ey}" r="5" fill="{CYAN}"/>')
+    c.ring(hx, hy, ring_r, (-90, 0, 90, 180), dashed=False)
+    # flow labels just inside the ring; the side labels run vertically so they clear the hub
+    label_pos = [(hx, hy - ring_r + 30, 0), (hx + ring_r - 22, hy, 90), (hx, hy + ring_r - 20, 0), (hx - ring_r + 22, hy, -90)]
+    for (lx, ly, rot), flow in zip(label_pos, ov["flows"]):
+        turn = f' transform="rotate({rot} {lx} {ly})"' if rot else ""
+        c.add(f'<text x="{lx}" y="{ly + (5 if rot else 0)}" text-anchor="middle"{turn} font-size="13.5" font-weight="700" font-style="italic" fill="{ACCENT}">{esc(flow)}</text>')
+    c.hub(hx, hy, 104, ov["hub"], ov["sub"], title_wrap=10, sub_wrap=16)
+    for i, ((x, y), d) in enumerate(zip(pos, dirs)):
+        c.add(f'<rect x="{x}" y="{y}" width="{CW}" height="{CH}" rx="16" fill="#fff" stroke="{LINE}" stroke-width="1.5"/>')
+        c.image(f'hero-{d["id"]}', x + 12, y + 12, CW - 24, IMG_H)
+        badge(c, x + 32, y + 32, i + 1)
+        ty = y + IMG_H + 42
+        for line in wrap(d["title"], 27)[:2]:
+            c.add(f'<text x="{x + 18}" y="{ty}" font-size="19" font-weight="800" fill="{INK}">{esc(line)}</text>')
+            ty += 23
+        for line in wrap(ov["guides"][d["id"]], 40)[:2]:
+            c.add(f'<text x="{x + 18}" y="{ty + 2}" font-size="14.5" font-style="italic" fill="{MUTED}">{esc(line)}</text>')
+            ty += 19
+        c.chips(x + 16, ty + 12, [n.get("short", n["name"]) for n in d["map"]["nodes"]], CW - 32, size=11.5, fill="#fff")
+    # platforms and applications
+    c.add(f'<rect x="24" y="{band_y}" width="{W - 48}" height="150" rx="16" fill="{SOFT}" stroke="{LINE}"/>'
+          f'<text x="48" y="{band_y + 32}" font-size="13" font-weight="800" letter-spacing="1.5" fill="{CYAN}">OUR PLATFORMS</text>'
+          f'<text x="760" y="{band_y + 32}" font-size="13" font-weight="800" letter-spacing="1.5" fill="{CYAN}">APPLICATIONS</text>'
+          f'<line x1="736" y1="{band_y + 18}" x2="736" y2="{band_y + 132}" stroke="{LINE}" stroke-width="1.5"/>')
+    for i, p in enumerate(ov["platforms"]):
+        px = 60 + i * 134
+        c.add(f'<circle cx="{px + 34}" cy="{band_y + 82}" r="37" fill="#fff" stroke="{LINE}" stroke-width="1.5"/>')
+        c.image(p["thumb"], px, band_y + 48, 68, 68, circle=True)
+        c.add(f'<text x="{px + 34}" y="{band_y + 138}" text-anchor="middle" font-size="12.5" font-weight="700" fill="{INK}">{esc(p["name"])}</text>')
+    c.chips(760, band_y + 52, ov["applications"], W - 48 - 760 + 4, size=12.5, fill="#fff")
+    return c.svg()
 
 
 def main():
@@ -140,10 +230,13 @@ def main():
     made = []
     for d in lab["directions"]:
         if d.get("map"):
-            (OUT / f'{d["id"]}.svg').write_text(figure(d), encoding="utf-8")
+            (OUT / f'{d["id"]}.svg').write_text(direction_figure(d), encoding="utf-8")
             made.append(d["id"])
+    if lab.get("overview") and all(d.get("map") for d in lab["directions"]):
+        (OUT / "overview.svg").write_text(overview_figure(lab), encoding="utf-8")
+        made.append("overview")
     return made
 
 
 if __name__ == "__main__":
-    print("Drew research maps:", ", ".join(main()))
+    print("Drew research figures:", ", ".join(main()))

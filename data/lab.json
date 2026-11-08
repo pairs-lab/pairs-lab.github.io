@@ -72,44 +72,59 @@
         }
       ],
       "map": {
+        "hub": "Active & Semantic SLAM",
         "core": "Maps that carry meaning and uncertainty",
+        "columns": [
+          "Understanding the scene",
+          "Autonomy over time"
+        ],
         "nodes": [
           {
-            "label": "Semantic data association",
-            "question": "Which observation belongs to which object?",
-            "thumb": "bpda",
+            "col": 0,
+            "name": "Semantic SLAM",
+            "short": "Semantic SLAM",
+            "thumb": "ppm",
+            "desc": "Maps of objects and their meaning, not only geometry.",
             "papers": [
               "BPDA-GMM",
-              "Adaptive-prior SLAM"
+              "Object mapping",
+              "Survey"
             ]
           },
           {
-            "label": "Uncertainty-aware maps",
-            "question": "How far can the robot trust its pose and map?",
-            "thumb": "usgloc",
+            "col": 0,
+            "name": "Foundation-model SLAM",
+            "short": "Foundation SLAM",
+            "thumb": "uags",
+            "desc": "Open-vocabulary features and learned depth priors inside the map.",
             "papers": [
-              "USGLoc",
+              "UAGS",
               "UC-SLAM",
-              "SR-SLAM"
+              "USGLoc"
             ]
           },
           {
-            "label": "Lifelong mapping",
-            "question": "Which objects stay, and which have moved?",
-            "thumb": "hiper",
-            "papers": [
-              "HiPer",
-              "UAGS"
-            ]
-          },
-          {
-            "label": "Active exploration",
-            "question": "Where should the robot look next?",
+            "col": 1,
+            "name": "Active SLAM",
+            "short": "Active SLAM",
             "thumb": "s3m",
+            "desc": "Choosing where to move so the map and the pose improve.",
             "papers": [
               "Semantic exploration",
               "S3M",
               "HESFM"
+            ]
+          },
+          {
+            "col": 1,
+            "name": "Lifelong SLAM",
+            "short": "Lifelong SLAM",
+            "thumb": "hiper",
+            "desc": "Keeping maps correct as objects move and scenes change.",
+            "papers": [
+              "HiPer",
+              "IL-SLAM",
+              "Adaptive-prior"
             ]
           }
         ],
@@ -172,39 +187,54 @@
         }
       ],
       "map": {
+        "hub": "Robust Perception & Navigation",
         "core": "Perception that holds up, decisions that stay safe",
+        "columns": [
+          "Perception",
+          "Navigation"
+        ],
         "nodes": [
           {
-            "label": "Robust visual front-ends",
-            "question": "Can tracking survive poor light and low texture?",
+            "col": 0,
+            "name": "Robust perception",
+            "short": "Robust perception",
             "thumb": "iraf",
+            "desc": "Vision that keeps working in poor light, low texture and underwater.",
             "papers": [
               "IRAF-SLAM",
-              "IL-SLAM",
+              "Con-DSO",
               "Underwater"
             ]
           },
           {
-            "label": "Multisensor fusion",
-            "question": "How should cameras, LiDAR, IMU and wheels be combined?",
+            "col": 0,
+            "name": "Multisensor fusion",
+            "short": "Sensor fusion",
             "thumb": "muldf",
+            "desc": "Cameras, LiDAR, IMU and wheel odometry combined into one estimate.",
             "papers": [
               "MulDF",
-              "LiDAR-IMU-encoder"
+              "LiDAR-IMU-enc.",
+              "UC-SLAM"
             ]
           },
           {
-            "label": "Localization-aware planning",
-            "question": "Can the robot plan where it can still localize?",
+            "col": 1,
+            "name": "Aerial autonomy",
+            "short": "Aerial autonomy",
             "thumb": "reliable-uav",
+            "desc": "UAVs that localize, plan and explore on their own.",
             "papers": [
-              "Reliable UAV localization"
+              "Reliable UAV",
+              "Semantic exploration"
             ]
           },
           {
-            "label": "Social navigation",
-            "question": "How can a robot move safely and politely around people?",
+            "col": 1,
+            "name": "Social navigation",
+            "short": "Social navigation",
             "thumb": "social-nav",
+            "desc": "Moving safely and naturally around people.",
             "papers": [
               "SGan-TEB",
               "Efficient HRI"
@@ -274,42 +304,77 @@
         }
       ],
       "map": {
+        "hub": "Robot Learning & HRI",
         "core": "Robots that learn from people and work with them",
+        "columns": [
+          "Learning",
+          "Interaction"
+        ],
         "nodes": [
           {
-            "label": "Learning from human video",
-            "question": "How does a human demo become robot actions?",
+            "col": 0,
+            "name": "Learning from demonstration",
+            "short": "Imitation learning",
             "thumb": "video2command",
+            "desc": "Turning human videos and demonstrations into robot skills.",
             "papers": [
               "Video2Command",
               "Human-to-Robot"
             ]
           },
           {
-            "label": "Reinforcement learning",
-            "question": "How to keep policies stable in hybrid action spaces?",
+            "col": 0,
+            "name": "Reinforcement learning",
+            "short": "RL",
             "thumb": "rl",
+            "desc": "Policies learned from reward and experience.",
             "papers": [
               "Hybrid TD3",
               "DRL signal control"
             ]
           },
           {
-            "label": "Manipulation in clutter",
-            "question": "Grasp the target, remove a blocker, or wait?",
-            "thumb": "cpor",
+            "col": 0,
+            "name": "Multi-agent systems",
+            "short": "Multi-agent",
+            "thumb": "sg-fleet",
+            "desc": "Many agents, human or robot, planning and acting together.",
             "papers": [
-              "CPOR-Grasp"
+              "SafeGuard ASF",
+              "OSDAG"
             ]
           },
           {
-            "label": "Natural interaction",
-            "question": "Can gestures and speech stay in sync?",
+            "col": 1,
+            "name": "Human–robot interaction",
+            "short": "HRI",
             "thumb": "dual-arm",
+            "desc": "Gestures, speech and language for natural interaction.",
             "papers": [
               "WaveSync",
               "LLM-based HRI",
-              "Dual-arm robot"
+              "Gestures"
+            ]
+          },
+          {
+            "col": 1,
+            "name": "Robot–robot interaction",
+            "short": "RRI",
+            "thumb": "osdag-sim",
+            "desc": "Robots sharing tasks and a workspace with each other.",
+            "papers": [
+              "OSDAG"
+            ]
+          },
+          {
+            "col": 1,
+            "name": "Safe collaboration",
+            "short": "Safe collaboration",
+            "thumb": "osdag-real",
+            "desc": "Working next to people without putting them at risk.",
+            "papers": [
+              "OSDAG",
+              "Efficient HRI"
             ]
           }
         ],
@@ -382,38 +447,50 @@
         }
       ],
       "map": {
+        "hub": "Agentic Robotics & Industrial Vision",
         "core": "Agents that plan, coordinate and inspect",
+        "columns": [
+          "Agentic robotics",
+          "Industry"
+        ],
         "nodes": [
           {
-            "label": "LLM task planning",
-            "question": "How does a goal become a graph of subtasks?",
-            "thumb": "osdag-sim",
+            "col": 0,
+            "name": "Embodied LLM/VLM agents",
+            "short": "LLM/VLM agents",
+            "thumb": "cpor",
+            "desc": "Language and vision-language models that plan, reason and act.",
             "papers": [
               "OSDAG",
+              "CPOR-Grasp"
+            ]
+          },
+          {
+            "col": 0,
+            "name": "Simulation for robot learning",
+            "short": "Simulation",
+            "thumb": "sr-scene",
+            "desc": "Training scenes and environments generated from language.",
+            "papers": [
               "SR-Platform"
             ]
           },
           {
-            "label": "Human–robot coordination",
-            "question": "Who does what, and when?",
-            "thumb": "osdag-real",
-            "papers": [
-              "OSDAG"
-            ]
-          },
-          {
-            "label": "Industrial safety agents",
-            "question": "Can robots find hazards with no people on site?",
-            "thumb": null,
-            "icon": "shield",
+            "col": 1,
+            "name": "Industrial safety robots",
+            "short": "Industrial safety",
+            "thumb": "sg-perception",
+            "desc": "Robots that find hazards in factories with no people on site.",
             "papers": [
               "SafeGuard ASF"
             ]
           },
           {
-            "label": "Industrial vision",
-            "question": "Can low-cost cameras find tiny defects and locate parts?",
+            "col": 1,
+            "name": "Industrial machine vision",
+            "short": "Machine vision",
             "thumb": "esrpcb",
+            "desc": "Finding tiny defects and locating parts with low-cost cameras.",
             "papers": [
               "ESRPCB",
               "M-Calib",
@@ -685,6 +762,51 @@
     "paragraphs": [
       "Robot autonomy means machines that perceive their surroundings, build and keep maps of the world, and decide how to act without constant human guidance.",
       "PAIRS Lab builds the perception, mapping and learning that autonomous robots need outside the lab: maps that carry meaning and uncertainty, perception that holds up in hard conditions, robots that learn from people, and agents that plan and coordinate tasks. We test our methods on aerial robots, mobile robots, manipulators and humanoids."
+    ]
+  },
+  "overview": {
+    "hub": "Robot autonomy",
+    "sub": "PAIRS Lab",
+    "flows": [
+      "maps & poses",
+      "safe motion",
+      "skills",
+      "tasks & goals"
+    ],
+    "guides": {
+      "semantic-slam": "Where am I, and what is around me?",
+      "perception-navigation": "How do I move safely in hard conditions?",
+      "robot-learning": "How do I learn skills and work with people?",
+      "agentic-industrial": "How do I plan tasks and deliver them in industry?"
+    },
+    "platforms": [
+      {
+        "name": "Quadrotor UAV",
+        "thumb": "plat-uav"
+      },
+      {
+        "name": "TurtleBot 4",
+        "thumb": "plat-turtlebot4"
+      },
+      {
+        "name": "UR3 arm",
+        "thumb": "plat-ur3"
+      },
+      {
+        "name": "Pi Mouse",
+        "thumb": "plat-pimouse"
+      },
+      {
+        "name": "Dual-arm robot",
+        "thumb": "plat-dual-arm-robot"
+      }
+    ],
+    "applications": [
+      "Industrial inspection",
+      "Solar-farm monitoring",
+      "Service robots",
+      "Factory safety",
+      "Smart traffic"
     ]
   }
 }
