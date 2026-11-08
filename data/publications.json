@@ -476,7 +476,7 @@
       "paper": "https://doi.org/10.1016/j.robot.2026.105535",
       "arxiv": "https://arxiv.org/abs/2510.00783",
       "code": "",
-      "website": ""
+      "website": "https://thanhnguyencanh.github.io/Semantic-Slam-survey/"
     },
     "cv_reference": "J5",
     "source_note": "Title and full four-author list follow official JAIST records: https://www.jaist.ac.jp/jisedai/results.html. Published 16 May 2026; CV omits Haolan Zhang."
@@ -1060,8 +1060,8 @@
     ],
     "year": 2026,
     "type": "conference",
-    "venue": "International Conference on Control, Automation, Robotics and Vision (ICARCV)",
-    "status": "preprint",
+    "venue": "RIVF International Conference on Computing and Communication Technologies (RIVF)",
+    "status": "accepted",
     "topics": [
       "SLAM",
       "Semantic SLAM",
@@ -1157,5 +1157,62 @@
       "website": ""
     },
     "image": "images/publications/safeguard-asf.jpg"
+  },
+  {
+    "id": "uav-warehouse-inspection",
+    "title": "Rack-to-Bin Hierarchical Localization and Visual Refinement for Autonomous UAV Warehouse Inspection",
+    "authors": [
+      "Van Tong Nguyen",
+      "Thang Tran Viet",
+      "Van Bang Nguyen",
+      "Xiem HoangVan",
+      "Thanh Nguyen Canh"
+    ],
+    "year": 2026,
+    "type": "conference",
+    "venue": "RIVF International Conference on Computing and Communication Technologies (RIVF)",
+    "status": "accepted",
+    "topics": [
+      "UAVs",
+      "Navigation",
+      "Computer vision"
+    ],
+    "abstract": "Autonomous unmanned aerial vehicles (UAVs) provide a flexible solution for inventory inspection in indoor warehouses, where GPS signals are often unavailable and storage racks are arranged in narrow aisles. This paper presents an integrated UAV inspection system based on a fiducial-anchored coarse-to-fine strategy. First, the UAV navigates toward the target rack using a LiDAR-based OctoMap and a collision-aware path planner. After reaching the rack area, a rack-level AprilTag is detected and combined with the known rack geometry to estimate the nominal position of the selected bin. Because small position errors can remain after global navigation, a proportional visual-servoing method uses the QR code position in the camera image to refine the final inspection pose before decoding. The system is evaluated in a custom Gazebo warehouse with narrow aisles. Under Point-LIO localization, the proposed method increases the capture success rate from 10.42% to 86.05% of eligible trials and reduces the mean per-axis capture errors to approximately 2.3 cm. Local visual refinement further reduces the image-space alignment error from 212.67 to 24.34 pixels. These simulation results show improved final viewpoint accuracy for UAV inventory inspection in GPS-denied warehouses.",
+    "links": {
+      "paper": "",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
+    "image": "images/publications/uav-warehouse-inspection.jpg"
+  },
+  {
+    "id": "path-aware-frontier-uav-exploration",
+    "title": "Lightweight Path-Aware Frontier Re-ranking for LiDAR-Based UAV Exploration",
+    "authors": [
+      "Duc Manh Do",
+      "Thanh Nguyen Canh",
+      "Ngoc Minh Do",
+      "Mai Thanh Thai",
+      "Xiem HoangVan"
+    ],
+    "year": 2026,
+    "type": "conference",
+    "venue": "RIVF International Conference on Computing and Communication Technologies (RIVF)",
+    "status": "accepted",
+    "topics": [
+      "SLAM",
+      "Active SLAM",
+      "UAVs",
+      "Navigation"
+    ],
+    "abstract": "Autonomous 3D exploration with UAVs requires efficient target selection under limited flight time and onboard computation. In conventional Euclidean-distance-based frontier pipelines, geometric distance may poorly represent the actual collision-free travel cost in cluttered environments, leading to inefficient frontier choices. This paper presents a lightweight path-aware frontier re-ranking method for LiDAR-based UAV exploration. The method first retains a small top-N set of promising frontier candidates using a lightweight utility function and then applies time-bounded RRT* planning to estimate their feasible path costs for re-ranking. The path generated for the selected frontier is further reused for navigation to reduce redundant global planning. Experiments in three warehouse-like environments show that the proposed method consistently produces shorter exploration trajectories than conventional frontier baselines, with traveled-distance reductions of up to 14.1%, while reducing exploration time by up to 9.5% in two environments and remaining competitive in the third. The method maintains map detail comparable to the conventional OctoMap-based baseline, demonstrating an effective trade-off between exploration efficiency and mapping quality.",
+    "links": {
+      "paper": "",
+      "arxiv": "",
+      "code": "",
+      "website": ""
+    },
+    "image": "images/publications/path-aware-frontier-uav-exploration.jpg"
   }
 ]
