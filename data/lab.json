@@ -23,49 +23,64 @@
   "directions": [
     {
       "id": "semantic-slam",
-      "title": "Active & semantic SLAM",
-      "summary": "Building meaningful representations of the world for autonomous robots.",
-      "description": "Building meaningful representations of the world for autonomous robots. Our research spans probabilistic semantic mapping, visual SLAM under challenging conditions, and active exploration with UAVs.",
+      "title": "Active and Semantic SLAM",
+      "summary": "Meaningful, uncertainty-aware maps for robots that explore on their own.",
+      "description": "Building meaningful representations of the world for autonomous robots. Our research spans probabilistic semantic mapping and data association, robust visual and RGB-D SLAM in dynamic scenes, Gaussian splatting, and active exploration with UAVs.",
       "image": "images/research/iraf-slam.png",
       "topics": [
         "SLAM",
         "Semantic SLAM",
-        "Active SLAM"
+        "Active SLAM",
+        "Gaussian splatting"
+      ]
+    },
+    {
+      "id": "perception-navigation",
+      "title": "Robust Perception and Autonomous Navigation",
+      "summary": "Perception that holds up in hard conditions, connected to safe navigation.",
+      "description": "Perception that keeps working under poor lighting, clutter and sensor noise, connected to safe decisions. We work on illumination-robust visual front-ends, multisensor fusion for localization and obstacle avoidance, semantic-aware path planning for UAVs, and social navigation with motion prediction around people.",
+      "image": "images/research/social-navigation.png",
+      "topics": [
+        "Navigation",
+        "Robot perception",
+        "Sensor fusion",
+        "UAVs",
+        "Image enhancement"
       ]
     },
     {
       "id": "robot-learning",
-      "title": "Robot learning & interaction",
-      "summary": "Learning robot behavior from observations, demonstrations and interaction.",
-      "description": "Learning robot behavior from observations, demonstrations and interaction. We investigate imitation learning, reinforcement learning and the use of vision-language models for robotic manipulation and human–robot interaction.",
+      "title": "Robot Learning and Human–Robot Interaction",
+      "summary": "Robots that learn from demonstrations and work naturally with people.",
+      "description": "Learning robot behavior from demonstrations, video and interaction. We study imitation learning from human video, reinforcement learning with stable policy optimization, object-centric video understanding for manipulation commands, and humanoid interaction through gestures, speech and language models.",
       "image": "images/research/video2command.jpg",
       "topics": [
         "Robot learning",
         "Human–robot interaction",
-        "Reinforcement learning"
+        "Reinforcement learning",
+        "Humanoid robotics",
+        "Manipulation"
       ]
     },
     {
-      "id": "navigation",
-      "title": "Reliable localization & navigation",
-      "summary": "Connecting perception with safe decisions.",
-      "description": "Connecting perception with safe decisions. We work on semantic-aware path planning, multisensor fusion, and motion prediction for navigation around people and in challenging environments.",
-      "image": "images/research/social-navigation.png",
+      "id": "agentic-industrial",
+      "title": "Agentic Robotics and Industrial Vision",
+      "summary": "Robots that plan and coordinate as agents, and vision for industrial inspection.",
+      "description": "Robots that plan, schedule and coordinate tasks as agents, and vision systems for industry. Work includes online scheduling for multi-robot collaboration, monocular 3D object localization for industrial robot vision, and super-resolution methods for detecting tiny defects on printed circuit boards.",
+      "image": "images/demos/osdag.jpg",
       "topics": [
-        "Navigation",
-        "Sensor fusion"
-      ]
-    },
-    {
-      "id": "robot-vision",
-      "title": "Robot vision & industrial perception",
-      "summary": "Turning visual observations into useful information for robotics and inspection.",
-      "description": "Turning visual observations into useful information for robotics and inspection. Applications include monocular 3D object localization and super-resolution methods for detecting tiny defects on printed circuit boards.",
-      "image": "images/research/esrpcb.png",
-      "topics": [
-        "Computer vision",
+        "Multi-robot collaboration",
         "Machine vision",
-        "Robot calibration"
+        "Robot calibration",
+        "Defect detection",
+        "Super-resolution"
+      ],
+      "tags": [
+        "Agentic robotics",
+        "Multi-robot collaboration",
+        "Machine vision",
+        "Robot calibration",
+        "Defect detection"
       ]
     }
   ],
@@ -239,10 +254,10 @@
     }
   ],
   "join_topics": [
-    "Active, semantic and lifelong SLAM",
-    "Robot perception and environment representation",
-    "Imitation learning and human–robot interaction",
-    "Safe navigation and multisensor fusion"
+    "Active and Semantic SLAM",
+    "Robust Perception and Autonomous Navigation",
+    "Robot Learning and Human–Robot Interaction",
+    "Agentic Robotics and Industrial Vision"
   ],
   "robots": []
 }

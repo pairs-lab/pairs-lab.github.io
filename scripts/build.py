@@ -207,7 +207,7 @@ def home():
 <div class="hero-actions"><a class="button" href="research/">Our research</a><a class="button button-ghost" href="join/">Join the lab</a></div>
 </div></section>
 <section class="section intro"><div class="shell intro-grid">
-<p class="intro-text">{esc(LAB["short_name"])} is based in the <a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a> at the <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a>, Hanoi. We study how robots perceive, map and act in the real world: semantic SLAM, robot learning, reliable navigation and robot vision.</p>
+<p class="intro-text">{esc(LAB["short_name"])} is based in the <a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a> at the <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a>, Hanoi. We study how robots perceive, map and act in the real world: active and semantic SLAM, robust perception and autonomous navigation, robot learning and human–robot interaction, and agentic robotics and industrial vision.</p>
 <dl class="stats"><div><dt>{count("journal")}</dt><dd>journal articles</dd></div><div><dt>{count("conference")}</dt><dd>conference papers</dd></div><div><dt>{current}</dt><dd>current members</dd></div></dl>
 </div></section>
 <section class="section section-alt"><div class="shell">{section_head("Research directions", "research/", "Research overview")}<div class="direction-grid">{directions}</div></div></section>
@@ -224,7 +224,7 @@ def research():
     for i, d in enumerate(LAB["directions"], 1):
         related = [p for p in sorted(PAPERS, key=lambda p: (-p["year"], TYPE_ORDER[p["type"]])) if set(p["topics"]) & set(d["topics"])]
         work = "".join(f'<li><a href="../publications/#{esc(p["id"])}">{esc(p["title"])}</a><span>{esc(p["venue"])} · {p["year"]}</span></li>' for p in related[:6])
-        tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in d["topics"])
+        tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in d.get("tags", d["topics"]))
         blocks += (f'<section class="direction" id="{d["id"]}"><div class="direction-text"><span class="direction-num">0{i}</span>'
                    f'<h2>{esc(d["title"])}</h2><p>{esc(d["description"])}</p><div class="tags">{tags}</div>'
                    f'<h3>Selected work</h3><ul class="work-list">{work}</ul>'
@@ -233,7 +233,7 @@ def research():
     body = (page_head("Research", "Perception, representation and learning for robots that operate in the real world.", "Research directions")
             + f'<div class="shell">{blocks}<section class="section notice"><h2>Connected research interests</h2><p>{esc(LAB["research_interests"])}</p>'
             f'<div class="chips"><a class="chip-link" href="../projects/">Projects {ARROW}</a><a class="chip-link" href="../publications/">Publications {ARROW}</a></div></section></div>')
-    render("research", "Research", "Research directions of PAIRS Lab: active and semantic SLAM, robot learning, navigation and robot vision.", body)
+    render("research", "Research", "Research directions of PAIRS Lab: active and semantic SLAM, robust perception and navigation, robot learning and human–robot interaction, agentic robotics and industrial vision.", body)
 
 
 def publications():
