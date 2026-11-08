@@ -1215,5 +1215,32 @@
       "website": ""
     },
     "image": "images/publications/path-aware-frontier-uav-exploration.jpg"
+  },
+  {
+    "id": "multi-view-reflective-inspection",
+    "title": "Multi-View Reflective Surface Inspection via Semantic-Saliency Cross-Verification",
+    "authors": [
+      "Van-Giang Nguyen",
+      "Tuan Thanh Tran",
+      "Xuan-Hieu Phan",
+      "Xiem HoangVan"
+    ],
+    "year": 2026,
+    "type": "conference",
+    "venue": "RIVF International Conference on Computing and Communication Technologies (RIVF)",
+    "status": "accepted",
+    "topics": [
+      "Computer vision",
+      "Defect detection",
+      "Machine vision"
+    ],
+    "abstract": "Reflective smartphone cover glass is challenging to inspect from a single fixed viewpoint because defect visibility varies with viewing geometry and specular reflections. This gives rise to two practical challenges: defects may be weakly observable from certain viewpoints, while the available visual evidence may remain spatially ambiguous. To address these issues, we propose a multi-view inspection framework in which each RGB observation is processed by a shared per-view expert. A vision-language model (VLM) produces class-aware semantic boxes, while a normal-reference reconstruction branch provides class-agnostic saliency. Their spatial agreement is used as supporting evidence to rank semantic proposals without modifying their coordinates or treating saliency as ground truth. The resulting evidence records are combined at product level without cross-view registration. On 282 production-line images, semantic-saliency association improves AP50 from 52.6% to 62.6% by re-ranking fixed semantic proposals. Across 94 products, cross-view evidence recall R_prod@0.5 increases from 75.5% for the best single view to 88.3% using all three views. These results support the complementary roles of semantic-saliency cross-verification and additional optical observations in reflective-surface inspection.",
+    "links": {
+      "paper": "",
+      "arxiv": "https://arxiv.org/abs/2608.30997",
+      "code": "",
+      "website": ""
+    },
+    "image": "images/publications/multi-view.jpg"
   }
 ]
