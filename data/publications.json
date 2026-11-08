@@ -389,7 +389,7 @@
       "paper": "",
       "arxiv": "https://arxiv.org/abs/2510.23988",
       "code": "",
-      "website": ""
+      "website": "https://thanhnguyencanh.github.io/3DCollabGS-SLAM-Survey/"
     },
     "cv_reference": "P3",
     "source_note": "CV marks Thanh Nguyen Canh and P. N. Xuan as equal contributors."
@@ -400,8 +400,8 @@
     "authors": [
       "Thanh Nguyen Canh",
       "Haolan Zhang",
-      "Xiem HoangVan",
       "Antonio Sgorbissa",
+      "Xiem HoangVan",
       "Nak Young Chong"
     ],
     "year": 2026,
