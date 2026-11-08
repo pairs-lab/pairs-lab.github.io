@@ -619,7 +619,8 @@
     ],
     "abstract": "Reinforcement learning in discrete-continuous hybrid action spaces presents fundamental challenges for robotic manipulation, where high-level task decisions and low-level joint-space execution must be jointly optimized. Existing approaches either discretize continuous components or relax discrete choices into continuous approximations, which suffer from scalability limitations and training instability in high-dimensional action spaces and under domain randomization. In this paper, we propose Hybrid TD3, an extension of Twin Delayed Deep Deterministic Policy Gradient (TD3) that natively handles parameterized hybrid action spaces in a principled manner. We conduct a rigorous theoretical analysis of overestimation bias in hybrid action settings, deriving formal bounds under twin-critic architectures and establishing a complete bias ordering across five algorithmic variants under synchronized Gaussian error assumptions. Building on this analysis, we introduce a weighted clipped Q-learning target that marginalizes over the discrete action distribution, achieving equivalent bias reduction to standard clipped minimization while improving policy smoothness. Experimental results demonstrate that Hybrid TD3 achieves superior training stability and competitive performance against state-of-the-art hybrid action baselines.",
     "image": "images/publications/hybrid-td3.jpg",
-    "video": "",
+    "poster": "images/demos/hybrid-td3.jpg",
+    "video": "images/demos/hybrid-td3.mp4",
     "links": {
       "paper": "https://doi.org/10.1109/case69030.2026.11704359",
       "arxiv": "https://arxiv.org/abs/2603.01302",
@@ -1047,7 +1048,7 @@
       "code": "https://github.com/pairs-lab/cpor-grasp",
       "website": ""
     },
-    "image": "images/demos/cpor-grasp.gif"
+    "image": "images/publications/cpor-grasp.jpg"
   },
   {
     "id": "semantic-aware-uav-exploration",
