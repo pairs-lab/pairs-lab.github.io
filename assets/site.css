@@ -20,6 +20,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }  /* the hidden attribute must win over component display rules */
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 16px); background: var(--bg); }
 body { margin: 0; color: var(--text); background: var(--bg); font: 17px/1.65 var(--font); -webkit-font-smoothing: antialiased; }
 body.nav-open { overflow: hidden; }
