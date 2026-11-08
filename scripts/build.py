@@ -303,7 +303,7 @@ def svg_height(name):
 def overview_figure(prefix):
     if not (ROOT / "images/directions/overview.svg").is_file():
         return ""
-    return (f'<figure class="overview-map"><a href="{prefix}images/directions/overview.svg" title="Open full size"><img src="{prefix}{fresh("images/directions/overview.svg")}" alt="{esc(overview_alt())}" width="1200" height="{svg_height("overview")}" loading="lazy" decoding="async"></a>'
+    return (f'<figure class="overview-map"><img src="{prefix}{fresh("images/directions/overview.svg")}" alt="{esc(overview_alt())}" width="1200" height="{svg_height("overview")}" loading="lazy" decoding="async">'
             f'<figcaption>How our four research directions fit together around robot autonomy: each one feeds the next, on our own robot platforms.</figcaption></figure>')
 
 
@@ -343,7 +343,7 @@ def research():
         programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ All directions</a>'
                      f'<p class="program-kicker"><span>0{i}</span>{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>'
                      f'<p class="program-copy">{esc(d["description"])}</p>'
-                     + (f'<figure class="direction-map"><a href="../images/directions/{d["id"]}.svg" title="Open full size"><img src="../{fresh("images/directions/" + d["id"] + ".svg")}" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async"></a>'
+                     + (f'<figure class="direction-map"><img src="../{fresh("images/directions/" + d["id"] + ".svg")}" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async">'
                         f'<figcaption>The core sub-areas of this direction, illustrated with results from our papers.</figcaption></figure>' if d.get("map") else "")
                      + f'<div class="work-heading"><h3>Featured projects and demos</h3>'
                      f'<p>Published work and papers under review are marked; each card links its project, paper or code.</p></div>'
@@ -416,10 +416,20 @@ def life():
     """Lab Life: one section per event (data/life.json), newest first, with a photo gallery."""
     events = ""
     for e in LIFE:
-        photos = "".join(f'<a class="gallery-item" href="../{esc(ph["src"])}"><img src="../{esc(fresh(ph["src"]))}" alt="{esc(ph["alt"])}" width="1600" height="1200" loading="lazy" decoding="async"></a>'
-                         for ph in e["photos"])
+        n = len(e["photos"])
+        cards = "".join(f'<button class="carousel-card" type="button" data-card aria-label="Show photo {i + 1} of {n}">'
+                        f'<span class="carousel-photo"><img src="../{esc(fresh(ph["src"]))}" alt="{esc(ph["alt"])}" width="1600" height="1200" loading="{"eager" if i < 6 else "lazy"}" decoding="async"></span></button>'
+                        for i, ph in enumerate(e["photos"]))
+        dots = "".join(f'<button type="button" data-dot aria-label="Show photo {i + 1} of {n}"></button>' for i in range(n))
+        details = "".join(f'<p class="carousel-detail life-caption" data-detail>{esc(ph["alt"])}</p>' for ph in e["photos"])
+        ring = (f'<div class="carousel carousel-wide" data-carousel tabindex="0" aria-roledescription="carousel" aria-label="{esc(e["title"])} photos">'
+                f'<div class="carousel-stage" data-stage>{cards}</div>'
+                f'<button class="carousel-arrow carousel-prev" type="button" data-prev aria-label="Previous photo">◀</button>'
+                f'<button class="carousel-arrow carousel-next" type="button" data-next aria-label="Next photo">▶</button>'
+                f'<div class="carousel-dots" data-dots>{dots}</div></div>'
+                f'<div class="carousel-details" aria-live="polite">{details}</div>')
         events += (f'<section class="life-event" id="{esc(e["id"])}"><div class="life-head"><p class="kicker">{esc(e["date"])} · {esc(e["place"])}</p>'
-                   f'<h2>{esc(e["title"])}</h2><p>{esc(e["text"])}</p></div><div class="gallery">{photos}</div></section>')
+                   f'<h2>{esc(e["title"])}</h2><p>{esc(e["text"])}</p></div>{ring}</section>')
     body = (page_head("Lab Life", "Dinners, celebrations and trips: the people of PAIRS Lab outside the lab.", "Beyond research")
             + f'<div class="shell section">{events}</div>')
     render("life", "Lab Life", "Gatherings and events of PAIRS Lab.", body)

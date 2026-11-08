@@ -158,13 +158,14 @@
         var n = cards.length;
         var width = root.clientWidth || 1160;
         var unit = Math.max(0.42, Math.min(1, width / 1160));
+        var spread = cards.length ? (cards[0].offsetWidth || 260) / 260 : 1;  // wider cards (photos) need wider spacing
         var maxVisible = width < 600 ? 2 : width < 900 ? 4 : 6;
         cards.forEach(function (card, i) {
           var o = i - active;
           if (o > n / 2) o -= n;
           if (o < -n / 2) o += n;
           var a = Math.abs(o), s = o < 0 ? -1 : 1;
-          var x = a === 0 ? 0 : s * (225 + (a - 1) * 58) * unit;
+          var x = a === 0 ? 0 : s * (225 + (a - 1) * 58) * unit * spread;
           var y = a === 0 ? 0 : 34 * unit;
           var z = a === 0 ? 40 : -70 - a * 55;
           var ry = a === 0 ? 0 : -s * Math.min(14 + a * 3, 32);
