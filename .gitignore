@@ -4,3 +4,5 @@ __pycache__/
 docs/reports/
 # source PDFs dropped in for figure extraction: never publish by accident
 *.pdf
+# per-paper folders (own git repos / source PDFs): never part of the lab site
+/publications/*/
