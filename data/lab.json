@@ -49,7 +49,7 @@
         {
           "paper": "uc-slam",
           "label": "EuRoC benchmark",
-          "attribution": "T-RO · under review",
+          "attribution": "Preprint · under review",
           "title": "Probabilistically Consistent Visual-Inertial SLAM",
           "cta": "UC-SLAM",
           "text": "UC-SLAM builds on ORB-SLAM3 with learned feature uncertainty and a foundation-model metric-depth factor, so features are weighted by content and metric scale does not rely on motion excitation alone."
@@ -57,7 +57,7 @@
         {
           "paper": "hiper",
           "label": "Simulated homes",
-          "attribution": "RA-L · submitted",
+          "attribution": "Preprint · submitted",
           "title": "Lifelong Open-Vocabulary Object Maps",
           "cta": "HiPer",
           "text": "HiPer learns hierarchical persistence beliefs from data rather than class-based priors, estimating whether each object is still in place after it leaves the robot's view."
@@ -65,7 +65,7 @@
         {
           "paper": "usgloc",
           "label": "7-Scenes",
-          "attribution": "RA-L · under review",
+          "attribution": "Preprint · under review",
           "title": "Uncertainty-Aware Localization from Gaussian Splatting",
           "cta": "USGLoc",
           "text": "USGLoc localizes a camera in a semantic 3D Gaussian Splatting map and reports how much to trust the pose, so the estimate can be fused into a Bayesian state estimator."
@@ -289,7 +289,7 @@
         {
           "paper": "cpor-grasp",
           "label": "Grasp reasoning",
-          "attribution": "ICRA · submitted",
+          "attribution": "Preprint · submitted",
           "title": "Calibrated Obstruction Reasoning for Grasping in Clutter",
           "cta": "CPOR-Grasp",
           "text": "Calibrated vision-language predictions and probabilistic reasoning over alternative obstruction graphs decide whether to grasp the target, remove a blocker, or wait."
@@ -424,7 +424,7 @@
         {
           "paper": "safeguard-asf",
           "label": "Preprint",
-          "attribution": "arXiv 2026",
+          "attribution": "Preprint · 2026",
           "title": "Agentic Humanoid Robots for Industrial Safety",
           "cta": "SafeGuard ASF",
           "text": "A ReAct-style agent on a Unitree G1 humanoid combines RGB-D perception and learned locomotion to detect fire and smoke, abnormal pipeline temperatures and intruders in unmanned factories."

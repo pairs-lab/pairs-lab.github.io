@@ -90,7 +90,7 @@ def citation(p):
     head = f'title = {{{p["title"]}}},\n  author = {{{" and ".join(p["authors"])}}},\n'
     arxiv = p["links"].get("arxiv", "")
     if in_review(p):  # not published yet: cite the arXiv version, never claim the target venue
-        note = f'  note = {{{"Preprint" if p["type"] == "preprint" else p["status"].capitalize() + ", " + p["venue"]}}},\n'
+        note = f'  note = {{{"Preprint" if not p.get("status") or p["status"] == "preprint" else "Preprint, " + p["status"]}}},\n'
         eprint = f'  eprint = {{{arxiv.rsplit("/", 1)[-1]}}},\n  archivePrefix = {{arXiv}},\n' if arxiv else ""
         return f'@misc{{{p["id"]},\n  {head}{eprint}{note}  year = {{{p["year"]}}}\n}}'
     kind, field = {"journal": ("article", "journal"), "conference": ("inproceedings", "booktitle")}[p["type"]]
@@ -135,11 +135,18 @@ def authors(p):
     return ", ".join(f"<strong>{esc(a)}</strong>" if name_key(a) in MEMBERS else esc(a) for a in p["authors"])
 
 
+def badge_and_venue(p):
+    """Under review / preprint: 'Preprint' badge and year only; the target venue stays in the data for later."""
+    if in_review(p):
+        return f'<span class="badge badge-preprint">Preprint</span>{p["year"]}'
+    return f'<span class="badge badge-{p["type"]}">{TYPE_LABEL[p["type"]]}</span>{esc(p["venue"])} · {p["year"]}'
+
+
 def paper_card(p, prefix, compact=False):
     title = esc(p["title"])
     if p["links"].get("website"):
         title = f'<a href="{esc(p["links"]["website"])}">{title}</a>'
-    status = f' <span class="status">{esc(p["status"])}</span>' if p.get("status", "") not in HIDDEN_STATUS else ""
+    status = f' <span class="status">{esc(p["status"])}</span>' if p.get("status", "") not in HIDDEN_STATUS | {"preprint"} else ""
     extra = ""
     if not compact:
         if p.get("abstract"):
@@ -147,11 +154,10 @@ def paper_card(p, prefix, compact=False):
         extra += f'<details><summary>BibTeX</summary><pre><code>{esc(citation(p))}</code></pre></details>'
     pic = media(p, prefix)
     search = esc(" ".join([p["title"], *p["authors"], p["venue"], str(p["year"]), *p["topics"]]).lower())
-    return (f'<article class="paper{"" if pic else " no-media"}" id="{esc(p["id"])}" data-type="{p["type"]}" data-review="{1 if in_review(p) else 0}" '
+    return (f'<article class="paper{"" if pic else " no-media"}" id="{esc(p["id"])}" data-type="{"preprint" if in_review(p) else p["type"]}" data-review="{1 if in_review(p) else 0}" '
             f'data-year="{p["year"]}" data-topics="{esc("|".join(p["topics"]))}" data-search="{search}">'
             + (f'<div class="paper-media">{pic}</div>' if pic else "")
-            + f'<div class="paper-body"><p class="paper-meta"><span class="badge badge-{p["type"]}">{TYPE_LABEL[p["type"]]}</span>'
-            f'{esc(p["venue"])} · {p["year"]}{status}</p><h3>{title}</h3><p class="authors">{authors(p)}</p>'
+            + f'<div class="paper-body"><p class="paper-meta">{badge_and_venue(p)}{status}</p><h3>{title}</h3><p class="authors">{authors(p)}</p>'
             f'<div class="chips">{links(p)}</div>{extra}</div></article>')
 
 
