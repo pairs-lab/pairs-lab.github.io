@@ -51,7 +51,7 @@ class Canvas:
     def __init__(self, height, title, desc):
         self.h = height
         self.parts = [f'<rect width="{W}" height="{height}" fill="#fff"/>']
-        self.defs = ['<radialGradient id="hub" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#0b55ad"/><stop offset="1" stop-color="#061a36"/></radialGradient>',
+        self.defs = ['<radialGradient id="hub" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#f2f8ff"/><stop offset="1" stop-color="#cfe5fa"/></radialGradient>',
                      f'<marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="{CYAN}"/></marker>']
         self.title, self.desc, self.clip = title, desc, 0
 
@@ -78,17 +78,17 @@ class Canvas:
         return rows
 
     def hub(self, cx, cy, r, title, sub, title_wrap=14, sub_wrap=22):
-        self.add(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#hub)"/>')
+        self.add(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#hub)" stroke="#9cc7ef" stroke-width="2"/>')
         tl, sl = wrap(title, title_wrap), wrap(sub, sub_wrap)
         block = len(tl) * 28 + 18 + len(sl) * 19
         y = cy - block / 2 + 22
         for line in tl:
-            self.add(f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">{esc(line)}</text>')
+            self.add(f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="24" font-weight="800" fill="{NAVY}">{esc(line)}</text>')
             y += 28
         self.add(f'<line x1="{cx - 28}" y1="{y - 12}" x2="{cx + 28}" y2="{y - 12}" stroke="{CYAN}" stroke-width="2.5" stroke-linecap="round"/>')
         y += 10
         for line in sl:
-            self.add(f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="14" font-weight="600" fill="#cfe3fb">{esc(line)}</text>')
+            self.add(f'<text x="{cx}" y="{y}" text-anchor="middle" font-size="14" font-weight="600" fill="{ACCENT}">{esc(line)}</text>')
             y += 19
 
     def ring(self, cx, cy, r, angles, dashed=True):
