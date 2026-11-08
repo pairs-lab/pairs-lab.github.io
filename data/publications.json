@@ -337,10 +337,10 @@
     "id": "monocular-vslam-colonoscopy-survey",
     "title": "Monocular vSLAM for Colonoscopy: Recent Advances, Benchmarking, and Future Perspectives",
     "authors": [
-      "D. M. Do",
-      "V. B. Nguyen",
+      "Duc Manh Do",
+      "Van Bang Nguyen",
       "Thanh Nguyen Canh",
-      "M. T. Thai",
+      "Mai Thanh Thai",
       "Xiem HoangVan"
     ],
     "year": 2026,
@@ -353,7 +353,7 @@
       "Survey"
     ],
     "abstract": "",
-    "image": "",
+    "image": "images/publications/monocular-vslam-colonoscopy-survey.jpg",
     "video": "",
     "links": {
       "paper": "",
@@ -365,17 +365,17 @@
   },
   {
     "id": "collaborative-gaussian-splatting-slam-survey",
-    "title": "A Survey on Collaborative SLAM with 3D Gaussian Splatting",
+    "title": "Collaborative SLAM in the Era of 3D Gaussian Splatting: Architectures, Methods, and Future Directions",
     "authors": [
+      "Phuc Nguyen Xuan",
       "Thanh Nguyen Canh",
-      "P. N. Xuan",
-      "H. Nguyen",
+      "Huu-Hung Nguyen",
       "Nak Young Chong",
       "Xiem HoangVan"
     ],
     "year": 2026,
     "type": "journal",
-    "venue": "Autonomous Robots",
+    "venue": "International Journal of Intelligent Robotics and Applications (IJIRA)",
     "status": "under review",
     "topics": [
       "SLAM",
@@ -1088,9 +1088,9 @@
       "Thanh Nguyen Canh"
     ],
     "year": 2026,
-    "type": "conference",
-    "venue": "International Conference on Control, Automation, Robotics and Vision (ICARCV)",
-    "status": "preprint",
+    "type": "journal",
+    "venue": "IEEE Sensors Letters",
+    "status": "under review",
     "topics": [
       "SLAM",
       "Semantic SLAM"
