@@ -1181,8 +1181,8 @@
     "links": {
       "paper": "",
       "arxiv": "",
-      "code": "",
-      "website": ""
+      "code": "https://github.com/pairs-lab/pairs_drone_inspection",
+      "website": "https://thanhnguyencanh.github.io/pairs_inspection/"
     },
     "image": "images/publications/uav-warehouse-inspection.jpg"
   },
