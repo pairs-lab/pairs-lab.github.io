@@ -151,6 +151,7 @@
     var details = $$("[data-detail]", root.nextElementSibling);
     var panel = root.closest("[data-panel]");
     var active = 0;
+    if (cards.length < 2) root.classList.add("is-single");
     var api = {
       root: root, panel: panel, cards: cards, details: details,
       layout: function () {
@@ -202,15 +203,17 @@
     window.addEventListener("resize", function () { carousels.forEach(function (c) { c.layout(); }); });
     var opened = false;
     var openBySlug = function (slug) {
+      var hit = null;
       carousels.forEach(function (c) {
         c.details.forEach(function (d, i) {
-          if (d.id === slug) { if (c.panel) showTab(c.panel.dataset.panel); c.go(i); opened = true; }
+          if (d.id === slug) { if (c.panel) showTab(c.panel.dataset.panel); c.go(i); opened = true; hit = c.root; }
         });
       });
+      return hit;
     };
     var hash = decodeURIComponent(window.location.hash.slice(1));
     if (tabs.some(function (t) { return t.dataset.tab === hash; })) { showTab(hash); opened = true; }
-    else if (hash) openBySlug(hash);
+    else if (hash) { var ring = openBySlug(hash); if (ring) ring.scrollIntoView({ block: "center" }); }
     if (!opened && tabs.length) showTab("people");
 
     // ---- member search (combobox) ----
@@ -231,7 +234,7 @@
       });
       var matches = [], cursor = -1;
       var close = function () { popup.hidden = true; input.setAttribute("aria-expanded", "false"); cursor = -1; };
-      var choose = function (p) { input.value = p.name; close(); openBySlug(p.slug); box.parentNode.querySelector("[data-carousel]").scrollIntoView({ block: "center" }); };
+      var choose = function (p) { input.value = p.name; close(); var ring = openBySlug(p.slug); if (ring) ring.scrollIntoView({ block: "center" }); };
       var draw = function () {
         var q = input.value.toLowerCase().trim();
         if (!q) { close(); return; }

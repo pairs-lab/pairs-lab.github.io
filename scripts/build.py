@@ -400,21 +400,6 @@ def carousel(records, label, prefix, profiles=True):
             f'<div class="carousel-details" aria-live="polite">{details}</div>')
 
 
-def directory(records):
-    """Plain grouped list of current members (Staff, PhD, Master, Undergraduate) that links to each profile."""
-    sections = ""
-    for g in LAB["people"]:
-        members = [r for r in records if r["group"] == g["group"]]
-        if not members:
-            continue
-        cards = "".join(
-            f'<a class="dir-card" href="{esc(r["slug"])}/"><img src="../{esc(r["image"])}" alt="" width="72" height="72" loading="lazy" decoding="async">'
-            f'<span><strong>{esc(r["name"])}</strong><small>{esc(r["role"])}</small></span></a>' for r in members)
-        sections += (f'<section class="dir-group" id="group-{slugify(g["group"])}"><h3>{esc(g["group"])} <span>{len(members)}</span></h3>'
-                     f'<div class="dir-grid">{cards}</div></section>')
-    return f'<div class="directory"><h2 class="dir-title">Directory</h2>{sections}</div>'
-
-
 def people():
     records = member_records()
     current = [r for r in records if r["group"] != "Alumni"]
@@ -424,6 +409,15 @@ def people():
               'aria-autocomplete="list" aria-expanded="false" aria-controls="member-search-results">'
               '<div class="member-search-popup" hidden><div id="member-search-results" role="listbox" aria-label="Members"></div>'
               '<p class="member-search-empty" role="status" hidden>No matching members. Try another name.</p></div></div>')
+    rings, n = "", 0
+    for g in LAB["people"]:
+        members = [r for r in current if r["group"] == g["group"]]
+        if not members:
+            continue  # e.g. PhD Students appears once it has members
+        n += 1
+        rings += (f'<section class="member-group" id="group-{slugify(g["group"])}"><div class="panel-heading">'
+                  f'<p class="kicker">0{n} / {esc(g["group"])}</p><h2>{esc(g["group"])}</h2></div>'
+                  f'{carousel(members, LAB["short_name"] + " " + g["group"].lower(), "../")}</section>')
     awards = LAB["student_awards"]
     body = f'''<section class="members-page"><div class="shell">
 <header class="members-intro"><h1>Members</h1><p>Meet the staff, students and alumni of {esc(LAB["short_name"])}.</p></header>
@@ -432,13 +426,11 @@ def people():
 <button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
 </div>
 <section class="member-panel" id="panel-people" role="tabpanel" data-panel="people">
-<div class="panel-heading"><p class="kicker">01 / Staff &amp; students</p><h2>People</h2></div>
 {search}
-{carousel(current, LAB["short_name"] + " people", "../")}
-{directory(current)}
+{rings}
 </section>
 <section class="member-panel" id="panel-alumni" role="tabpanel" data-panel="alumni">
-<div class="panel-heading"><p class="kicker">02 / Alumni</p><h2>Alumni</h2></div>
+<div class="panel-heading"><p class="kicker">Former members</p><h2>Alumni</h2></div>
 {carousel(alumni, LAB["short_name"] + " alumni", "../")}
 </section>
 <section class="notice"><h2>Student awards</h2><p>{esc(awards["title"])}:</p><ul>{"".join(f"<li>{esc(x)}</li>" for x in awards["items"])}</ul><a class="text-link" href="../join/">Join the lab {ARROW}</a></section>
