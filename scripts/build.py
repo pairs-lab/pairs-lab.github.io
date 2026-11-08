@@ -20,7 +20,7 @@ LAB = json.loads((ROOT / "data/lab.json").read_text(encoding="utf-8"))
 PAPERS = json.loads((ROOT / "data/publications.json").read_text(encoding="utf-8"))
 NEWS = sorted(json.loads((ROOT / "data/news.json").read_text(encoding="utf-8")), key=lambda n: n["date"], reverse=True)
 PAGES = [("", "Home"), ("research", "Research"), ("publications", "Publications"), ("projects", "Projects"),
-         ("datasets", "Datasets & Resources"), ("news", "News"), ("people", "Member"), ("join", "Join Us")]
+         ("datasets", "Datasets & Resources"), ("news", "News"), ("people", "Members"), ("join", "Join Us")]
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
 HIDDEN_STATUS = {"", "accepted", "published", "preprint"}
@@ -271,16 +271,16 @@ def research():
     programs = ""
     for i, d in enumerate(LAB["directions"], 1):
         cards = "".join(topic_card(f, "../") for f in d.get("featured", []))
-        programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ Research directions</a>'
+        programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ All directions</a>'
                      f'<p class="program-kicker"><span>0{i}</span>{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>'
                      f'<p class="program-copy">{esc(d["description"])}</p>'
-                     f'<div class="work-heading"><h3>Selected research and lab demonstrations</h3>'
+                     f'<div class="work-heading"><h3>Featured projects and demos</h3>'
                      f'<p>Published work and papers under review are marked; each card links its project, paper or code.</p></div>'
                      f'<div class="topic-grid">{cards}</div>'
                      f'<a class="text-link" href="../publications/?topic={esc(d["topics"][0])}">All related publications {ARROW}</a></article>')
     paragraphs = "".join(f"<p>{esc(t)}</p>" for t in focus["paragraphs"])
     body = (f'<header class="research-hero"><div class="shell"><p class="kicker">{esc(LAB["short_name"])}</p><h1>Research</h1></div></header>'
-            f'<section class="research-focus"><div class="shell focus-grid"><div><p class="kicker">Our focus on</p><h2>{esc(focus["title"])}</h2></div>'
+            f'<section class="research-focus"><div class="shell focus-grid"><div><p class="kicker">What drives us</p><h2>{esc(focus["title"])}</h2></div>'
             f'<div class="focus-copy">{paragraphs}</div></div></section>'
             f'<nav class="research-choices" id="research-directions" aria-label="Research directions"><div class="shell">'
             f'<div class="choices-head"><p class="kicker">Research</p><button class="preview-toggle" type="button" data-preview-toggle hidden>Pause previews</button></div>'
@@ -320,18 +320,28 @@ def projects():
 
 
 def datasets():
-    robots = [{**m, "group": "Robot", "role": m.get("category", "Platform"), "slug": slugify(m["name"]), "bio_text": m.get("description", ""),
-               "image": m.get("image") or "images/people/default.svg"} for m in LAB.get("robots", [])]
-    machines = (carousel(robots, LAB["short_name"] + " robots and research infrastructure", "../", profiles=False) if robots else
-                '<p class="notice">Our robot platforms, sensors and computing infrastructure will be listed here soon.</p>')
-    body = (page_head("Datasets & Resources", "Research datasets, robot platforms and infrastructure of the lab.", "Open research")
+    groups = {}
+    for r in LAB.get("robots", []):
+        groups.setdefault(r.get("group", "Robots"), []).append(r)
+    machines = ""
+    for name, items in groups.items():
+        cards = "".join(
+            f'<article class="hw-card"><div class="hw-media{" is-contain" if r.get("fit") == "contain" else ""}">'
+            f'<img src="../{esc(r["image"])}" alt="{esc(r["name"])}" loading="lazy" decoding="async"></div>'
+            f'<div class="hw-body"><p class="hw-category">{esc(r["category"])}</p><h3>{esc(r["name"])}</h3><p>{esc(r["description"])}</p>'
+            + (f'<a class="text-link" href="{esc(r["url"])}">Learn more {EXT}</a>' if r.get("url") else "") + '</div></article>'
+            for r in items)
+        machines += f'<div class="hw-group"><h3 class="hw-group-title">{esc(name)} <span>{len(items)}</span></h3><div class="hw-grid">{cards}</div></div>'
+    if not machines:
+        machines = '<p class="notice">Our robot platforms, sensors and computing infrastructure will be listed here soon.</p>'
+    body = (page_head("Datasets & Resources", "Research datasets, robot platforms and computing hardware of the lab.", "Open research")
             + f'<div class="shell"><section class="section" id="datasets">{section_head("Datasets", kicker="01 / Data")}'
             f'<div class="notice"><p class="kicker">Dataset releases</p><h3>Coming soon</h3>'
             f'<p>Dataset download links will be listed here when available. For resources associated with an existing paper, see its project page and repository.</p>'
             f'<div class="chips"><a class="chip-link" href="mailto:{esc(LAB["email"])}?subject=Research%20dataset%20inquiry">Ask about research data {EXT}</a>'
             f'<a class="chip-link" href="../publications/">Code is linked from each publication {ARROW}</a><a class="chip-link" href="{esc(LAB["github"])}">GitHub organization {EXT}</a></div></div>'
             f'<p class="muted">Please consult each repository for its license, usage instructions and citation information.</p></section>'
-            f'<section class="section resources-panel" id="resources">{section_head("Robots & Research Infrastructure", kicker="02 / The platforms")}{machines}</section></div>')
+            f'<section class="section resources-panel" id="resources">{section_head("Robot Platforms & Computing", kicker="02 / Hardware")}{machines}</section></div>')
     render("datasets", "Datasets & Resources", "Research datasets, robot platforms and infrastructure of PAIRS Lab.", body)
 
 
@@ -401,13 +411,13 @@ def people():
               '<p class="member-search-empty" role="status" hidden>No matching members. Try another name.</p></div></div>')
     awards = LAB["student_awards"]
     body = f'''<section class="members-page"><div class="shell">
-<header class="members-intro"><h1>Member</h1><p>Meet the faculty, students and alumni of {esc(LAB["short_name"])}.</p></header>
+<header class="members-intro"><h1>Members</h1><p>Meet the faculty, students and alumni of {esc(LAB["short_name"])}.</p></header>
 <div class="member-tabs" role="tablist" aria-label="Choose directory">
 <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-people" data-tab="people">People</button>
 <button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
 </div>
 <section class="member-panel" id="panel-people" role="tabpanel" data-panel="people">
-<div class="panel-heading"><p class="kicker">01 / The team</p><h2>People</h2></div>
+<div class="panel-heading"><p class="kicker">01 / Faculty &amp; students</p><h2>People</h2></div>
 {search}
 {carousel(current, LAB["short_name"] + " people", "../")}
 </section>
@@ -417,7 +427,7 @@ def people():
 </section>
 <section class="notice"><h2>Student awards</h2><p>{esc(awards["title"])}:</p><ul>{"".join(f"<li>{esc(x)}</li>" for x in awards["items"])}</ul><a class="text-link" href="../join/">Join the lab {ARROW}</a></section>
 </div></section>'''
-    render("people", "Member", "Faculty, students and alumni of PAIRS Lab.", body)
+    render("people", "Members", "Faculty, students and alumni of PAIRS Lab.", body)
     for r in records:
         profile(r)
 

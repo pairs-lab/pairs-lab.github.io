@@ -421,7 +421,73 @@
     "Robot Learning and Human–Robot Interaction",
     "Agentic Robotics and Industrial Vision"
   ],
-  "robots": [],
+  "robots": [
+    {
+      "name": "Custom Quadrotor UAV",
+      "group": "Robots",
+      "category": "Aerial robot",
+      "image": "images/resources/uav.jpg",
+      "fit": "cover",
+      "description": "Lab-built quadrotor with a 3D-printed frame, an onboard NVIDIA Jetson computer and an Intel RealSense depth camera, used for semantic mapping, active SLAM and autonomous exploration."
+    },
+    {
+      "name": "TurtleBot 4",
+      "group": "Robots",
+      "category": "Mobile robot",
+      "image": "images/resources/turtlebot4.jpg",
+      "fit": "cover",
+      "description": "ROS 2 mobile robot on the iRobot Create 3 base with a 2D LiDAR and an OAK-D stereo camera, used for indoor navigation, mapping and social navigation experiments."
+    },
+    {
+      "name": "Universal Robots UR3",
+      "group": "Robots",
+      "category": "Collaborative arm",
+      "image": "images/resources/ur3.jpg",
+      "fit": "contain",
+      "description": "Six-axis collaborative arm for tabletop manipulation, grasping in clutter and human–robot collaboration."
+    },
+    {
+      "name": "Raspberry Pi Mouse",
+      "group": "Robots",
+      "category": "Mobile robot",
+      "image": "images/resources/pimouse.jpg",
+      "fit": "cover",
+      "description": "Compact two-wheeled robot fitted with a 2D laser scanner and a webcam, used for teaching and for SLAM and localization experiments."
+    },
+    {
+      "name": "Dual-Arm Service Robot",
+      "group": "Robots",
+      "category": "Service robot",
+      "image": "images/resources/dual-arm-robot.jpg",
+      "fit": "cover",
+      "url": "https://thanhnguyencanh.github.io/DualArmRobot/",
+      "description": "Mobile dual-arm robot designed and built in the lab for human–robot interaction, gesture and voice interaction, and service tasks."
+    },
+    {
+      "name": "NVIDIA Jetson Orin NX",
+      "group": "Edge computing",
+      "category": "Embedded GPU",
+      "image": "images/resources/jetson-orin-nx.jpg",
+      "fit": "contain",
+      "description": "Embedded AI computer for running perception and learning models onboard robots in real time."
+    },
+    {
+      "name": "NVIDIA Jetson AGX Xavier",
+      "group": "Edge computing",
+      "category": "Embedded GPU",
+      "image": "images/resources/jetson-agx-xavier.jpg",
+      "fit": "contain",
+      "description": "High-performance embedded computer for onboard SLAM, semantic segmentation and planning."
+    },
+    {
+      "name": "NVIDIA Jetson TX2",
+      "group": "Edge computing",
+      "category": "Embedded GPU",
+      "image": "images/resources/jetson-tx2.jpg",
+      "fit": "contain",
+      "description": "Embedded computer for lightweight onboard perception on aerial and mobile robots."
+    }
+  ],
   "focus": {
     "title": "Robot Autonomy",
     "paragraphs": [

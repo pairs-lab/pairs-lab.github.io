@@ -302,6 +302,22 @@ address { margin-bottom: 16px; font-style: normal; }
   .research-choice { min-height: 190px; }
 }
 
+/* hardware cards (Datasets & Resources) */
+.hw-group { margin-top: 28px; }
+.hw-group-title { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; color: var(--accent-strong); font-size: 1.15rem; }
+.hw-group-title span { padding: 1px 9px; border-radius: 999px; color: var(--accent-strong); background: var(--accent-soft); font-size: 0.8rem; }
+.hw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+.hw-card { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #fff; transition: transform 0.2s, box-shadow 0.2s; }
+.hw-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.hw-media { position: relative; overflow: hidden; aspect-ratio: 4 / 3; background: var(--bg-alt); }
+.hw-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hw-media.is-contain { background: #fff; border-bottom: 1px solid var(--line); }
+.hw-media.is-contain img { object-fit: contain; padding: 14px; }
+.hw-body { display: flex; flex-direction: column; flex: 1; padding: 16px 18px 18px; }
+.hw-category { margin: 0 0 4px; color: var(--cyan); font-size: 0.76rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.hw-body h3 { margin-bottom: 8px; font-size: 1.05rem; }
+.hw-body p:not(.hw-category) { flex: 1; margin-bottom: 10px; color: var(--text); font-size: 0.93rem; }
+
 /* responsive */
 @media (max-width: 1080px) {
   .direction-grid { grid-template-columns: repeat(2, 1fr); }
