@@ -114,12 +114,18 @@ def links(p):
     return out
 
 
+def fresh(path):
+    """Append a content fingerprint so browsers refetch an image as soon as it changes."""
+    f = ROOT / path
+    return f"{path}?v={hashlib.sha256(f.read_bytes()).hexdigest()[:8]}" if f.is_file() else path
+
+
 def media(p, prefix):
     if p.get("image"):
-        return f'<img src="{esc(prefix + p["image"])}" alt="" loading="lazy" decoding="async">'
+        return f'<img src="{esc(prefix + fresh(p["image"]))}" alt="" loading="lazy" decoding="async">'
     if p.get("video"):
         src = p["video"] if p["video"].startswith("http") else prefix + p["video"]
-        poster = f' poster="{esc(prefix + p["poster"])}" preload="none"' if p.get("poster") else ' preload="metadata"'
+        poster = f' poster="{esc(prefix + fresh(p["poster"]))}" preload="none"' if p.get("poster") else ' preload="metadata"'
         return (f'<video controls muted playsinline{poster} aria-label="Demo video: {esc(p["title"])}">'
                 f'<source src="{esc(src)}" type="video/mp4"></video>')
     return ""
@@ -243,7 +249,7 @@ def card_media(d):
     card = f'images/directions/{d["id"]}-card.svg'
     if d.get("map") and (ROOT / card).is_file():
         alt = d["title"] + ": " + ", ".join(n["name"] for n in d["map"]["nodes"])
-        return f'<div class="direction-media is-map"><img src="{card}" alt="{esc(alt)}" width="720" height="450" loading="lazy" decoding="async"></div>'
+        return f'<div class="direction-media is-map"><img src="{fresh(card)}" alt="{esc(alt)}" width="720" height="450" loading="lazy" decoding="async"></div>'
     return f'<div class="direction-media"><img src="{esc(d["image"])}" alt="" decoding="async"></div>'
 
 
@@ -290,7 +296,7 @@ def svg_height(name):
 def overview_figure(prefix):
     if not (ROOT / "images/directions/overview.svg").is_file():
         return ""
-    return (f'<figure class="overview-map"><a href="{prefix}images/directions/overview.svg" title="Open full size"><img src="{prefix}images/directions/overview.svg" alt="{esc(overview_alt())}" width="1200" height="{svg_height("overview")}" loading="lazy" decoding="async"></a>'
+    return (f'<figure class="overview-map"><a href="{prefix}images/directions/overview.svg" title="Open full size"><img src="{prefix}{fresh("images/directions/overview.svg")}" alt="{esc(overview_alt())}" width="1200" height="{svg_height("overview")}" loading="lazy" decoding="async"></a>'
             f'<figcaption>How our four research directions fit together around robot autonomy: each one feeds the next, on our own robot platforms.</figcaption></figure>')
 
 
@@ -308,7 +314,7 @@ def topic_card(f, prefix):
         pic = (f'<video data-loop muted loop playsinline preload="metadata" aria-hidden="true">'
                f'<source src="{esc(p["video"])}" type="video/mp4"></video>')
     elif p.get("image"):
-        pic = f'<img src="{esc(prefix + p["image"])}" alt="" loading="lazy" decoding="async">'
+        pic = f'<img src="{esc(prefix + fresh(p["image"]))}" alt="" loading="lazy" decoding="async">'
     else:
         pic = '<span class="topic-placeholder" aria-hidden="true"></span>'
     url = p["links"].get("website") or p["links"].get("paper") or p["links"].get("arxiv") or p["links"].get("code") or f'{prefix}publications/#{p["id"]}'
@@ -330,7 +336,7 @@ def research():
         programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ All directions</a>'
                      f'<p class="program-kicker"><span>0{i}</span>{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>'
                      f'<p class="program-copy">{esc(d["description"])}</p>'
-                     + (f'<figure class="direction-map"><a href="../images/directions/{d["id"]}.svg" title="Open full size"><img src="../images/directions/{d["id"]}.svg" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async"></a>'
+                     + (f'<figure class="direction-map"><a href="../images/directions/{d["id"]}.svg" title="Open full size"><img src="../{fresh("images/directions/" + d["id"] + ".svg")}" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async"></a>'
                         f'<figcaption>The core sub-areas of this direction, illustrated with results from our papers.</figcaption></figure>' if d.get("map") else "")
                      + f'<div class="work-heading"><h3>Featured projects and demos</h3>'
                      f'<p>Published work and papers under review are marked; each card links its project, paper or code.</p></div>'
