@@ -1,0 +1,248 @@
+{
+  "name": "Perception, Autonomy, and Intelligent Robotics Systems Lab",
+  "short_name": "PAIRS Lab",
+  "tagline": "Perception, representation and learning for robots that operate in the real world.",
+  "site_url": "https://pairs-lab.github.io/",
+  "hero_image": "images/vnu-campus.jpg",
+  "email": "thanhnc@jaist.ac.jp",
+  "github": "https://github.com/pairs-lab",
+  "affiliation": {
+    "department": "Robotics Department",
+    "department_url": "https://sites.google.com/view/aimpuet/home",
+    "institution": "University of Engineering and Technology, Vietnam National University",
+    "institution_short": "VNU-UET",
+    "institution_url": "https://uet.vnu.edu.vn/en/"
+  },
+  "office": {
+    "room": "704",
+    "building": "E3 Building",
+    "city": "Hanoi, Vietnam",
+    "maps_url": "https://maps.app.goo.gl/f5X8RaNbiU7YKNjU8",
+    "embed_url": "https://maps.google.com/maps?q=21.0382325,105.7826814&z=17&output=embed"
+  },
+  "directions": [
+    {
+      "id": "semantic-slam",
+      "title": "Active & semantic SLAM",
+      "summary": "Building meaningful representations of the world for autonomous robots.",
+      "description": "Building meaningful representations of the world for autonomous robots. Our research spans probabilistic semantic mapping, visual SLAM under challenging conditions, and active exploration with UAVs.",
+      "image": "images/research/iraf-slam.png",
+      "topics": [
+        "SLAM",
+        "Semantic SLAM",
+        "Active SLAM"
+      ]
+    },
+    {
+      "id": "robot-learning",
+      "title": "Robot learning & interaction",
+      "summary": "Learning robot behavior from observations, demonstrations and interaction.",
+      "description": "Learning robot behavior from observations, demonstrations and interaction. We investigate imitation learning, reinforcement learning and the use of vision-language models for robotic manipulation and human–robot interaction.",
+      "image": "images/research/video2command.jpg",
+      "topics": [
+        "Robot learning",
+        "Human–robot interaction",
+        "Reinforcement learning"
+      ]
+    },
+    {
+      "id": "navigation",
+      "title": "Reliable localization & navigation",
+      "summary": "Connecting perception with safe decisions.",
+      "description": "Connecting perception with safe decisions. We work on semantic-aware path planning, multisensor fusion, and motion prediction for navigation around people and in challenging environments.",
+      "image": "images/research/social-navigation.png",
+      "topics": [
+        "Navigation",
+        "Sensor fusion"
+      ]
+    },
+    {
+      "id": "robot-vision",
+      "title": "Robot vision & industrial perception",
+      "summary": "Turning visual observations into useful information for robotics and inspection.",
+      "description": "Turning visual observations into useful information for robotics and inspection. Applications include monocular 3D object localization and super-resolution methods for detecting tiny defects on printed circuit boards.",
+      "image": "images/research/esrpcb.png",
+      "topics": [
+        "Computer vision",
+        "Machine vision",
+        "Robot calibration"
+      ]
+    }
+  ],
+  "research_interests": "We are also interested in lifelong SLAM, robot dynamics learning, model-based reinforcement learning and learning from demonstration. Modeling uncertainty in map representations and robot dynamics is central to our interests in safe, active planning and control.",
+  "selected_publications": [
+    "bayesian-probabilistic-data-association",
+    "semantic-visual-slam-survey",
+    "esrpcb"
+  ],
+  "people": [
+    {
+      "group": "Faculty",
+      "members": [
+        {
+          "name": "Thanh Nguyen Canh",
+          "image": "images/people/thanh.jpg",
+          "url": "https://thanhnguyencanh.github.io/",
+          "note": "Lecturer, Robotics Department, VNU-UET",
+          "bio": "Thanh Nguyen Canh is a lecturer in the Robotics Department at the University of Engineering and Technology, Vietnam National University (VNU-UET), and a Ph.D. candidate at the Japan Advanced Institute of Science and Technology (JAIST), working on 3D active semantic SLAM, robot perception, navigation and learning."
+        }
+      ],
+      "role": "Faculty"
+    },
+    {
+      "group": "Master students",
+      "members": [
+        {
+          "name": "Pham Thi My Le",
+          "image": "images/people/le.jpg"
+        },
+        {
+          "name": "Quoc Bao Nguyen",
+          "image": "images/people/bao.jpg",
+          "url": "https://scholar.google.com.vn/citations?hl=en&authuser=1&user=ZrIP6fgAAAAJ"
+        },
+        {
+          "name": "Manh Do Duc",
+          "image": "images/people/manh.jpg",
+          "url": "https://scholar.google.com.vn/citations?hl=en&authuser=1&user=Hj01OC4AAAAJ"
+        }
+      ],
+      "role": "Master's Student"
+    },
+    {
+      "group": "Undergraduate students",
+      "members": [
+        {
+          "name": "Nguyen Duc Khanh Huyen",
+          "image": "images/people/huyen.jpg"
+        },
+        {
+          "name": "Nguyen Van Bang",
+          "image": "images/people/bang.jpg"
+        },
+        {
+          "name": "Tuan Thanh Tran",
+          "image": "images/people/tuan.jpg",
+          "url": "https://scholar.google.com.vn/citations?hl=en&authuser=1&user=KPCDoNsAAAAJ"
+        },
+        {
+          "name": "Duong Vu Viet Thang",
+          "image": "images/people/thang.jpg"
+        },
+        {
+          "name": "Dinh Manh Quan",
+          "image": "images/people/quan.jpg"
+        },
+        {
+          "name": "Thang Tran Viet",
+          "image": "images/people/thang-2.jpg",
+          "url": "https://scholar.google.com.vn/citations?hl=en&authuser=1&user=YUrt870AAAAJ"
+        },
+        {
+          "name": "Phuc Dinh Van",
+          "image": "images/people/phuc.jpg",
+          "url": "https://scholar.google.com.vn/citations?hl=en&authuser=1&user=nKX07A4AAAAJ"
+        },
+        {
+          "name": "Tong Nguyen Van",
+          "image": "images/people/tong.jpg"
+        }
+      ],
+      "role": "Undergraduate Student"
+    },
+    {
+      "group": "Alumni",
+      "members": [
+        {
+          "name": "Hoang Ngo Huy",
+          "image": "images/people/hoang.jpg",
+          "note": "Vin Robotics"
+        },
+        {
+          "name": "Dang Minh Bui",
+          "image": "images/people/dang.jpg",
+          "url": "https://scholar.google.com.vn/citations?hl=en&authuser=1&user=_FX7gOEAAAAJ",
+          "note": "UET-VNU"
+        },
+        {
+          "name": "Thien Nguyen Duc",
+          "image": "images/people/thien.jpg",
+          "note": "Samsung SDV"
+        },
+        {
+          "name": "Quan Nguyen"
+        },
+        {
+          "name": "Kien Hoang Van"
+        }
+      ],
+      "role": "Alumni"
+    }
+  ],
+  "student_awards": {
+    "title": "Student Research Competition, VNU-University of Engineering and Technology",
+    "items": [
+      "Second place, 2026",
+      "Third place, 2025",
+      "Second place, 2023"
+    ]
+  },
+  "funded_projects": [
+    {
+      "title": "SOLARIS",
+      "status": "Completed",
+      "program": "Horizon Europe",
+      "grant": "HORIZON-CL5-2023-D3-02-13",
+      "description": "Research on drone teams for monitoring solar panels and detecting defects and faults, with Prof. Antonio Sgorbissa at RICE Lab, DIBRIS, University of Genoa.",
+      "role": "Thanh Nguyen Canh, visiting researcher, University of Genoa",
+      "period": "2026"
+    }
+  ],
+  "research_projects": [
+    {
+      "id": "semantic-active-slam",
+      "title": "Semantic Active SLAM",
+      "period": "2022–present",
+      "description": "Semantic-aware mapping and active exploration for UAVs, with research on robust visual SLAM, data association and Gaussian splatting.",
+      "tools": "Python / C++ · ROS · UAVs"
+    },
+    {
+      "id": "humanoid-interaction",
+      "title": "Humanoid Robot Interaction & Social Navigation",
+      "period": "2024–present",
+      "description": "Multi-robot collaboration, humanoid perception and interaction using vision-language and large language models, with navigation in crowded environments.",
+      "tools": "Python / C++ · ROS / ROS2"
+    },
+    {
+      "id": "delibot",
+      "title": "Delibot — Humanoid Robotics",
+      "period": "2020–2024",
+      "description": "Design and fabrication of a dual-arm service robot, visual 3D localization from 2D estimates and obstacle avoidance using multisensor fusion.",
+      "tools": "C++ / Python · ROS · MoveIt / Gazebo"
+    }
+  ],
+  "positions": [
+    {
+      "title": "Master's students",
+      "text": "Students who want to do thesis research in SLAM, robot learning or autonomous navigation. Contact us with your research interests before you apply.",
+      "tag": "Thesis research"
+    },
+    {
+      "title": "Undergraduate researchers",
+      "text": "VNU-UET undergraduates can join ongoing projects, co-author papers and take part in the Student Research Competition.",
+      "tag": "Project-based"
+    },
+    {
+      "title": "Visiting students & collaborators",
+      "text": "Students and researchers at other institutions are welcome to collaborate with us on a clearly scoped research project.",
+      "tag": "Onsite / remote"
+    }
+  ],
+  "join_topics": [
+    "Active, semantic and lifelong SLAM",
+    "Robot perception and environment representation",
+    "Imitation learning and human–robot interaction",
+    "Safe navigation and multisensor fusion"
+  ],
+  "robots": []
+}

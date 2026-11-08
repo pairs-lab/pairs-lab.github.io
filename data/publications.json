@@ -1,0 +1,806 @@
+[
+  {
+    "id": "iraf-slam",
+    "title": "IRAF-SLAM: An Illumination-Robust and Adaptive Feature-Culling Front-End for Visual SLAM in Challenging Environments",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Bao Nguyen Quoc",
+      "HaoLan Zhang",
+      "Bupesh Rethinam Veeraiah",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2025,
+    "type": "conference",
+    "venue": "European Conference on Mobile Robots (ECMR)",
+    "status": "accepted",
+    "topics": [
+      "SLAM",
+      "Robot perception"
+    ],
+    "abstract": "Robust Visual SLAM (vSLAM) is essential for autonomous systems operating in real-world environments, where challenges such as dynamic objects, low texture, and critically, varying illumination conditions often degrade performance. Existing feature-based SLAM systems rely on fixed front-end parameters, making them vulnerable to sudden lighting changes and unstable feature tracking. To address these challenges, we propose \"IRAF-SLAM\", an Illumination-Robust and Adaptive Feature-Culling front-end designed to enhance vSLAM resilience in complex and challenging environments. Our approach introduces: (1) an image enhancement scheme to preprocess and adjust image quality under varying lighting conditions; (2) an adaptive feature extraction mechanism that dynamically adjusts detection sensitivity based on image entropy, pixel intensity, and gradient analysis; and (3) a feature culling strategy that filters out unreliable feature points using density distribution analysis and a lighting impact factor. Comprehensive evaluations on the TUM and European Robotics Challenge (EuRoC) datasets demonstrate that IRAF-SLAM significantly reduces tracking failures and achieves superior trajectory accuracy compared to state-of-the-art vSLAM methods under adverse illumination conditions. These results highlight the effectiveness of adaptive front-end strategies in improving vSLAM robustness without incurring significant computational overhead.",
+    "image": "images/research/iraf-slam.png",
+    "video": "",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/IRAF-SLAM/",
+      "code": "https://github.com/thanhnguyencanh/IRAF-SLAM"
+    }
+  },
+  {
+    "id": "s3m",
+    "title": "S3M: Semantic Segmentation Sparse Mapping for UAVs with RGB-D Camera",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Van-Truong Nguyen",
+      "Xiem HoangVan",
+      "Armagan Elibol",
+      "Nak Young Chong"
+    ],
+    "year": 2024,
+    "type": "conference",
+    "venue": "IEEE/SICE International Symposium on System Integration (SII)",
+    "status": "accepted",
+    "topics": [
+      "Semantic SLAM",
+      "UAVs"
+    ],
+    "abstract": "This paper presents a novel approach to address challenges in semantic information extraction and utilization within UAV operations. Our system integrates state-of-the-art visual SLAM to estimate a comprehensive 6-DoF pose and advanced object segmentation methods at the back end. To improve the computational and storage efficiency of the framework, we adopt a streamlined voxel-based 3D map representation - OctoMap to build a working system. Furthermore, the fusion algorithm is incorporated to obtain the semantic information of each frame from the front-end SLAM task, and the corresponding point. By leveraging semantic information, our framework enhances the UAV's ability to perceive and navigate through indoor spaces, addressing challenges in pose estimation accuracy and uncertainty reduction. Through Gazebo simulations, we validate the efficacy of our proposed system and successfully embed our approach into a Jetson Xavier AGX unit for real-world applications.",
+    "image": "",
+    "video": "https://thanhnguyencanh.github.io/images/s3m/mp4/sim.mp4",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/S3M_SLAM/",
+      "paper": "https://arxiv.org/abs/2401.08134",
+      "code": "https://github.com/thanhnguyencanh/S3M_SLAM"
+    }
+  },
+  {
+    "id": "object-oriented-semantic-mapping",
+    "title": "Object-Oriented Semantic Mapping for Reliable UAVs Navigation",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Armagan Elibol",
+      "Nak Young Chong",
+      "Xiem HoangVan"
+    ],
+    "year": 2023,
+    "type": "conference",
+    "venue": "IEEE International Conference on Control, Automation and Information Sciences (ICCAIS)",
+    "status": "accepted",
+    "topics": [
+      "Semantic SLAM",
+      "UAVs"
+    ],
+    "abstract": "To autonomously navigate in real-world environments, special in search and rescue operations, Unmanned Aerial Vehicles (UAVs) necessitate comprehensive maps to ensure safety. However, the prevalent metric map often lacks semantic information crucial for holistic scene comprehension. In this paper, we proposed a system to construct a probabilistic metric map enriched with object information extracted from the environment from RGB-D images. Our approach combines a state-of-the-art YOLOv8-based object detection framework at the front end and a 2D SLAM method - CartoGrapher at the back end. To effectively track and position semantic object classes extracted from the front-end interface, we employ the innovative BoT-SORT methodology. A novel association method is introduced to extract the position of objects and then project it with the metric map. Unlike previous research, our approach takes into reliable navigating in the environment with various hollow bottom objects. The output of our system is a probabilistic map, which significantly enhances the map's representation by incorporating object-specific attributes, encompassing class distinctions, accurate positioning, and object heights. A number of experiments have been conducted to evaluate our proposed approach. The results show that the robot can effectively produce augmented semantic maps containing several objects (notably chairs and desks). Furthermore, our system is evaluated within an embedded computer - Jetson Xavier AGX unit to demonstrate the use case in real-world applications.",
+    "image": "",
+    "video": "https://thanhnguyencanh.github.io/images/ppm/mp4/video_demo.mp4",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/probabilistic_semantic_mapping/",
+      "paper": "https://arxiv.org/abs/2401.08132",
+      "code": "https://github.com/thanhnguyencanh/probabilistic_semantic_mapping"
+    }
+  },
+  {
+    "id": "multisensor-data-fusion",
+    "title": "Multisensor Data Fusion for Reliable Obstacle Avoidance",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Truong Son Nguyen",
+      "Cong Hoang Quach",
+      "Xiem HoangVan",
+      "Manh Duong Phung"
+    ],
+    "year": 2022,
+    "type": "conference",
+    "venue": "IEEE International Conference on Control, Automation and Information Sciences (ICCAIS)",
+    "status": "accepted",
+    "topics": [
+      "Sensor fusion",
+      "Navigation"
+    ],
+    "abstract": "In this work, we propose a new approach that combines data from multiple sensors for reliable obstacle avoidance. The sensors include two depth cameras and a LiDAR arranged so that they can capture the whole 3D area in front of the robot and a 2D slide around it. To fuse the data from these sensors, we first use an external camera as a reference to combine data from two depth cameras. A projection technique is then introduced to convert the 3D point cloud data of the cameras to its 2D correspondence. An obstacle avoidance algorithm is then developed based on the dynamic window approach. A number of experiments have been conducted to evaluate our proposed approach. The results show that the robot can effectively avoid static and dynamic obstacles of different shapes and sizes in different environments.",
+    "image": "",
+    "video": "https://thanhnguyencanh.github.io/images/mulDF/demo.mp4",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/MulDF/",
+      "paper": "https://arxiv.org/abs/2212.13218"
+    }
+  },
+  {
+    "id": "esrpcb",
+    "title": "ESRPCB: an Edge guided Super-Resolution model and Ensemble learning for tiny Printed Circuit Board Defect detection",
+    "authors": [
+      "Xiem HoangVan",
+      "Dang Bui Dinh",
+      "Thanh Nguyen Canh",
+      "Van-Truong Nguyen"
+    ],
+    "year": 2025,
+    "type": "journal",
+    "venue": "Engineering Applications of Artificial Intelligence",
+    "status": "accepted",
+    "topics": [
+      "Machine vision",
+      "Defect detection",
+      "Computer vision"
+    ],
+    "abstract": "Printed Circuit Boards (PCBs) are critical components in modern electronics, which require stringent quality control to ensure proper functionality. However, the detection of defects in small-scale PCBs images poses significant challenges as a result of the low resolution of the captured images, leading to potential confusion between defects and noise. To overcome these challenges, this paper proposes a novel framework, named ESRPCB (edge-guided super-resolution for PCBs defect detection), which combines edge-guided super-resolution with ensemble learning to enhance PCBs defect detection. Our approach leverages the edge information to guide the EDSR (Enhanced Deep Super-Resolution) model with a novel ResCat (Residual Concatenation) structure, enabling it to reconstruct high-resolution images from small PCBs inputs. By incorporating edge features, the super-resolution process preserves critical structural details, ensuring that tiny defects remain distinguishable in the enhanced image. Following this, a multi-modal defect detection model employs ensemble learning to analyze the super-resolved image, improving the accuracy of defect identification. Experimental results demonstrate that ESRPCB achieves superior performance compared to State-of-the-Art (SOTA) methods. Our model attains an average Peak Signal to Noise Ratio (PSNR) of 30.54 dB(decibel), surpassing EDSR by 0.42dB. In defect detection, ESRPCB achieves a mAP50(mean average precision at an Intersection over Union threshold of 0.50) of 0.965, surpassing EDSR (0.905) and traditional super-resolution models by over 5%. Furthermore, our ensemble-based detection approach further enhances performance, achieving a mAP50 of 0.977. These results highlight the effectiveness of ESRPCB in enhancing both image quality and defect detection accuracy, particularly in challenging low-resolution scenarios.",
+    "image": "images/research/esrpcb.png",
+    "video": "",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/ESRPCB/",
+      "paper": "https://www.sciencedirect.com/science/article/abs/pii/S0952197625015490",
+      "code": "https://github.com/thanhnguyencanh/ESRPCB"
+    },
+    "source_note": "Title and author order follow the primary paper: https://arxiv.org/abs/2506.13476. All original website authors and full abstract are retained."
+  },
+  {
+    "id": "human-to-robot",
+    "title": "Human-to-Robot Interaction: Learning from Video Demonstration for Robot Imitation",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Tuan Thanh Tran",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "preprint",
+    "venue": "Autonomous Robots",
+    "status": "2nd revision",
+    "topics": [
+      "Robot learning",
+      "Human–robot interaction"
+    ],
+    "abstract": "Robotic manipulation through learning from demonstration aims to enable robots to acquire various actions efficiently. Unlike traditional learning from observation-action pairs, which is time-consuming and requires proficiency in coding. Our approach is inspired by the way humans learn and imitate actions in a more flexible and efficient manner by simply \"watching\" and \"repeating\" the actions. Inspired by this, we propose a \"Human-to-Robot\" imitation learning pipeline, which enables robots to learn diverse actions from video demonstrations. Specifically, we explicitly represent each step as two key tasks: (1) understanding the demonstration video and (2) learning the demonstrated manipulations. First, the video description is achieved by focusing on two essential commonsense properties: action understanding and object understanding. We utilize deep Convolutional Neural Networks (CNNs) and Large Vision Models (VLMs) to extract meaningful features related to these properties. Then, for execution, we develop a robot manipulation system built upon a Language Vision-conditioned architectures and Deep Reinforcement Learning. Experiments with real-world video demonstrations. The results show the robustness and adaptability of the two frameworks in various scenarios using a real robotic arm UR5.",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "P2",
+    "source_note": "Submitted manuscript authors, venue and year follow the latest owner CV; abstract is retained from the original website."
+  },
+  {
+    "id": "three-way-traffic-signal-control",
+    "title": "Design of Deep Reinforcement Learning Approach for Traffic Signal Control at Three-way Crossroads",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Anh Pham Tuan",
+      "Xiem HoangVan"
+    ],
+    "year": 2024,
+    "type": "journal",
+    "venue": "Public Transport",
+    "status": "accepted",
+    "topics": [
+      "Robot learning",
+      "Reinforcement learning"
+    ],
+    "abstract": "Traffic light control (TSC) is an important and challenging real-world problem with the aim of reducing travel time as well as saving energy. Recent researches have numerous attempts to apply intelligent methods for TSC at four-way crossroads to solve the traffic light scheduling problem. However, there is the limitation of researches on efficient TSC at three-way crossroads. Therefore, this paper introduces a novel TSC solution for three-way crossroad environment (TW-TSC). The proposed TSC method is designed based on a deep reinforcement learning approach, namely Soft Actor-Critic (TWSAC). Firstly, we create a simulation environment for three-way crossroads which consists of numerous transportation and two parallel lanes using Unity framework. Secondly, to achieve practical movements of transportation in three-way crossroads, we carefully design agents which have a high impact to the transportation movement, notably the time to wait for traffic light, the velocity of transportation, and the number of transportation passing successfully. Finally, to achieve TW-TSC efficiency, we propose a novel reward function together with a design of TWSAC algorithm. Experimental results show that the proposed TWSAC in TW-TSC achieves higher performance than both fixed-time TSC methods and relevant RL algorithms.",
+    "image": "images/research/traffic-signal-rl.png",
+    "video": "",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/DRL4Three-wayTSC/",
+      "paper": "https://www.researchsquare.com/article/rs-3128875/v1",
+      "code": "https://github.com/thanhnguyencanh/DRL4Three-wayTSC"
+    }
+  },
+  {
+    "id": "dual-arm-service-robot",
+    "title": "Optimal design and fabrication of frame structure for dual-arm service robots: An effective approach for human–robot interaction",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Son Tran Duc",
+      "Huong Nguyen The",
+      "Trang Huyen Dao",
+      "Xiem HoangVan"
+    ],
+    "year": 2024,
+    "type": "journal",
+    "venue": "Engineering Science and Technology, an International Journal (JESTECH)",
+    "status": "accepted",
+    "topics": [
+      "Human–robot interaction",
+      "Robot design"
+    ],
+    "abstract": "Rapid advancement in robotics technology has paved the way for developing mobile service robots capable of human interaction and assistance. In this paper, we propose a comprehensive approach to design, fabricate, and optimize the overall structure of a dual-arm service robot. The conceptual design phase focuses on both critical components, the mobile platform and the manipulation system, essential for seamless navigation and effective task execution. In the proposed system, the distribution of the robot payload in terms of region, maximum stress, and displacement is examined, comprehensively analyzed, and compared with the relevant works. In addition, to enhance the system’s efficiency while minimizing its weight, we introduce a lightweight design approach in which Finite Element Analysis is utilized to optimize the frame structure. Subsequently, we fabricate a physical prototype based on the derived model. Finally, we provide a kinematic model for our dual-arm service robot and demonstrate its efficacy in both control and human–robot interaction (HRI) tasks. Experimental results indicate that the proposed dual arm design can achieve a significant weight reduction of 25% from the original design while still performing actions smoothly for HRI tasks.",
+    "image": "",
+    "video": "https://thanhnguyencanh.github.io/images/DAR/mp4/ObsAvd.mp4",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/DualArmRobot/",
+      "paper": "https://www.sciencedirect.com/science/article/pii/S2215098624001496"
+    }
+  },
+  {
+    "id": "reliable-uav-localization",
+    "title": "Toward Integrating Semantic-aware Path Planning and Reliable Localization for UAV Operations",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Huy-Hoang Ngo",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2024,
+    "type": "conference",
+    "venue": "International Conference on Control, Automation and Systems (ICCAS)",
+    "status": "accepted",
+    "topics": [
+      "UAVs",
+      "Navigation"
+    ],
+    "abstract": "Localization is one of the most crucial tasks for Unmanned Aerial Vehicle systems (UAVs) directly impacting overall performance, which can be achieved with various sensors and applied to numerous tasks related to search and rescue operations, object tracking, construction, etc. However, due to the negative effects of challenging environments, UAVs may lose signals for localization. In this paper, we present an effective path-planning system leveraging semantic segmentation information to navigate around texture-less and problematic areas like lakes, oceans, and high-rise buildings using a monocular camera. We introduce a real-time semantic segmentation architecture and a novel keyframe decision pipeline to optimize image inputs based on pixel distribution, reducing processing time. A hierarchical planner based on the Dynamic Window Approach (DWA) algorithm, integrated with a cost map, is designed to facilitate efficient path planning. The system is implemented in a photo-realistic simulation environment using Unity, aligning with segmentation model parameters. Comprehensive qualitative and quantitative evaluations validate the effectiveness of our approach, showing significant improvements in the reliability and efficiency of UAV localization in challenging environments.",
+    "image": "",
+    "video": "https://thanhnguyencanh.github.io/images/RealiableLocalization/mp4/RGB%20Image.mp4",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/ReliableLocalize/",
+      "paper": "https://arxiv.org/abs/2411.01816"
+    }
+  },
+  {
+    "id": "social-robot-navigation",
+    "title": "Enhancing Social Robot Navigation with Integrated Motion Prediction and Trajectory Planning in Dynamic Human Environments",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2024,
+    "type": "conference",
+    "venue": "International Conference on Control, Automation and Systems (ICCAS)",
+    "status": "accepted",
+    "topics": [
+      "Navigation",
+      "Human–robot interaction"
+    ],
+    "abstract": "Navigating safely in dynamic human environments is crucial for mobile service robots, and social navigation is a key aspect of this process. In this paper, we proposed an integrative approach that combines motion prediction and trajectory planning to enable safe and socially-aware robot navigation. The main idea of the proposed method is to leverage the advantages of Socially Acceptable trajectory prediction and Timed Elastic Band (TEB) by incorporating human interactive information including position, orientation, and motion into the objective function of the TEB algorithms. In addition, we designed social constraints to ensure the safety of robot navigation. The proposed system is evaluated through physical simulation using both quantitative and qualitative metrics, demonstrating its superior performance in avoiding human and dynamic obstacles, thereby ensuring safe navigation.",
+    "image": "images/research/social-navigation.png",
+    "video": "",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/SGan-TEB/",
+      "paper": "https://arxiv.org/abs/2411.01814",
+      "code": "https://github.com/thanhnguyencanh/SGan-TEB"
+    }
+  },
+  {
+    "id": "m-calib",
+    "title": "M-Calib: A Monocular 3D Object Localization using 2D Estimates for Industrial Robot Vision System",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Du Ngoc Trinh",
+      "Xiem HoangVan"
+    ],
+    "year": 2025,
+    "type": "journal",
+    "venue": "Journal of Automation, Mobile Robotics and Intelligent Systems (JAMRIS)",
+    "status": "accepted",
+    "topics": [
+      "Machine vision",
+      "Robot calibration",
+      "Computer vision"
+    ],
+    "abstract": "3D Object Localization has been emerging recently as one of the challenges of Machine Vision or Robot Vision tasks. In this paper, we proposed a novel method designed for the localization of isometric flat 3D objects, leveraging a blend of deep learning techniques primarily rooted in object detection, postimage processing algorithms, and pose estimation. Our approach involves the strategic application of 3D calibration methods tailored for low-cost industrial robotics systems, requiring only a single 2D image input. Initially, object detection is performed using the You Only Look Once (YOLO) model, followed by segmentation of the object into two distinct parts— the top face and the remainder— using the Mask R-CNN model. Subsequently, the center of the top face serves as the initialization position and a unique combination of postprocessing techniques and a novel calibration algorithm is employed to refine the object’s position. Experimental results demonstrate a notable reduction in localization error by 87.65% when compared to existing methodologies.",
+    "image": "images/research/m-calib.png",
+    "video": "",
+    "links": {
+      "website": "https://thanhnguyencanh.github.io/MonoCalibNet/",
+      "paper": "https://www.researchsquare.com/article/rs-4019542/v1",
+      "code": "https://github.com/thanhnguyencanh/MonoCalibNet"
+    }
+  },
+  {
+    "id": "rocc",
+    "title": "ROCC: Reliability-Gated Obstruction Reasoning with Certified DAG for Clutter Grasping",
+    "authors": [
+      "Tuan Thanh Tran",
+      "Thanh Nguyen Canh",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2027,
+    "type": "preprint",
+    "venue": "IEEE International Conference on Robotics and Automation (ICRA)",
+    "status": "preprint",
+    "topics": [
+      "Robot learning",
+      "Manipulation"
+    ],
+    "abstract": "",
+    "image": "images/demos/rocc-grasp.gif",
+    "video": "",
+    "links": {},
+    "cv_reference": "P17"
+  },
+  {
+    "id": "con-dso",
+    "title": "Con-DSO: Learning Short-Horizon Consistency Priors for RGB-D Direct Sparse Odometry",
+    "authors": [
+      "Haolan Zhang",
+      "Thanh Nguyen Canh",
+      "C. Li",
+      "Z. Gao",
+      "X. Jiang",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "preprint",
+    "venue": "IEEE Transactions on Multimedia",
+    "status": "under review",
+    "topics": [
+      "SLAM",
+      "Computer vision"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "P8"
+  },
+  {
+    "id": "monocular-vslam-colonoscopy-survey",
+    "title": "Monocular vSLAM for Colonoscopy: Recent Advances, Benchmarking, and Future Perspectives",
+    "authors": [
+      "D. M. Do",
+      "V. B. Nguyen",
+      "Thanh Nguyen Canh",
+      "M. T. Thai",
+      "Xiem HoangVan"
+    ],
+    "year": 2026,
+    "type": "preprint",
+    "venue": "Robotics and Autonomous Systems",
+    "status": "under review",
+    "topics": [
+      "SLAM",
+      "Computer vision",
+      "Survey"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "P7"
+  },
+  {
+    "id": "collaborative-gaussian-splatting-slam-survey",
+    "title": "A Survey on Collaborative SLAM with 3D Gaussian Splatting",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "P. N. Xuan",
+      "H. Nguyen",
+      "Nak Young Chong",
+      "Xiem HoangVan"
+    ],
+    "year": 2026,
+    "type": "preprint",
+    "venue": "Autonomous Robots",
+    "status": "under review",
+    "topics": [
+      "SLAM",
+      "Gaussian splatting",
+      "Survey"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "P3",
+    "source_note": "CV marks Thanh Nguyen Canh and P. N. Xuan as equal contributors."
+  },
+  {
+    "id": "bayesian-probabilistic-data-association",
+    "title": "BPDA-GMM: Bayesian Probabilistic Data Association via Gaussian Mixture Models for Semantic SLAM",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Haolan Zhang",
+      "Xiem HoangVan",
+      "Antonio Sgorbissa",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "journal",
+    "venue": "IEEE Robotics and Automation Letters (RA-L)",
+    "topics": [
+      "SLAM",
+      "Semantic SLAM",
+      "Probabilistic learning"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "images/demos/bpda-gmm.mp4",
+    "links": {
+      "paper": "https://arxiv.org/abs/2606.04618",
+      "code": "https://github.com/pairs-lab/BPDA-SLAM"
+    },
+    "cv_reference": "J8",
+    "source_note": "Title and full five-author list follow https://arxiv.org/abs/2606.04618. CV lists this under journals with two authors; no journal acceptance status is supplied.",
+    "poster": "images/demos/bpda-gmm.jpg"
+  },
+  {
+    "id": "e2dsr",
+    "title": "E2DSR: Edge-Enhanced Representation for Deep Super-Resolution in Machine Vision Applications",
+    "authors": [
+      "Xiem HoangVan",
+      "Long Luong Hai",
+      "Thanh Nguyen Canh"
+    ],
+    "year": 2025,
+    "type": "journal",
+    "venue": "REV Journal on Electronics and Communications",
+    "topics": [
+      "Computer vision",
+      "Machine vision",
+      "Super-resolution"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {
+      "paper": "https://rev-jec.org/index.php/rev-jec/article/view/427"
+    },
+    "cv_reference": "J7"
+  },
+  {
+    "id": "semantic-visual-slam-survey",
+    "title": "Semantic Visual Simultaneous Localization and Mapping: A survey on state of the art, challenges, and future directions",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Haolan Zhang",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "journal",
+    "venue": "Robotics and Autonomous Systems",
+    "topics": [
+      "SLAM",
+      "Semantic SLAM",
+      "Survey"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {
+      "paper": "https://www.sciencedirect.com/science/article/pii/S0921889026002071"
+    },
+    "cv_reference": "J5",
+    "source_note": "Title and full four-author list follow official JAIST records: https://www.jaist.ac.jp/jisedai/results.html. Published 16 May 2026; CV omits Haolan Zhang."
+  },
+  {
+    "id": "sr-slam",
+    "title": "SR-SLAM: Scene reliability-based RGB-D SLAM in diverse environments",
+    "authors": [
+      "Haolan Zhang",
+      "Chenghao Li",
+      "Thanh Nguyen Canh",
+      "Lijun Wang",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "journal",
+    "venue": "Robotics and Autonomous Systems",
+    "topics": [
+      "SLAM",
+      "Computer vision"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {
+      "paper": "https://www.sciencedirect.com/science/article/pii/S0921889025004038"
+    },
+    "cv_reference": "J4",
+    "source_note": "Publication year (March 2026) and full five-author list follow official JAIST records: https://www.jaist.ac.jp/jisedai/results2025.html. CV lists 2025 and omits Lijun Wang."
+  },
+  {
+    "id": "decoupled-object-centric-video-understanding",
+    "title": "Decoupled Object-Centric Video Understanding for Generating Robotic Manipulation Commands",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Tuan Thanh Tran",
+      "Haolan Zhang",
+      "Z. Gao",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "conference",
+    "venue": "International Conference on Control, Automation and Systems (ICCAS)",
+    "topics": [
+      "Robot learning",
+      "Computer vision",
+      "Manipulation"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "images/demos/video2command.mp4",
+    "links": {},
+    "cv_reference": "C17",
+    "poster": "images/demos/video2command.jpg"
+  },
+  {
+    "id": "owavesync",
+    "title": "OWaveSync: Constrained Wavefront Optimization for Synchronized Co-Speech Gestures in Humanoid Robots",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Thang Tran Viet",
+      "G. H. Uong",
+      "P. V. Dinh",
+      "T. V. T. Nguyen",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "conference",
+    "venue": "International Conference on Control, Automation and Systems (ICCAS)",
+    "topics": [
+      "Human–robot interaction",
+      "Humanoid robotics"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "images/demos/wavesync.mp4",
+    "links": {},
+    "cv_reference": "C17",
+    "poster": "images/demos/wavesync.jpg"
+  },
+  {
+    "id": "osdag",
+    "title": "OSDAG: Online Scheduling for Efficient Multi-Robot Collaboration",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Thang Tran Viet",
+      "P. V. Dinh",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "conference",
+    "venue": "International Conference on Control, Automation and Systems (ICCAS)",
+    "topics": [
+      "Robot learning",
+      "Multi-robot collaboration"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "images/demos/osdag.mp4",
+    "links": {},
+    "cv_reference": "C17",
+    "poster": "images/demos/osdag.jpg"
+  },
+  {
+    "id": "hybrid-td3",
+    "title": "Hybrid TD3: Overestimation Bias Analysis and Stable Policy Optimization for Hybrid Action Space",
+    "authors": [
+      "Tuan Thanh Tran",
+      "Thanh Nguyen Canh",
+      "Nak Young Chong",
+      "Xiem HoangVan"
+    ],
+    "year": 2026,
+    "type": "conference",
+    "venue": "IEEE International Conference on Automation Science and Engineering (CASE)",
+    "topics": [
+      "Robot learning",
+      "Reinforcement learning"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "C16"
+  },
+  {
+    "id": "il-slam",
+    "title": "IL-SLAM: Intelligent Line-assisted SLAM Based on Feature Awareness for Dynamic Environments",
+    "authors": [
+      "Haolan Zhang",
+      "Thanh Nguyen Canh",
+      "Chenghao Li",
+      "Ruidong Yang",
+      "Yonghoon Ji",
+      "Nak Young Chong"
+    ],
+    "year": 2025,
+    "type": "conference",
+    "venue": "International Conference on Robotic Computing and Communication (RoboticCC)",
+    "topics": [
+      "SLAM",
+      "Computer vision"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {
+      "paper": "https://ieeexplore.ieee.org/document/11391948"
+    },
+    "cv_reference": "C15",
+    "source_note": "Venue and full author names follow official JAIST records: https://www.jaist.ac.jp/jisedai/results2025.html. CV abbreviates the venue as IRC."
+  },
+  {
+    "id": "humanoid-gesture-voice-interaction",
+    "title": "Development of a Humanoid Robot Prototype and Gesture and Voice-Based Interaction Approach",
+    "authors": [
+      "Thang Tran Viet",
+      "Phuc Dinh Van",
+      "Huy Uong Gia",
+      "Son Tran Duc",
+      "Thanh Nguyen Canh",
+      "Xiem HoangVan"
+    ],
+    "year": 2025,
+    "type": "conference",
+    "venue": "International Conference on Advances in Information and Communication Technology (RIVF)",
+    "topics": [
+      "Human–robot interaction",
+      "Humanoid robotics"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "C14",
+    "source_note": "Title and author list follow the CV. Official JAIST records list a RIVF 2025 work titled Development of a Humanoid Robot Prototype for Multimodal Human-Robot Interaction with a different author list; no merge or link is assumed."
+  },
+  {
+    "id": "refined-monocular-3d-localization",
+    "title": "Refined 3D Object Localization with Monocular Camera using Depth Estimation and Geometric Refinement",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Quang Minh Trinh",
+      "Thai-Viet Dang",
+      "Phan Xuan Tan",
+      "Xiem HoangVan"
+    ],
+    "year": 2025,
+    "type": "conference",
+    "venue": "International Conference on Interactive Collaborative Robotics (ICR)",
+    "topics": [
+      "Computer vision",
+      "Robot calibration"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "C13"
+  },
+  {
+    "id": "efficient-human-robot-interaction",
+    "title": "Efficient Human-Robot Interaction via Deep Perception and flexible Motion Planning",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Thang Tran Viet",
+      "Son Tran Duc",
+      "Huong Nguyen The",
+      "Trang Huyen Dao",
+      "Viet-Ha Nguyen",
+      "Xiem HoangVan"
+    ],
+    "year": 2025,
+    "type": "conference",
+    "venue": "International Conference on Interactive Collaborative Robotics (ICR)",
+    "topics": [
+      "Human–robot interaction",
+      "Navigation",
+      "Computer vision"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "C12"
+  },
+  {
+    "id": "adaptive-prior-scene-object-slam",
+    "title": "Adaptive Prior Scene-Object SLAM for Dynamic Environments",
+    "authors": [
+      "Haolan Zhang",
+      "Thanh Nguyen Canh",
+      "Chenghao Li",
+      "Nak Young Chong"
+    ],
+    "year": 2025,
+    "type": "conference",
+    "venue": "IEEE International Conference on Real-time Computing and Robotics (RCAR)",
+    "status": "accepted",
+    "topics": [
+      "SLAM",
+      "Semantic SLAM"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "C10"
+  },
+  {
+    "id": "context-aware-llm-human-robot-interaction",
+    "title": "Context-aware LLM-based Human-Robot Interaction",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Kien HoangVan",
+      "Xiem HoangVan"
+    ],
+    "year": 2025,
+    "type": "conference",
+    "venue": "International Conference on Intelligent Systems & Networks (ICISN)",
+    "status": "accepted",
+    "topics": [
+      "Human–robot interaction",
+      "Robot learning"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "C9"
+  },
+  {
+    "id": "underwater-image-enhancement",
+    "title": "Underwater Image Enhancement for Depth Estimation via Various Image Processing Techniques",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "M. DoNgoc",
+      "T. N. Quang",
+      "H. B. Thanh",
+      "Xiem HoangVan"
+    ],
+    "year": 2024,
+    "type": "conference",
+    "venue": "International Conference on System Science and Engineering (ICSSE)",
+    "topics": [
+      "Computer vision",
+      "Image enhancement"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {},
+    "cv_reference": "C6"
+  },
+  {
+    "id": "fusion-lidar-inertial-encoder",
+    "title": "Fusion LiDAR-Inertial-Encoder data for High-Accuracy SLAM",
+    "authors": [
+      "Manh Do Duc",
+      "Thanh Nguyen Canh",
+      "Minh DoNgoc",
+      "Xiem HoangVan"
+    ],
+    "year": 2024,
+    "type": "conference",
+    "venue": "International Conference on Mechatronic, Automobile, and Environment Engineering (ICMAEE)",
+    "topics": [
+      "SLAM",
+      "Sensor fusion",
+      "Navigation"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {
+      "paper": "https://arxiv.org/abs/2407.11870"
+    },
+    "cv_reference": "C5"
+  },
+  {
+    "id": "malicious-vehicle-detection",
+    "title": "Machine Learning-Based Malicious Vehicle Detection for Security Threats and Attacks in Vehicle Ad-hoc Network (VANET) Communications",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Xiem HoangVan"
+    ],
+    "year": 2023,
+    "type": "conference",
+    "venue": "IEEE International Conference on Research, Innovation and Vision for the Future (RIVF)",
+    "topics": [
+      "Machine learning",
+      "Security"
+    ],
+    "abstract": "",
+    "image": "",
+    "video": "",
+    "links": {
+      "paper": "https://arxiv.org/abs/2401.08135",
+      "code": "https://www.kaggle.com/code/nguyncnhthanh/blackhole-attack-rivf-2023"
+    },
+    "cv_reference": "C2"
+  }
+]
