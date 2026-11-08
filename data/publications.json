@@ -158,8 +158,9 @@
       "Human–robot interaction"
     ],
     "abstract": "Robotic manipulation through learning from demonstration aims to enable robots to acquire various actions efficiently. Unlike traditional learning from observation-action pairs, which is time-consuming and requires proficiency in coding. Our approach is inspired by the way humans learn and imitate actions in a more flexible and efficient manner by simply \"watching\" and \"repeating\" the actions. Inspired by this, we propose a \"Human-to-Robot\" imitation learning pipeline, which enables robots to learn diverse actions from video demonstrations. Specifically, we explicitly represent each step as two key tasks: (1) understanding the demonstration video and (2) learning the demonstrated manipulations. First, the video description is achieved by focusing on two essential commonsense properties: action understanding and object understanding. We utilize deep Convolutional Neural Networks (CNNs) and Large Vision Models (VLMs) to extract meaningful features related to these properties. Then, for execution, we develop a robot manipulation system built upon a Language Vision-conditioned architectures and Deep Reinforcement Learning. Experiments with real-world video demonstrations. The results show the robustness and adaptability of the two frameworks in various scenarios using a real robotic arm UR5.",
-    "image": "images/publications/human-to-robot.jpg",
-    "video": "",
+    "image": "",
+    "video": "images/demos/video2command.mp4",
+    "poster": "images/demos/video2command.jpg",
     "links": {
       "paper": "",
       "arxiv": "https://arxiv.org/abs/2602.19184",
@@ -530,8 +531,8 @@
       "Manipulation"
     ],
     "abstract": "Translating video demonstrations into executable robot commands remains challenging because existing methods often fail to identify which objects are functionally involved in the demonstrated action. As a result, they may generate commands that are linguistically plausible but operationally ambiguous. We propose an object-centric video understanding framework that decouples action recognition from object identification to generate precise, grammar-free manipulation commands. Our approach integrates Temporal Shift Modules (TSM) for efficient spatio-temporal action classification with a novel Object Selection algorithm that identifies task-relevant objects through trajectory-based role classification, blur detection, and overlap minimization. The selected objects are then processed by Vision-Language Models (VLMs) for robust category recognition and zero-shot generalization. Evaluated on a modified Something-Something V2 dataset, our method achieves 86.79% action classification accuracy and BLEU-4 scores of 0.337 on standard objects and 0.261 on novel objects. These results improve over the strongest task-specific baseline by 80.2% and 143.9%, respectively. Larger gains are observed in METEOR and CIDEr, reaching 157.9% and 171.7% on novel objects. Across all semantic metrics, our approach consistently outperforms task-specific methods and remains competitive with, or surpasses, large general-purpose VLMs while retaining a modular, object-centric design.",
-    "image": "",
-    "video": "images/demos/video2command.mp4",
+    "image": "images/publications/decoupled-object-centric-video-understanding.jpg",
+    "video": "",
     "links": {
       "paper": "",
       "arxiv": "https://arxiv.org/abs/2606.16470",
@@ -539,7 +540,7 @@
       "website": ""
     },
     "cv_reference": "C17",
-    "poster": "images/demos/video2command.jpg"
+    "poster": ""
   },
   {
     "id": "owavesync",
