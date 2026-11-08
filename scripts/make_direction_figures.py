@@ -48,10 +48,12 @@ def data_uri(name):
 
 
 class Canvas:
-    def __init__(self, height, title, desc):
-        self.h = height
-        self.parts = [f'<rect width="{W}" height="{height}" fill="#fff"/>']
-        self.defs = ['<radialGradient id="hub" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#f2f8ff"/><stop offset="1" stop-color="#cfe5fa"/></radialGradient>',
+    def __init__(self, height, title, desc, width=W):
+        self.h, self.w = height, width
+        self.parts = [f'<rect width="{width}" height="{height}" fill="#fff"/>']
+        self.defs = ['<linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.38" stop-color="#061a36" stop-opacity="0"/>'
+                     '<stop offset="1" stop-color="#061a36" stop-opacity="0.88"/></linearGradient>',
+                     '<radialGradient id="hub" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#f2f8ff"/><stop offset="1" stop-color="#cfe5fa"/></radialGradient>',
                      f'<marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="{CYAN}"/></marker>']
         self.title, self.desc, self.clip = title, desc, 0
 
@@ -101,7 +103,7 @@ class Canvas:
             self.add(f'<path d="M{px - tx * 10},{py - ty * 10} L{px + tx * 2},{py + ty * 2}" stroke="{CYAN}" stroke-width="2.5" marker-end="url(#arrow)"/>')
 
     def svg(self):
-        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {self.h}" width="{W}" height="{self.h}" font-family="{FONT}" role="img" aria-labelledby="t d">'
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {self.w} {self.h}" width="{self.w}" height="{self.h}" font-family="{FONT}" role="img" aria-labelledby="t d">'
                 f'<title id="t">{esc(self.title)}</title><desc id="d">{esc(self.desc)}</desc><defs>{"".join(self.defs)}</defs>{"".join(self.parts)}</svg>')
 
 
@@ -172,6 +174,47 @@ def direction_figure(d):
     return c.svg()
 
 
+def card_figure(d):
+    """16:10 card version: one photo tile per sub-area (numbered as in the full map) meeting at a light-blue hub."""
+    m = d["map"]
+    CW, CH, M, G = 720, 450, 12, 10
+    left = [n for n in m["nodes"] if n.get("col", 0) == 0]
+    right = [n for n in m["nodes"] if n.get("col", 0) == 1]
+    rows = max(len(left), len(right))
+    tw, th = (CW - 2 * M - G) / 2, (CH - 2 * M - (rows - 1) * G) / rows
+    c = Canvas(CH, f'{d["title"]}: sub-areas', f'{m["hub"]}: ' + ", ".join(n["name"] for n in m["nodes"]) + ".", width=CW)
+    number, tiles = 0, []
+    for side, col in enumerate((left, right)):
+        for r, node in enumerate(col):
+            number += 1
+            tiles.append((M + side * (tw + G), M + r * (th + G), node, number, side))
+    fs = 22 if rows <= 2 else 20
+    for x, y, node, n, side in tiles:
+        c.image(node["thumb"], x, y, tw, th, rx=14)
+        c.add(f'<rect x="{x}" y="{y}" width="{tw}" height="{th}" rx="14" fill="url(#shade)"/>')
+        lines = wrap(node["name"], 16)[:2]
+        tx, anchor = (x + 18, "start") if side == 0 else (x + tw - 18, "end")
+        y0 = y + th - 18 - (len(lines) - 1) * (fs + 4)
+        for j, line in enumerate(lines):
+            c.add(f'<text x="{tx}" y="{y0 + j * (fs + 4)}" text-anchor="{anchor}" font-size="{fs}" font-weight="800" fill="#fff" '
+                  f'stroke="#061a36" stroke-opacity="0.55" stroke-width="4" stroke-linejoin="round" paint-order="stroke">{esc(line)}</text>')
+        badge(c, x + 30 if side == 0 else x + tw - 30, y + 30, n)
+    hx, hy = CW / 2, CH / 2
+    hr = 72 if rows <= 2 else 60
+    c.add(f'<circle cx="{hx}" cy="{hy}" r="{hr + 18}" fill="none" stroke="{CYAN}" stroke-width="2.5" stroke-dasharray="6 6"/>'
+          f'<circle cx="{hx}" cy="{hy}" r="{hr + 9}" fill="#fff"/>'
+          f'<circle cx="{hx}" cy="{hy}" r="{hr}" fill="url(#hub)" stroke="#9cc7ef" stroke-width="2"/>')
+    for ang in (45, 135, 225, 315):  # one dot towards each tile column/row
+        a = math.radians(ang)
+        c.add(f'<circle cx="{hx + (hr + 18) * math.cos(a)}" cy="{hy + (hr + 18) * math.sin(a)}" r="5" fill="{CYAN}" stroke="#fff" stroke-width="2"/>')
+    hl = wrap(m["hub"], 13)
+    hs = min(18 if len(hl) <= 3 else 16, (2 * hr - 22) / (max(len(x) for x in hl) * 0.62))  # shrink to fit the circle
+    y0 = hy - (len(hl) - 1) * (hs + 3) / 2 + hs * 0.36
+    for j, line in enumerate(hl):
+        c.add(f'<text x="{hx}" y="{y0 + j * (hs + 3)}" text-anchor="middle" font-size="{hs}" font-weight="800" fill="{NAVY}">{esc(line)}</text>')
+    return c.svg()
+
+
 def overview_figure(lab):
     ov = lab["overview"]
     dirs = lab["directions"]
@@ -231,6 +274,7 @@ def main():
     for d in lab["directions"]:
         if d.get("map"):
             (OUT / f'{d["id"]}.svg').write_text(direction_figure(d), encoding="utf-8")
+            (OUT / f'{d["id"]}-card.svg').write_text(card_figure(d), encoding="utf-8")
             made.append(d["id"])
     if lab.get("overview") and all(d.get("map") for d in lab["directions"]):
         (OUT / "overview.svg").write_text(overview_figure(lab), encoding="utf-8")

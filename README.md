@@ -34,7 +34,8 @@ Commit the generated HTML together with the data change.
 - **Research figures:** each direction's `map` in `data/lab.json` (hub, core goal, two `columns`, `nodes` with
   `name`, `desc`, `thumb`, `papers`, `col`, `short`, and `open` questions) and the lab-wide `overview`
   (guiding questions, flows between directions, platforms, applications). Thumbnails live in
-  `images/directions/thumbs/`. The build redraws `images/directions/*.svg` via `scripts/make_direction_figures.py`.
+  `images/directions/thumbs/`. The build redraws `images/directions/*.svg` via `scripts/make_direction_figures.py`:
+  `<id>.svg` (full map, Research page), `<id>-card.svg` (compact version, home cards) and `overview.svg`.
 
 ## Deploy
 

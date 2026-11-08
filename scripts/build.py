@@ -219,11 +219,20 @@ def hero_slider():
             f'<div class="hero-dots">{dots}</div></section>')
 
 
+def card_media(d):
+    """Home card picture: the compact research map when one exists, else the direction's result image."""
+    card = f'images/directions/{d["id"]}-card.svg'
+    if d.get("map") and (ROOT / card).is_file():
+        alt = d["title"] + ": " + ", ".join(n["name"] for n in d["map"]["nodes"])
+        return f'<div class="direction-media is-map"><img src="{card}" alt="{esc(alt)}" width="720" height="450" loading="lazy" decoding="async"></div>'
+    return f'<div class="direction-media"><img src="{esc(d["image"])}" alt="" decoding="async"></div>'
+
+
 def home():
     aff = LAB["affiliation"]
     by_id = {p["id"]: p for p in PAPERS}
     directions = "".join(
-        f'<a class="direction-card" href="research/#{d["id"]}"><div class="direction-media"><img src="{esc(d["image"])}" alt="" decoding="async"></div>'
+        f'<a class="direction-card" href="research/#{d["id"]}">{card_media(d)}'
         f'<div class="direction-body"><span class="direction-num">0{i}</span><h3>{esc(d["title"])}</h3><p>{esc(d["summary"])}</p>'
         f'<span class="text-link">Explore direction {ARROW}</span></div></a>'
         for i, d in enumerate(LAB["directions"], 1))
