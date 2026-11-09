@@ -383,7 +383,24 @@ def project_card(p):
     kicker = " · ".join(x for x in [p.get("program"), p.get("period"), p.get("status")] if x)
     meta = "".join(f"<dt>{label}</dt><dd>{esc(p[key])}</dd>" for key, label in (("grant", "Call"), ("role", "Participation")) if p.get(key))
     return (f'<article class="card funded" id="{esc(p.get("id", slugify(p["title"])))}"><p class="kicker">{esc(kicker)}</p><h3>{esc(p["title"])}</h3><p>{esc(p["description"])}</p>'
-            + (f'<dl class="meta-list">{meta}</dl>' if meta else "") + (f'<p class="muted">{esc(p["tools"])}</p>' if p.get("tools") else "") + "</article>")
+            + (f'<dl class="meta-list">{meta}</dl>' if meta else "") + (f'<p class="muted">{esc(p["tools"])}</p>' if p.get("tools") else "")
+            + project_papers(p) + project_links(p) + "</article>")
+
+
+def project_papers(p):
+    """Lab papers from this project, linked to their project page (or the publication list)."""
+    items = []
+    for pid in p.get("papers", []):
+        paper = next(x for x in PAPERS if x["id"] == pid)
+        url = paper["links"].get("website") or f'../publications/#{pid}'
+        items.append(f'<li><a href="{esc(url)}">{esc(paper["title"].split(":")[0])}</a></li>')
+    return f'<p class="project-papers-label">Papers</p><ul class="project-papers">{"".join(items)}</ul>' if items else ""
+
+
+def project_links(p):
+    labels = (("website", "Homepage"), ("github", "GitHub"))
+    links = "".join(f'<a class="chip-link" href="{esc(p["links"][k])}">{label} {EXT}</a>' for k, label in labels if p.get("links", {}).get(k))
+    return f'<div class="chips">{links}</div>' if links else ""
 
 
 def projects():

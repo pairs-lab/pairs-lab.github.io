@@ -380,3 +380,6 @@ address { margin-bottom: 16px; font-style: normal; }
   .js .carousel-next { right: 4px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+.project-papers-label { margin: 14px 0 4px; color: var(--muted); font-size: 0.78rem; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
+.project-papers { margin: 0 0 12px; padding-left: 18px; }
+.project-papers li { margin: 2px 0; }

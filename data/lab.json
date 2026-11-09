@@ -650,6 +650,20 @@
     "ongoing": [],
     "past": [
       {
+        "id": "strike-robot",
+        "title": "Strike Robot",
+        "period": "2025–2026",
+        "description": "Agentic robotics with Strike Robot: SR Agentic, a plug-and-play agentic framework for humanoid robots starting with the Unitree G1, applied to autonomous industrial safety, and SR-Platform, an agentic pipeline that builds robot simulation environments from natural language.",
+        "papers": [
+          "safeguard-asf",
+          "sr-platform"
+        ],
+        "links": {
+          "website": "https://strikerobot.ai/",
+          "github": "https://github.com/StrikeRobot"
+        }
+      },
+      {
         "title": "SOLARIS",
         "status": "Completed",
         "program": "Horizon Europe",
