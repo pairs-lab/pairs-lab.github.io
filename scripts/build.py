@@ -406,7 +406,9 @@ def project_papers(p):
     for pid in p.get("papers", []):
         paper = next(x for x in PAPERS if x["id"] == pid)
         url = paper["links"].get("website") or f'../publications/#{pid}'
-        items.append(f'<li><a href="{esc(url)}">{esc(paper["title"].split(":")[0])}</a></li>')
+        name = paper["title"].split(":")[0]
+        name = name if len(name) <= 40 else paper["title"]  # short names (SafeGuard ASF) for named systems, full titles otherwise
+        items.append(f'<li><a href="{esc(url)}">{esc(name)}</a></li>')
     return f'<p class="project-papers-label">Papers</p><ul class="project-papers">{"".join(items)}</ul>' if items else ""
 
 

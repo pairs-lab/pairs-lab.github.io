@@ -682,7 +682,12 @@
         "period": "2020–2024",
         "description": "Design and fabrication of a dual-arm service robot, visual 3D localization from 2D estimates and obstacle avoidance using multisensor fusion.",
         "tools": "C++ / Python · ROS · MoveIt / Gazebo",
-        "image": "images/projects/delibot.jpg"
+        "image": "images/projects/delibot.jpg",
+        "papers": [
+          "humanoid-gesture-voice-interaction",
+          "dual-arm-service-robot",
+          "efficient-human-robot-interaction"
+        ]
       }
     ]
   },
