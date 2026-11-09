@@ -448,4 +448,3 @@ address { margin-bottom: 16px; font-style: normal; }
 .header-row { gap: 18px; }
 .site-nav a { padding-inline: 8px; }
 .theme-toggle { margin-left: 0; }
-html[data-theme="dark"] .overview-map img.logo-dark { background: var(--bg); }

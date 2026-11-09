@@ -330,9 +330,7 @@ def svg_height(name):
 def overview_figure(prefix):
     if not (ROOT / "images/directions/overview.svg").is_file():
         return ""
-    img = lambda name, cls: (f'<img class="{cls}" src="{prefix}{fresh("images/directions/" + name + ".svg")}" alt="{esc(overview_alt())}" '
-                             f'width="1200" height="{svg_height("overview")}" loading="lazy" decoding="async">')
-    return (f'<figure class="overview-map">{img("overview", "logo-light")}{img("overview-dark", "logo-dark")}'
+    return (f'<figure class="overview-map"><img src="{prefix}{fresh("images/directions/overview.svg")}" alt="{esc(overview_alt())}" width="1200" height="{svg_height("overview")}" loading="lazy" decoding="async">'
             f'<figcaption>How our four research directions fit together around robot autonomy: each one feeds the next, on our own robot platforms.</figcaption></figure>')
 
 

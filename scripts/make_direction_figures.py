@@ -268,19 +268,6 @@ def overview_figure(lab):
     return c.svg()
 
 
-def dark_variant(svg):
-    """The same figure for the site's dark theme (navy palette): surfaces, text and lines remapped; photos unchanged."""
-    import re
-    svg = re.sub(r'<rect ([^>]*?)fill="#fff"(?![^>]*stroke)([^>]*)/>', r'<rect \1fill="#0b1422"\2/>', svg, count=1)  # page background
-    for a, b in [('stop-color="#f2f8ff"', 'stop-color="#1d3d68"'), ('stop-color="#cfe5fa"', 'stop-color="#10284a"'), ('stroke="#9cc7ef"', 'stroke="#3d6fa8"'),
-                 ('fill="#063a7a" stroke="#fff"', 'fill="#0b55ad" stroke="#111f33"'), ('fill="#063a7a"', 'fill="#e8eef7"'),
-                 ('fill="#fff" stroke', 'fill="#111f33" stroke'), ('fill="#f4f7fb"', 'fill="#0f1b2d"'), ('"#d9e2ec"', '"#2a3d57"'),
-                 ('fill="#0a2342"', 'fill="#e8eef7"'), ('fill="#0b55ad"', 'fill="#6fb1ff"'), ('fill="#5d7087"', 'fill="#8fa1b6"'),
-                 ('"#00b4cc"', '"#2fd0e4"'), ('"#b9c8da"', '"#3a4d66"')]:
-        svg = svg.replace(a, b)
-    return svg
-
-
 def main():
     lab = json.loads((ROOT / "data/lab.json").read_text(encoding="utf-8"))
     made = []
@@ -290,9 +277,7 @@ def main():
             (OUT / f'{d["id"]}-card.svg').write_text(card_figure(d), encoding="utf-8")
             made.append(d["id"])
     if lab.get("overview") and all(d.get("map") for d in lab["directions"]):
-        ov = overview_figure(lab)
-        (OUT / "overview.svg").write_text(ov, encoding="utf-8")
-        (OUT / "overview-dark.svg").write_text(dark_variant(ov), encoding="utf-8")
+        (OUT / "overview.svg").write_text(overview_figure(lab), encoding="utf-8")
         made.append("overview")
     return made
 
