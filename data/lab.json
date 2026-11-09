@@ -662,9 +662,9 @@
           "website": "https://strikerobot.ai/",
           "github": "https://github.com/StrikeRobot"
         },
-        "image": "images/projects/strike-robot/hero.jpg",
+        "image": "images/projects/strike-robot/card.jpg",
         "page": "projects/strike-robot/",
-        "video": "images/projects/strike-robot/hero.mp4"
+        "video": "images/projects/strike-robot/card.mp4"
       },
       {
         "title": "SOLARIS",
@@ -713,7 +713,7 @@
       "title": "Undergraduate researchers",
       "text": "VNU-UET undergraduates can join ongoing projects, co-author papers and take part in the Student Research Competition.",
       "tags": [
-        "Project-based",
+        "Thesis research / project-based",
         "Onsite / remote"
       ]
     },
