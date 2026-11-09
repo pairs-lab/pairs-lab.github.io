@@ -460,3 +460,4 @@ html[data-theme="dark"] .cta { background: linear-gradient(110deg, #141415, #223
 html[data-theme="dark"] .button-light { color: #1c1c1d; background: #7bcce4; }
 html[data-theme="dark"] .skip-link { color: #1c1c1d; }
 .button-ghost, .button-ghost:hover { color: #fff; }
+html[data-theme="dark"] .overview-map img.logo-dark { background: var(--bg); }
