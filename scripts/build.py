@@ -389,7 +389,7 @@ def research():
 
 def publications():
     years = sorted({p["year"] for p in PAPERS}, reverse=True)
-    topics = ["SLAM", "Robot learning", "Human–robot interaction", "Navigation", "Computer vision"]
+    topics = ["SLAM", "Survey", "Robot learning", "Human–robot interaction", "Navigation", "Computer vision"]
     buttons = "".join(f'<button type="button" class="topic" data-topic="{esc(t)}" aria-pressed="false">{esc(t)}</button>' for t in topics)
     toolbar = (f'<form class="filters" id="paper-filters" role="search" hidden>'
                f'<label class="sr-only" for="paper-q">Search publications</label><input id="paper-q" type="search" placeholder="Search title, author, venue or topic…" autocomplete="off">'
