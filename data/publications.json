@@ -1247,5 +1247,32 @@
       "website": ""
     },
     "image": "images/publications/multi-view.jpg"
+  },
+  {
+    "id": "open-world-semantic-slam-survey",
+    "title": "Open-World Semantic SLAM: A Survey on Representations, Uncertainty, and Lifelong Adaptation",
+    "authors": [
+      "Thanh Nguyen Canh",
+      "Haolan Zhang",
+      "Xiem HoangVan",
+      "Nak Young Chong"
+    ],
+    "year": 2026,
+    "type": "journal",
+    "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+    "status": "submitted",
+    "topics": [
+      "SLAM",
+      "Semantic SLAM",
+      "Survey"
+    ],
+    "abstract": "Semantic simultaneous localization and mapping (SLAM) still largely assumes a closed set of categories, a static world, and deterministic labels. Four developments each relax one of these assumptions: differentiable scene representations such as neural radiance fields and 3D Gaussian splatting, vision–language foundation models, principled uncertainty quantification, and lifelong mapping. Yet the literature has grown in parallel threads. This survey argues that these threads are interlocking pillars of a single shift toward open-world semantic SLAM. Such SLAM operates with open vocabularies, in non-stationary environments, and with calibrated beliefs over geometry and meaning. We give a unified probabilistic formulation of the problem and organize 81 systems around four pillars: (P1) map representations, (P2) foundation-model grounding, (P3) uncertainty, and (P4) lifelong adaptation. We assess the pillars through 17 explicit claims. A cross-cutting analysis shows how the pillars constrain one another and that no current system addresses all four. We consolidate datasets, metrics, and reported results, and argue that closed-world, single-session benchmarks now limit progress. We close with a reference architecture and seven open problems for open-world semantic SLAM.",
+    "links": {
+      "paper": "",
+      "arxiv": "",
+      "code": "https://github.com/thanhnguyencanh/open-semanticSLAM-survey",
+      "website": "https://thanhnguyencanh.github.io/open-semanticSLAM-survey/"
+    },
+    "image": "images/publications/open-world-semantic-slam-survey.jpg"
   }
 ]
