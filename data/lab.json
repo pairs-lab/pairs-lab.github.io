@@ -661,7 +661,8 @@
         "links": {
           "website": "https://strikerobot.ai/",
           "github": "https://github.com/StrikeRobot"
-        }
+        },
+        "image": "images/projects/strike-robot.jpg"
       },
       {
         "title": "SOLARIS",
@@ -671,14 +672,16 @@
         "description": "Research on drone teams for monitoring solar panels and detecting defects and faults, with Prof. Antonio Sgorbissa at RICE Lab, DIBRIS, University of Genoa.",
         "role": "Thanh Nguyen Canh, visiting researcher, University of Genoa",
         "period": "2026",
-        "id": "solaris"
+        "id": "solaris",
+        "image": "images/projects/solaris.jpg"
       },
       {
         "id": "delibot",
         "title": "Delibot — Humanoid Robotics",
         "period": "2020–2024",
         "description": "Design and fabrication of a dual-arm service robot, visual 3D localization from 2D estimates and obstacle avoidance using multisensor fusion.",
-        "tools": "C++ / Python · ROS · MoveIt / Gazebo"
+        "tools": "C++ / Python · ROS · MoveIt / Gazebo",
+        "image": "images/projects/delibot.jpg"
       }
     ]
   },

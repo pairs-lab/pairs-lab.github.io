@@ -378,13 +378,26 @@ def publications():
     render("publications", "Publications", "Publications of PAIRS Lab in SLAM, robot learning, navigation and robot vision.", body)
 
 
-def project_card(p):
-    """One project: funded projects show program, call and participation; lab projects show their tools."""
-    kicker = " · ".join(x for x in [p.get("program"), p.get("period"), p.get("status")] if x)
-    meta = "".join(f"<dt>{label}</dt><dd>{esc(p[key])}</dd>" for key, label in (("grant", "Call"), ("role", "Participation")) if p.get(key))
-    return (f'<article class="card funded" id="{esc(p.get("id", slugify(p["title"])))}"><p class="kicker">{esc(kicker)}</p><h3>{esc(p["title"])}</h3><p>{esc(p["description"])}</p>'
-            + (f'<dl class="meta-list">{meta}</dl>' if meta else "") + (f'<p class="muted">{esc(p["tools"])}</p>' if p.get("tools") else "")
-            + project_papers(p) + project_links(p) + "</article>")
+def project_ring(items, label):
+    """Projects in the same 3D ring as Members, with 4:3 cards (as on Lab Life) and the details below."""
+    n = len(items)
+    cards = "".join(f'<button class="carousel-card" type="button" data-card aria-label="Show {esc(p["title"])}">'
+                    f'<span class="carousel-photo"><img src="../{esc(fresh(p["image"]))}" alt="{esc(p["title"])}" loading="eager" decoding="async"></span>'
+                    f'<span class="carousel-name">{esc(p["title"])}</span></button>' for p in items)
+    dots = "".join(f'<button type="button" data-dot aria-label="Show {esc(p["title"])}"></button>' for p in items)
+    details = ""
+    for p in items:
+        kicker = " · ".join(x for x in [p.get("program"), p.get("period"), p.get("status")] if x)
+        meta = "".join(f"<dt>{lab}</dt><dd>{esc(p[k])}</dd>" for k, lab in (("grant", "Call"), ("role", "Participation")) if p.get(k))
+        details += (f'<article class="carousel-detail project-detail" id="{esc(p["id"])}" data-detail><p class="carousel-role">{esc(kicker)}</p><h2>{esc(p["title"])}</h2>'
+                    f'<p class="carousel-bio">{esc(p["description"])}</p>' + (f'<dl class="meta-list">{meta}</dl>' if meta else "")
+                    + (f'<p class="muted">{esc(p["tools"])}</p>' if p.get("tools") else "") + project_papers(p) + project_links(p) + "</article>")
+    return (f'<div class="carousel carousel-wide" data-carousel tabindex="0" aria-roledescription="carousel" aria-label="{esc(label)}">'
+            f'<div class="carousel-stage" data-stage>{cards}</div>'
+            f'<button class="carousel-arrow carousel-prev" type="button" data-prev aria-label="Previous project">◀</button>'
+            f'<button class="carousel-arrow carousel-next" type="button" data-next aria-label="Next project">▶</button>'
+            f'<div class="carousel-dots" data-dots>{dots}</div></div>'
+            f'<div class="carousel-details" aria-live="polite">{details}</div>')
 
 
 def project_papers(p):
@@ -405,11 +418,11 @@ def project_links(p):
 
 def projects():
     P = LAB["projects"]
-    ongoing = (f'<div class="card-grid">{"".join(project_card(p) for p in P["ongoing"])}</div>' if P["ongoing"] else
+    ongoing = (project_ring(P["ongoing"], "Ongoing projects") if P["ongoing"] else
                '<div class="notice"><h3>Coming soon</h3><p>Current projects will be listed here when they are announced.</p></div>')
     body = (page_head("Projects", "Ongoing and past projects of the lab, including funded research.", "Projects")
             + f'<div class="shell"><section class="section" id="ongoing">{section_head("Ongoing projects", kicker="01 / Now")}{ongoing}</section>'
-            f'<section class="section" id="past">{section_head("Past projects", kicker="02 / Completed")}<div class="card-grid">{"".join(project_card(p) for p in P["past"])}</div></section></div>')
+            f'<section class="section" id="past">{section_head("Past projects", kicker="02 / Completed")}{project_ring(P["past"], "Past projects")}</section></div>')
     render("projects", "Projects", "Ongoing and past projects of PAIRS Lab.", body)
 
 

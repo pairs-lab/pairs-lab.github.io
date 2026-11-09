@@ -383,3 +383,9 @@ address { margin-bottom: 16px; font-style: normal; }
 .project-papers-label { margin: 14px 0 4px; color: var(--muted); font-size: 0.78rem; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
 .project-papers { margin: 0 0 12px; padding-left: 18px; }
 .project-papers li { margin: 2px 0; }
+.project-detail { max-width: 72ch; margin: 0 auto; text-align: center; }
+.project-detail .meta-list { display: inline-grid; text-align: left; }
+.project-detail .project-papers-label, .project-detail .project-papers { text-align: left; display: inline-block; }
+.project-detail .project-papers { display: block; width: fit-content; margin: 0 auto 12px; }
+.project-detail .project-papers-label { display: block; text-align: center; }
+.project-detail .chips { justify-content: center; }
