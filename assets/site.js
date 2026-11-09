@@ -275,7 +275,7 @@
   var vids = [].slice.call(document.querySelectorAll(".demo video"));
   vids.forEach(function (v) { v.addEventListener("play", function () { vids.forEach(function (o) { if (o !== v) o.pause(); }); }); });
 })();
-// Theme toggle: light / dark, saved per browser; the first visit follows the system setting.
+// Theme toggle: light by default; dark only after the visitor picks it (saved per browser).
 (function () {
   var btn = document.querySelector("[data-theme-toggle]");
   if (!btn) return;

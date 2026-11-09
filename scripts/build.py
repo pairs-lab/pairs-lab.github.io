@@ -209,11 +209,11 @@ def render(slug, title, description, body):
 <meta property="og:title" content="{esc(full_title)}"><meta property="og:description" content="{esc(plain(description))}">
 <meta property="og:url" content="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}"><link rel="canonical" href="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}">
 <meta property="og:image" content="{esc(LAB["site_url"] + og_image)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PAIRS Lab logo"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{esc(LAB["site_url"] + og_image)}">
-<meta name="theme-color" content="#063a7a"><meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#063a7a"><meta name="color-scheme" content="light">
 <link rel="icon" href="{prefix}images/brand/pairs-lab-icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="{prefix}images/brand/pairs-lab-icon-180.png">
 <link rel="stylesheet" href="{prefix}assets/site.css?v={REV}">
-<script>document.documentElement.classList.add("js");try{{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"||t==="light"?t:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}}catch(e){{}}</script>
+<script>document.documentElement.classList.add("js");try{{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}}catch(e){{}}</script>
 <script src="{prefix}assets/site.js?v={REV}" defer></script>{org_jsonld() if not slug else ""}
 </head>
 <body class="page-{section or "home"}">
