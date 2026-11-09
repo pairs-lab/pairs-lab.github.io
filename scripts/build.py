@@ -164,6 +164,29 @@ def paper_card(p, prefix, compact=False):
 
 # ---------- page shell ----------
 
+def org_jsonld():
+    """schema.org data so search engines know which PAIRS Lab this is (name, university, city, profiles)."""
+    aff = LAB["affiliation"]
+    lead = next(m for g in LAB["people"] for m in g["members"] if m["name"] == "Thanh Nguyen Canh")
+    data = {"@context": "https://schema.org", "@type": "ResearchOrganization", "name": LAB["short_name"], "alternateName": [LAB["name"], "PAIRS Lab VNU-UET", "pairs-lab"],
+            "url": LAB["site_url"], "logo": LAB["site_url"] + "images/brand/pairs-lab-icon-180.png", "email": LAB["email"],
+            "description": LAB["tagline"],
+            "parentOrganization": {"@type": "CollegeOrUniversity", "name": aff["institution"], "alternateName": aff["institution_short"], "url": aff["institution_url"]},
+            "address": {"@type": "PostalAddress", "streetAddress": f'Room {LAB["office"]["room"]}, {LAB["office"]["building"]}', "addressLocality": "Hanoi", "addressCountry": "VN"},
+            "founder": {"@type": "Person", "name": lead["name"], "url": lead["url"]},
+            "sameAs": [LAB["github"], LAB["youtube"]]}
+    return '\n<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
+def seo_files():
+    """sitemap.xml and robots.txt, rebuilt with the site."""
+    pages = [s for s, _ in PAGES] + ["projects/strike-robot"] + [f'people/{slugify(m["name"])}' for g in LAB["people"] for m in g["members"]]
+    today = datetime.date.today().isoformat()
+    urls = "".join(f'<url><loc>{LAB["site_url"]}{p + "/" if p else ""}</loc><lastmod>{today}</lastmod></url>' for p in pages)
+    (ROOT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n', encoding="utf-8")
+    (ROOT / "robots.txt").write_text(f'User-agent: *\nAllow: /\nSitemap: {LAB["site_url"]}sitemap.xml\n', encoding="utf-8")
+
+
 def render(slug, title, description, body):
     depth = slug.count("/") + 1 if slug else 0
     prefix = "../" * depth
@@ -172,7 +195,8 @@ def render(slug, title, description, body):
     nav = "".join(f'<a href="{route(s, prefix)}"{current if s == section else ""}>{esc(label)}</a>' for s, label in PAGES)
     aff = LAB["affiliation"]
     office = LAB["office"]
-    full_title = f'{title} · {LAB["short_name"]}' if slug else f'{LAB["short_name"]} · {LAB["name"]}'
+    aff_short = LAB["affiliation"]["institution_short"]
+    full_title = f'{title} · {LAB["short_name"]}' if slug else f'{LAB["short_name"]} · {LAB["name"]} · {aff_short}, Hanoi'
     og_image = LAB["hero_image"] if (ROOT / LAB["hero_image"]).is_file() else "images/brand/og-image.png"
     doc = f'''<!doctype html>
 <html lang="en">
@@ -183,14 +207,14 @@ def render(slug, title, description, body):
 <meta name="description" content="{esc(plain(description))}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="{esc(LAB["short_name"])}">
 <meta property="og:title" content="{esc(full_title)}"><meta property="og:description" content="{esc(plain(description))}">
-<meta property="og:url" content="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}">
+<meta property="og:url" content="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}"><link rel="canonical" href="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}">
 <meta property="og:image" content="{esc(LAB["site_url"] + og_image)}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#063a7a"><meta name="color-scheme" content="light">
 <link rel="icon" href="{prefix}images/brand/pairs-lab-icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="{prefix}images/brand/pairs-lab-icon-180.png">
 <link rel="stylesheet" href="{prefix}assets/site.css?v={REV}">
 <script>document.documentElement.classList.add("js")</script>
-<script src="{prefix}assets/site.js?v={REV}" defer></script>
+<script src="{prefix}assets/site.js?v={REV}" defer></script>{org_jsonld() if not slug else ""}
 </head>
 <body class="page-{section or "home"}">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -278,7 +302,9 @@ def home():
 <div>{section_head("Selected publications", "publications/", "All publications")}<div class="paper-list compact">{"".join(paper_card(by_id[i], "", compact=True) for i in LAB["selected_publications"])}</div></div>
 </div></section>
 <section class="cta"><div class="shell cta-inner"><div><h2>Join {esc(LAB["short_name"])}</h2><p>We welcome students and collaborators who want to build robots that work reliably in the real world.</p></div><a class="button button-light" href="join/">Open positions {ARROW}</a></div></section>'''
-    render("", "Home", LAB["tagline"], body)
+    aff = LAB["affiliation"]
+    render("", "Home", f'PAIRS Lab (Perception, Autonomy, and Intelligent Robotics Systems Lab) at the {aff["department"]}, {aff["institution"]} ({aff["institution_short"]}), Hanoi: '
+           f'semantic SLAM, robust perception and navigation, robot learning and human-robot interaction, agentic robotics.', body)
 
 
 def map_alt(d):
@@ -658,6 +684,7 @@ def main():
     make_direction_figures.main()
     for build in (home, research, publications, projects, strike_robot, datasets, news, life, people, join):
         build()
+    seo_files()
     print(f"Built {len(PAGES)} pages and {sum(len(g['members']) for g in LAB['people'])} member profiles from {len(PAPERS)} publications and {len(NEWS)} news items.")
 
 
