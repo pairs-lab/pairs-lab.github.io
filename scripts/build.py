@@ -197,7 +197,7 @@ def render(slug, title, description, body):
     office = LAB["office"]
     aff_short = LAB["affiliation"]["institution_short"]
     full_title = f'{title} · {LAB["short_name"]}' if slug else f'{LAB["short_name"]} · {LAB["name"]} · {aff_short}, Hanoi'
-    og_image = LAB["hero_image"] if (ROOT / LAB["hero_image"]).is_file() else "images/brand/og-image.png"
+    og_image = "images/brand/og-image.png"  # the lab logo in link previews (chat apps, social media)
     doc = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -208,7 +208,7 @@ def render(slug, title, description, body):
 <meta property="og:type" content="website"><meta property="og:site_name" content="{esc(LAB["short_name"])}">
 <meta property="og:title" content="{esc(full_title)}"><meta property="og:description" content="{esc(plain(description))}">
 <meta property="og:url" content="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}"><link rel="canonical" href="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}">
-<meta property="og:image" content="{esc(LAB["site_url"] + og_image)}"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{esc(LAB["site_url"] + og_image)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PAIRS Lab logo"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{esc(LAB["site_url"] + og_image)}">
 <meta name="theme-color" content="#063a7a"><meta name="color-scheme" content="light">
 <link rel="icon" href="{prefix}images/brand/pairs-lab-icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="{prefix}images/brand/pairs-lab-icon-180.png">
@@ -408,8 +408,9 @@ def project_ring(items, label):
     """Projects in the same 3D ring as Members, with 4:3 cards (as on Lab Life) and the details below."""
     n = len(items)
     cards = "".join(f'<button class="carousel-card" type="button" data-card aria-label="Show {esc(p["title"])}">'
-                    f'<span class="carousel-photo"><img src="../{esc(fresh(p["image"]))}" alt="{esc(p["title"])}" loading="eager" decoding="async"></span>'
-                    f'<span class="carousel-name">{esc(p["title"])}</span></button>' for p in items)
+                    + (f'<span class="carousel-photo"><video autoplay muted loop playsinline preload="metadata" poster="../{esc(fresh(p["image"]))}" aria-label="{esc(p["title"])}"><source src="../{esc(p["video"])}" type="video/mp4"></video></span>' if p.get("video") else
+                       f'<span class="carousel-photo"><img src="../{esc(fresh(p["image"]))}" alt="{esc(p["title"])}" loading="eager" decoding="async"></span>')
+                    + f'<span class="carousel-name">{esc(p["title"])}</span></button>' for p in items)
     dots = "".join(f'<button type="button" data-dot aria-label="Show {esc(p["title"])}"></button>' for p in items)
     details = ""
     for p in items:
