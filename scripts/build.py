@@ -378,16 +378,22 @@ def publications():
     render("publications", "Publications", "Publications of PAIRS Lab in SLAM, robot learning, navigation and robot vision.", body)
 
 
+def project_card(p):
+    """One project: funded projects show program, call and participation; lab projects show their tools."""
+    kicker = " · ".join(x for x in [p.get("program"), p.get("period"), p.get("status")] if x)
+    meta = "".join(f"<dt>{label}</dt><dd>{esc(p[key])}</dd>" for key, label in (("grant", "Call"), ("role", "Participation")) if p.get(key))
+    return (f'<article class="card funded" id="{esc(p.get("id", slugify(p["title"])))}"><p class="kicker">{esc(kicker)}</p><h3>{esc(p["title"])}</h3><p>{esc(p["description"])}</p>'
+            + (f'<dl class="meta-list">{meta}</dl>' if meta else "") + (f'<p class="muted">{esc(p["tools"])}</p>' if p.get("tools") else "") + "</article>")
+
+
 def projects():
-    funded = "".join(f'<article class="card funded"><p class="kicker">{esc(p["program"])} · {esc(p["status"])}</p><h3>{esc(p["title"])}</h3><p>{esc(p["description"])}</p>'
-                     f'<dl class="meta-list"><dt>Call</dt><dd>{esc(p["grant"])}</dd><dt>Participation</dt><dd>{esc(p["role"])}</dd><dt>Period</dt><dd>{esc(p["period"])}</dd></dl></article>'
-                     for p in LAB["funded_projects"])
-    research_projects = "".join(f'<article class="timeline-item" id="{esc(p["id"])}"><p class="timeline-date">{esc(p["period"])}</p><div><h3>{esc(p["title"])}</h3>'
-                                f'<p>{esc(p["description"])}</p><p class="muted">{esc(p["tools"])}</p></div></article>' for p in LAB["research_projects"])
-    body = (page_head("Projects", "Funded projects and long-running research projects of the lab.", "Projects")
-            + f'<div class="shell"><section class="section">{section_head("Funded projects")}<div class="card-grid">{funded}</div></section>'
-            f'<section class="section">{section_head("Research projects")}<div class="timeline">{research_projects}</div></section></div>')
-    render("projects", "Projects", "Funded projects and research projects of PAIRS Lab.", body)
+    P = LAB["projects"]
+    ongoing = (f'<div class="card-grid">{"".join(project_card(p) for p in P["ongoing"])}</div>' if P["ongoing"] else
+               '<div class="notice"><h3>Coming soon</h3><p>Current projects will be listed here when they are announced.</p></div>')
+    body = (page_head("Projects", "Ongoing and past projects of the lab, including funded research.", "Projects")
+            + f'<div class="shell"><section class="section" id="ongoing">{section_head("Ongoing projects", kicker="01 / Now")}{ongoing}</section>'
+            f'<section class="section" id="past">{section_head("Past projects", kicker="02 / Completed")}<div class="card-grid">{"".join(project_card(p) for p in P["past"])}</div></section></div>')
+    render("projects", "Projects", "Ongoing and past projects of PAIRS Lab.", body)
 
 
 def datasets():

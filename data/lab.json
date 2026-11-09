@@ -646,40 +646,28 @@
       "Second place, 2023"
     ]
   },
-  "funded_projects": [
-    {
-      "title": "SOLARIS",
-      "status": "Completed",
-      "program": "Horizon Europe",
-      "grant": "HORIZON-CL5-2023-D3-02-13",
-      "description": "Research on drone teams for monitoring solar panels and detecting defects and faults, with Prof. Antonio Sgorbissa at RICE Lab, DIBRIS, University of Genoa.",
-      "role": "Thanh Nguyen Canh, visiting researcher, University of Genoa",
-      "period": "2026"
-    }
-  ],
-  "research_projects": [
-    {
-      "id": "semantic-active-slam",
-      "title": "Semantic Active SLAM",
-      "period": "2022–present",
-      "description": "Semantic-aware mapping and active exploration for UAVs, with research on robust visual SLAM, data association and Gaussian splatting.",
-      "tools": "Python / C++ · ROS · UAVs"
-    },
-    {
-      "id": "humanoid-interaction",
-      "title": "Humanoid Robot Interaction & Social Navigation",
-      "period": "2024–present",
-      "description": "Multi-robot collaboration, humanoid perception and interaction using vision-language and large language models, with navigation in crowded environments.",
-      "tools": "Python / C++ · ROS / ROS2"
-    },
-    {
-      "id": "delibot",
-      "title": "Delibot — Humanoid Robotics",
-      "period": "2020–2024",
-      "description": "Design and fabrication of a dual-arm service robot, visual 3D localization from 2D estimates and obstacle avoidance using multisensor fusion.",
-      "tools": "C++ / Python · ROS · MoveIt / Gazebo"
-    }
-  ],
+  "projects": {
+    "ongoing": [],
+    "past": [
+      {
+        "title": "SOLARIS",
+        "status": "Completed",
+        "program": "Horizon Europe",
+        "grant": "HORIZON-CL5-2023-D3-02-13",
+        "description": "Research on drone teams for monitoring solar panels and detecting defects and faults, with Prof. Antonio Sgorbissa at RICE Lab, DIBRIS, University of Genoa.",
+        "role": "Thanh Nguyen Canh, visiting researcher, University of Genoa",
+        "period": "2026",
+        "id": "solaris"
+      },
+      {
+        "id": "delibot",
+        "title": "Delibot — Humanoid Robotics",
+        "period": "2020–2024",
+        "description": "Design and fabrication of a dual-arm service robot, visual 3D localization from 2D estimates and obstacle avoidance using multisensor fusion.",
+        "tools": "C++ / Python · ROS · MoveIt / Gazebo"
+      }
+    ]
+  },
   "positions": [
     {
       "title": "Master's students",
