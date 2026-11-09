@@ -275,3 +275,16 @@
   var vids = [].slice.call(document.querySelectorAll(".demo video"));
   vids.forEach(function (v) { v.addEventListener("play", function () { vids.forEach(function (o) { if (o !== v) o.pause(); }); }); });
 })();
+// Theme toggle: light / dark, saved per browser; the first visit follows the system setting.
+(function () {
+  var btn = document.querySelector("[data-theme-toggle]");
+  if (!btn) return;
+  var root = document.documentElement;
+  var label = function () { btn.setAttribute("aria-label", root.dataset.theme === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
+  label();
+  btn.addEventListener("click", function () {
+    root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+    label();
+  });
+})();

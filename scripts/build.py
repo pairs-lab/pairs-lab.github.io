@@ -209,25 +209,26 @@ def render(slug, title, description, body):
 <meta property="og:title" content="{esc(full_title)}"><meta property="og:description" content="{esc(plain(description))}">
 <meta property="og:url" content="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}"><link rel="canonical" href="{esc(LAB["site_url"] + (slug + "/" if slug else ""))}">
 <meta property="og:image" content="{esc(LAB["site_url"] + og_image)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="PAIRS Lab logo"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{esc(LAB["site_url"] + og_image)}">
-<meta name="theme-color" content="#063a7a"><meta name="color-scheme" content="light">
+<meta name="theme-color" content="#063a7a"><meta name="color-scheme" content="light dark">
 <link rel="icon" href="{prefix}images/brand/pairs-lab-icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="{prefix}images/brand/pairs-lab-icon-180.png">
 <link rel="stylesheet" href="{prefix}assets/site.css?v={REV}">
-<script>document.documentElement.classList.add("js")</script>
+<script>document.documentElement.classList.add("js");try{{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"||t==="light"?t:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}}catch(e){{}}</script>
 <script src="{prefix}assets/site.js?v={REV}" defer></script>{org_jsonld() if not slug else ""}
 </head>
 <body class="page-{section or "home"}">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header"><div class="shell header-row">
-<a class="brand" href="{route("", prefix)}"><img src="{prefix}images/brand/pairs-lab-horizontal.png" width="164" height="48" alt="{esc(LAB["short_name"])} — {esc(LAB["name"])}"></a>
-<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span></span><span></span><span></span></button>
+<a class="brand" href="{route("", prefix)}"><img class="logo-light" src="{prefix}images/brand/pairs-lab-horizontal.png" width="164" height="48" alt="{esc(LAB["short_name"])} — {esc(LAB["name"])}"><img class="logo-dark" src="{prefix}images/brand/pairs-lab-horizontal-dark.png" width="164" height="48" alt="{esc(LAB["short_name"])} — {esc(LAB["name"])}"></a>
 <nav class="site-nav" id="site-nav" aria-label="Main navigation">{nav}</nav>
+<div class="header-tools"><button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span></span><span></span><span></span></button></div>
 </div></header>
 <main id="main" tabindex="-1">
 {body}
 </main>
 <footer class="site-footer"><div class="shell footer-grid">
-<div><a class="footer-logo" href="{route("", prefix)}"><img src="{prefix}images/brand/pairs-lab-horizontal.png" width="164" height="48" alt="{esc(LAB["short_name"])}"></a>
+<div><a class="footer-logo" href="{route("", prefix)}"><img class="logo-light" src="{prefix}images/brand/pairs-lab-horizontal.png" width="164" height="48" alt="{esc(LAB["short_name"])}"><img class="logo-dark" src="{prefix}images/brand/pairs-lab-horizontal-dark.png" width="164" height="48" alt="{esc(LAB["short_name"])}"></a>
 <p>{esc(LAB["name"])}<br><a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a>, <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a></p></div>
 <div><p class="footer-label">Visit</p><p>Room {esc(office["room"])}, {esc(office["building"])}<br>{esc(office["city"])}</p><a href="{esc(office["maps_url"])}">Google Maps {EXT}</a></div>
 <div><p class="footer-label">Connect</p><p><a href="mailto:{esc(LAB["email"])}">{esc(LAB["email"])}</a><br><a href="{esc(LAB["github"])}">GitHub {EXT}</a><br><a href="{esc(LAB["youtube"])}">YouTube {EXT}</a><br><a href="{route("join", prefix)}">Join us {ARROW}</a></p></div>
