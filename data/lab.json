@@ -662,7 +662,8 @@
           "website": "https://strikerobot.ai/",
           "github": "https://github.com/StrikeRobot"
         },
-        "image": "images/projects/strike-robot.jpg"
+        "image": "images/projects/strike-robot.jpg",
+        "page": "projects/strike-robot/"
       },
       {
         "title": "SOLARIS",

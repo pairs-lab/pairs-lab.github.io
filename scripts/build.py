@@ -412,7 +412,8 @@ def project_papers(p):
 
 def project_links(p):
     labels = (("website", "Homepage"), ("github", "GitHub"))
-    links = "".join(f'<a class="chip-link" href="{esc(p["links"][k])}">{label} {EXT}</a>' for k, label in labels if p.get("links", {}).get(k))
+    links = (f'<a class="chip-link chip-primary" href="../{esc(p["page"])}">Project page {ARROW}</a>' if p.get("page") else "") + "".join(
+        f'<a class="chip-link" href="{esc(p["links"][k])}">{label} {EXT}</a>' for k, label in labels if p.get("links", {}).get(k))
     return f'<div class="chips">{links}</div>' if links else ""
 
 
@@ -424,6 +425,45 @@ def projects():
             + f'<div class="shell"><section class="section" id="ongoing">{section_head("Ongoing projects", kicker="01 / Now")}{ongoing}</section>'
             f'<section class="section" id="past">{section_head("Past projects", kicker="02 / Completed")}{project_ring(P["past"], "Past projects")}</section></div>')
     render("projects", "Projects", "Ongoing and past projects of PAIRS Lab.", body)
+
+
+def strike_robot():
+    """Detail page of the Strike Robot project: one section per sub-problem, with its solution, links and demo videos."""
+    D = json.loads((ROOT / "data/strike_robot.json").read_text(encoding="utf-8"))
+    pre, media = "../../", "images/projects/strike-robot/"
+
+    def video(src, poster, title, text, post=None, date="", also=None):
+        src_link = (f' <a href="{esc(post)}">{esc(date[:7])} post {EXT}</a>' if post else "") + (f' <a href="{esc(also)}">repost {EXT}</a>' if also else "")
+        return (f'<figure class="demo"><video controls muted playsinline preload="none" poster="{pre}{esc(fresh(poster))}"><source src="{pre}{esc(src)}" type="video/mp4"></video>'
+                f'<figcaption><strong>{esc(title)}</strong>{esc(text)}{src_link}</figcaption></figure>')
+
+    def links(ls):
+        return '<div class="chips">' + "".join(f'<a class="chip-link" href="{esc(u)}">{esc(k)} {EXT}</a>' for k, u in ls.items()) + "</div>" if ls else ""
+
+    toc = "".join(f'<a class="chip-link" href="#{esc(sec["id"])}">{esc(sec["title"])}</a>' for sec in D["sections"])
+    secs = ""
+    for i, sec in enumerate(D["sections"], 1):
+        feats = ""
+        if sec.get("features"):
+            fm = sec.get("feature_media", [])
+            feats = '<div class="sr-features">' + "".join(
+                f'<div class="sr-feature">' + (f'<video autoplay muted loop playsinline preload="none" poster="{pre}{esc(fresh(media + fm[k] + ".jpg"))}" aria-hidden="true"><source src="{pre}{media}{esc(fm[k])}.mp4" type="video/mp4"></video>' if k < len(fm) else "")
+                + f'<h4>{esc(t)}</h4><p>{esc(x)}</p></div>' for k, (t, x) in enumerate(sec["features"])) + "</div>"
+        vids = [video(media + v["id"] + ".mp4", media + v["id"] + ".jpg", v["title"], v["text"], v["post"], v["date"], v.get("also")) for v in sec["videos"]]
+        if sec.get("local_video"):
+            lv = sec["local_video"]
+            vids.insert(0, video(lv["src"], lv["poster"], lv["title"], lv["text"]))
+        grid = f'<div class="demos">{"".join(vids)}</div>' if vids else ""
+        kick = "%02d / %s" % (i, sec["problem"])
+        secs += (f'<section class="section sr-section" id="{esc(sec["id"])}">{section_head(sec["title"], kicker=kick)}'
+                 f'<p class="sr-text">{esc(sec["text"])}</p>{links(sec.get("links", {}))}{feats}{grid}</section>')
+    hero = D["hero"]
+    body = (page_head(D["title"], esc(D["intro"]), f'Past project · {D["period"]}')
+            + f'<div class="shell"><div class="sr-top"><a class="back-link" href="../#past">← All projects</a>{links(D["links"])}</div>'
+            f'<figure class="sr-hero"><video autoplay muted loop playsinline poster="{pre}{esc(fresh(media + hero + ".jpg"))}" aria-label="In a simulated factory, a quadruped with an arm on its back finds and walks to a microwave"><source src="{pre}{media}{hero}.mp4" type="video/mp4"></video></figure>'
+            f'<nav class="chips sr-toc" aria-label="Sub-projects">{toc}</nav>{secs}'
+            f'<p class="muted sr-credit">Videos: <a href="https://x.com/StrikeRobot_ai">Strike Robot</a>; each clip links to its original post. Descriptions follow the posts and strikerobot.ai.</p></div>')
+    render("projects/strike-robot", D["title"], "Strike Robot: SR Platform, SR Agentic and their use on humanoids, quadrupeds and arms.", body)
 
 
 def datasets():
@@ -614,7 +654,7 @@ def main():
             if d.is_dir() and d.name not in keep:
                 shutil.rmtree(d)
     make_direction_figures.main()
-    for build in (home, research, publications, projects, datasets, news, life, people, join):
+    for build in (home, research, publications, projects, strike_robot, datasets, news, life, people, join):
         build()
     print(f"Built {len(PAGES)} pages and {sum(len(g['members']) for g in LAB['people'])} member profiles from {len(PAPERS)} publications and {len(NEWS)} news items.")
 

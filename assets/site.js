@@ -270,3 +270,8 @@
     }
   }
 })();
+// Demo grids: only one video plays at a time.
+(function () {
+  var vids = [].slice.call(document.querySelectorAll(".demo video"));
+  vids.forEach(function (v) { v.addEventListener("play", function () { vids.forEach(function (o) { if (o !== v) o.pause(); }); }); });
+})();

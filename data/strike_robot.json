@@ -1,0 +1,277 @@
+{
+  "title": "Strike Robot",
+  "period": "2025–2026",
+  "intro": "Strike Robot builds the software stack for physical AI: SR Platform creates simulation-ready worlds and assets from language, SR Agentic gives robots task-shaped understanding of the real world, and both are tested on humanoids, quadrupeds and arms in simulation and on real hardware.",
+  "links": {
+    "Homepage": "https://strikerobot.ai/",
+    "GitHub": "https://github.com/StrikeRobot"
+  },
+  "hero": "hero",
+  "sections": [
+    {
+      "id": "sr-platform",
+      "title": "SR Platform",
+      "problem": "Building simulation worlds by hand",
+      "text": "SR Platform generates physics-valid simulation environments, production-grade 3D assets and training-ready datasets from a single natural-language description. Generated assets pass validation gates for geometry, articulation and physics readiness.",
+      "features": [
+        [
+          "Asset creation",
+          "3D geometry from text, or a real object reconstructed from photos, with physically based materials."
+        ],
+        [
+          "Spatial layout generation",
+          "Full environments composed from language, with physics constraints built in."
+        ],
+        [
+          "Simulation and rollouts",
+          "Robot policy rollouts in generated scenes, with sensor, collision and success data exported."
+        ],
+        [
+          "Real-time editing",
+          "Swap assets and change physics or lighting without leaving the platform."
+        ]
+      ],
+      "links": {
+        "SR Platform": "https://strikerobot.ai/sr-platform",
+        "Paper (arXiv)": "https://arxiv.org/abs/2605.14700"
+      },
+      "videos": [
+        {
+          "id": "2107151242460074259",
+          "title": "From prompt to simulation-ready",
+          "text": "A prompt becomes assets and scenes; validation gates check geometry, articulation and physics, and feedback guides refinement.",
+          "date": "2026-10-05",
+          "post": "https://x.com/StrikeRobot_ai/status/2107151242460074259"
+        },
+        {
+          "id": "2109694924400861450",
+          "title": "Articulated assets",
+          "text": "A fully functional asset with several degrees of freedom, built by SR Platform.",
+          "date": "2026-10-12",
+          "post": "https://x.com/StrikeRobot_ai/status/2109694924400861450"
+        },
+        {
+          "id": "2112925782553330046",
+          "title": "Soft, elastic objects",
+          "text": "From a prompt to a simulation-ready soft, elastic object.",
+          "date": "2026-10-21",
+          "post": "https://x.com/StrikeRobot_ai/status/2112925782553330046"
+        },
+        {
+          "id": "2080856388369310046",
+          "title": "One month after launch",
+          "text": "Richer geometry, higher-fidelity surface materials and more realistic assets than at launch.",
+          "date": "2026-07-25",
+          "post": "https://x.com/StrikeRobot_ai/status/2080856388369310046"
+        }
+      ]
+    },
+    {
+      "id": "sr-agentic",
+      "title": "SR Agentic",
+      "problem": "Robots acting on stale or hallucinated world models",
+      "text": "SR Agentic is an intelligence layer between perception and action. It turns a natural-language task into a lean, task-shaped world model, runs a fast safety loop on the robot and deep reasoning in the cloud only when something new happens, and verifies before it commits.",
+      "features": [
+        [
+          "Task-conditioned scene graph",
+          "Builds only the spatial structure the task needs: the map is a function of the task."
+        ],
+        [
+          "Open-vocabulary perception",
+          "Detects and grounds objects it was never trained on, fusing detection, segmentation and captioning."
+        ],
+        [
+          "Real-time adaptation",
+          "Change detection updates the world model and the planner re-plans on the fly."
+        ],
+        [
+          "Trust and anti-hallucination",
+          "Confidence gating, grounded retrieval and visual checks: the robot abstains and re-checks instead of guessing."
+        ]
+      ],
+      "feature_media": [
+        "agentic-1",
+        "agentic-2",
+        "agentic-3",
+        "agentic-4"
+      ],
+      "links": {
+        "SR Agentic": "https://strikerobot.ai/agentic"
+      },
+      "videos": []
+    },
+    {
+      "id": "safeguard-asf",
+      "title": "SafeGuard ASF",
+      "problem": "Safety in factories without people",
+      "text": "SR Agentic on the Unitree G1 humanoid for autonomous industrial safety: fire and smoke, abnormal pipeline temperature and intruders in restricted zones, with ReAct reasoning over 23 tools and learned locomotion policies.",
+      "links": {
+        "Project page": "https://thanhnguyencanh.github.io/SafeGuard-ASF/",
+        "Paper (arXiv)": "https://arxiv.org/abs/2603.25353"
+      },
+      "local_video": {
+        "src": "images/demos/safeguard-asf.mp4",
+        "poster": "images/demos/safeguard-asf.jpg",
+        "title": "Tracking a worker",
+        "text": "The G1 recognizes a worker in protective gear and keeps tracking them."
+      },
+      "videos": []
+    },
+    {
+      "id": "simulation",
+      "title": "Simulation to reality",
+      "problem": "Behaviors that work in simulation but not on the robot",
+      "text": "A real laboratory is reconstructed inside SR Platform so that behaviors validated in simulation can be checked against the real space. The simulation stack is open source.",
+      "links": {
+        "Strike-Robot-Simulation": "https://github.com/StrikeRobot/Strike-Robot-Simulation"
+      },
+      "videos": [
+        {
+          "id": "2069373346199060906",
+          "title": "A real lab, reconstructed",
+          "text": "Part of a real laboratory rebuilt in SR Platform, to carry behaviors from simulation into reality.",
+          "date": "2026-06-23",
+          "post": "https://x.com/StrikeRobot_ai/status/2069373346199060906"
+        }
+      ]
+    },
+    {
+      "id": "legged",
+      "title": "Legged robots",
+      "problem": "Autonomy without relying on the cloud",
+      "text": "Humanoids and quadrupeds that turn camera, depth and LiDAR data into maps and actions, with on-device inference on Qualcomm edge hardware so they keep working offline.",
+      "videos": [
+        {
+          "id": "2065110608920642040",
+          "title": "Camera → depth → LiDAR → SLAM → action",
+          "text": "Real sensor data turned into navigable maps for autonomous humanoid operation.",
+          "date": "2026-06-11",
+          "post": "https://x.com/StrikeRobot_ai/status/2065110608920642040"
+        },
+        {
+          "id": "2069630938863349939",
+          "title": "One stack, many robots",
+          "text": "SR Agentic runs across platforms; a Unitree Go2 quadruped joins the fleet.",
+          "date": "2026-06-24",
+          "post": "https://x.com/StrikeRobot_ai/status/2069630938863349939"
+        },
+        {
+          "id": "2073998254191350109",
+          "title": "A brain on its back",
+          "text": "A Qualcomm Dragonwing QCS6490 mounted on the robot processes everything on the spot, in real time.",
+          "date": "2026-07-06",
+          "post": "https://x.com/StrikeRobot_ai/status/2073998254191350109"
+        },
+        {
+          "id": "2085243417681105298",
+          "title": "Why edge computing",
+          "text": "Low-latency on-device VLM/VLA inference, offline navigation and longer deployments on less power.",
+          "date": "2026-08-06",
+          "post": "https://x.com/StrikeRobot_ai/status/2085243417681105298"
+        }
+      ]
+    },
+    {
+      "id": "contact-deformable",
+      "title": "Contact-rich and deformable objects",
+      "problem": "Physics that is hard to simulate",
+      "text": "Assets with realistic contact, friction and deformation: cloth that can be grabbed, pulled and draped, articulated objects, and physical properties validated in simulation.",
+      "videos": [
+        {
+          "id": "2082140747332202595",
+          "title": "Cloth manipulation",
+          "text": "Grab, pull and drape cloth naturally, using MuJoCo's Newton constraint solver for cloth, contact and friction.",
+          "date": "2026-07-28",
+          "post": "https://x.com/StrikeRobot_ai/status/2082140747332202595"
+        },
+        {
+          "id": "2093381189264605581",
+          "title": "Drop tests in Isaac Sim",
+          "text": "Generated assets checked for mass, center of mass, inertia and friction in NVIDIA Isaac Sim.",
+          "date": "2026-08-28",
+          "post": "https://x.com/StrikeRobot_ai/status/2093381189264605581"
+        },
+        {
+          "id": "2077249317082218945",
+          "title": "Articulated assets for under $1",
+          "text": "A simulation-ready articulated asset for under one dollar, free for students, university labs and researchers.",
+          "date": "2026-07-15",
+          "post": "https://x.com/StrikeRobot_ai/status/2077249317082218945"
+        },
+        {
+          "id": "2090989015118106950",
+          "title": "Full-physics worlds",
+          "text": "Simulated worlds with full physics and real interactions, everything within reach.",
+          "date": "2026-08-22",
+          "post": "https://x.com/StrikeRobot_ai/status/2090989015118106950"
+        },
+        {
+          "id": "2094281404687466511",
+          "title": "Three months of progress",
+          "text": "More detailed, physics-ready layouts for robot training, generated in under 5 minutes.",
+          "date": "2026-08-31",
+          "post": "https://x.com/StrikeRobot_ai/status/2094281404687466511"
+        }
+      ]
+    },
+    {
+      "id": "manipulation",
+      "title": "Manipulation",
+      "problem": "From instructions to closed-loop manipulation",
+      "text": "Robot arms trained and tested on articulated, physics-enabled assets generated by SR Platform, from opening a microwave to semantic pick-and-place driven by SR Agentic.",
+      "videos": [
+        {
+          "id": "2102565369349304615",
+          "title": "See, reason, act",
+          "text": "SR Agentic understands a high-level instruction, identifies objects by material and runs semantic pick-and-place, closed loop.",
+          "date": "2026-09-23",
+          "post": "https://x.com/StrikeRobot_ai/status/2102565369349304615",
+          "also": "https://x.com/StrikeRobot_ai/status/2115467791860183247"
+        },
+        {
+          "id": "2090445596998185306",
+          "title": "Opening a microwave",
+          "text": "A robot arm opens an articulated microwave inside a generated layout, in Genesis physics simulation.",
+          "date": "2026-08-20",
+          "post": "https://x.com/StrikeRobot_ai/status/2090445596998185306"
+        },
+        {
+          "id": "2091564442865823828",
+          "title": "Bridging sim and real",
+          "text": "Physics-enabled, interactive assets that make the move from simulation to reality easier.",
+          "date": "2026-08-23",
+          "post": "https://x.com/StrikeRobot_ai/status/2091564442865823828"
+        }
+      ]
+    },
+    {
+      "id": "combined",
+      "title": "Mobile manipulation",
+      "problem": "Long tasks that combine moving and handling",
+      "text": "Legs, wheels and arms working together on multi-step tasks inside environments generated entirely by SR Platform.",
+      "videos": [
+        {
+          "id": "2117467225116590497",
+          "title": "A quadruped opens a microwave",
+          "text": "A robot dog uses an arm mounted on its back to open a microwave.",
+          "date": "2026-11-03",
+          "post": "https://x.com/StrikeRobot_ai/status/2117467225116590497"
+        },
+        {
+          "id": "2102056172887142717",
+          "title": "A 12-step task",
+          "text": "In a world generated by SR Platform, XLeRobot runs a 12-step task sequence from start to finish.",
+          "date": "2026-09-21",
+          "post": "https://x.com/StrikeRobot_ai/status/2102056172887142717"
+        },
+        {
+          "id": "2087399083082486097",
+          "title": "Find, pick, deliver",
+          "text": "Find a target cube, pick it up and deliver it in a generated factory layout, with Genesis for physics.",
+          "date": "2026-08-12",
+          "post": "https://x.com/StrikeRobot_ai/status/2087399083082486097"
+        }
+      ]
+    }
+  ]
+}
