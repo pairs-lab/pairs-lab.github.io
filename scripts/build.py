@@ -281,7 +281,9 @@ def card_media(d):
     card = f'images/directions/{d["id"]}-card.svg'
     if d.get("map") and (ROOT / card).is_file():
         alt = d["title"] + ": " + ", ".join(n["name"] for n in d["map"]["nodes"])
-        return f'<div class="direction-media is-map"><img src="{fresh(card)}" alt="{esc(alt)}" width="720" height="450" loading="lazy" decoding="async"></div>'
+        dark = card.replace(".svg", "-dark.svg")
+        return (f'<div class="direction-media is-map"><img class="logo-light" src="{fresh(card)}" alt="{esc(alt)}" width="720" height="450" loading="lazy" decoding="async">'
+                f'<img class="logo-dark" src="{fresh(dark)}" alt="{esc(alt)}" width="720" height="450" loading="lazy" decoding="async"></div>')
     return f'<div class="direction-media"><img src="{esc(d["image"])}" alt="" decoding="async"></div>'
 
 
@@ -372,7 +374,7 @@ def research():
         programs += (f'<article class="research-program" id="{d["id"]}"><a class="back-to-grid" href="#research-directions">↑ All directions</a>'
                      f'<p class="program-kicker"><span>0{i}</span>{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>'
                      f'<p class="program-copy">{esc(d["description"])}</p>'
-                     + (f'<figure class="direction-map"><img src="../{fresh("images/directions/" + d["id"] + ".svg")}" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async">'
+                     + (f'<figure class="direction-map"><img class="logo-light" src="../{fresh("images/directions/" + d["id"] + ".svg")}" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async"><img class="logo-dark" src="../{fresh("images/directions/" + d["id"] + "-dark.svg")}" alt="{esc(map_alt(d))}" width="1200" height="{svg_height(d["id"])}" loading="lazy" decoding="async">'
                         f'<figcaption>The core sub-areas of this direction, illustrated with results from our papers.</figcaption></figure>' if d.get("map") else "")
                      + f'<div class="work-heading"><h3>Featured projects and demos</h3>'
                      f'<p>Published work and papers under review are marked; each card links its project, paper or code.</p></div>'

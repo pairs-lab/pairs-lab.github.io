@@ -461,3 +461,4 @@ html[data-theme="dark"] .button-light { color: #1c1c1d; background: #7bcce4; }
 html[data-theme="dark"] .skip-link { color: #1c1c1d; }
 .button-ghost, .button-ghost:hover { color: #fff; }
 html[data-theme="dark"] .overview-map img.logo-dark { background: var(--bg); }
+html[data-theme="dark"] .direction-map img.logo-dark, html[data-theme="dark"] .direction-media.is-map { background: var(--bg); }

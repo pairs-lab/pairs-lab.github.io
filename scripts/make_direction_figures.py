@@ -272,9 +272,11 @@ def dark_variant(svg):
     """The same figure for the site's dark theme (charcoal palette, as the site): surfaces, text and lines remapped; photos unchanged."""
     import re
     svg = re.sub(r'<rect ([^>]*?)fill="#fff"(?![^>]*stroke)([^>]*)/>', r'<rect \1fill="#1c1c1d"\2/>', svg, count=1)  # page background
+    svg = re.sub(r'<circle ([^>]*?)fill="#fff"(?![^>]*stroke)([^>]*)/>', r'<circle \1fill="#212529"\2/>', svg)  # plain discs
+    svg = re.sub(r'<(rect|circle) ([^>]*?)fill="#fff" stroke', r'<\1 \2fill="#212529" stroke', svg)  # outlined cards and chips (text keeps white)
     for a, b in [('stop-color="#f2f8ff"', 'stop-color="#34404a"'), ('stop-color="#cfe5fa"', 'stop-color="#232a31"'), ('stroke="#9cc7ef"', 'stroke="#5b7a8c"'),
                  ('fill="#063a7a" stroke="#fff"', 'fill="#2f7f9e" stroke="#212529"'), ('fill="#063a7a"', 'fill="#e8e8e8"'),
-                 ('fill="#fff" stroke', 'fill="#212529" stroke'), ('fill="#f4f7fb"', 'fill="#202124"'), ('"#d9e2ec"', '"#424246"'),
+('fill="#f4f7fb"', 'fill="#202124"'), ('"#d9e2ec"', '"#424246"'),
                  ('fill="#0a2342"', 'fill="#e8e8e8"'), ('fill="#0b55ad"', 'fill="#7bcce4"'), ('fill="#5d7087"', 'fill="#8f8f8f"'),
                  ('"#00b4cc"', '"#7bcce4"'), ('"#b9c8da"', '"#55555a"')]:
         svg = svg.replace(a, b)
@@ -286,8 +288,9 @@ def main():
     made = []
     for d in lab["directions"]:
         if d.get("map"):
-            (OUT / f'{d["id"]}.svg').write_text(direction_figure(d), encoding="utf-8")
-            (OUT / f'{d["id"]}-card.svg').write_text(card_figure(d), encoding="utf-8")
+            for name, svg in ((d["id"], direction_figure(d)), (d["id"] + "-card", card_figure(d))):
+                (OUT / f"{name}.svg").write_text(svg, encoding="utf-8")
+                (OUT / f"{name}-dark.svg").write_text(dark_variant(svg), encoding="utf-8")
             made.append(d["id"])
     if lab.get("overview") and all(d.get("map") for d in lab["directions"]):
         ov = overview_figure(lab)
