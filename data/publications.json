@@ -1157,10 +1157,12 @@
     "links": {
       "paper": "",
       "arxiv": "https://arxiv.org/abs/2603.25353",
-      "code": "",
-      "website": ""
+      "code": "https://github.com/StrikeRobot/Strike-Robot-Simulation",
+      "website": "https://thanhnguyencanh.github.io/SafeGuard-ASF/"
     },
-    "image": "images/publications/safeguard-asf.jpg"
+    "image": "",
+    "video": "images/demos/safeguard-asf.mp4",
+    "poster": "images/demos/safeguard-asf.jpg"
   },
   {
     "id": "uav-warehouse-inspection",
