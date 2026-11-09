@@ -654,10 +654,14 @@ def profile(r):
     render(f'people/{r["slug"]}', r["name"], r["bio_text"], body)
 
 
+def position_tags(p):
+    return "".join('<span class="tag">' + esc(t) + "</span>" for t in p.get("tags", [p.get("tag", "")]) if t)
+
+
 def join():
     office = LAB["office"]
     aff = LAB["affiliation"]
-    cards = "".join(f'<article class="position"><span class="direction-num">0{i}</span><h3>{esc(p["title"])}</h3><p>{esc(p["text"])}</p><p class="tag">{esc(p["tag"])}</p></article>'
+    cards = "".join(f'<article class="position"><span class="direction-num">0{i}</span><h3>{esc(p["title"])}</h3><p>{esc(p["text"])}</p><p class="tags">{position_tags(p)}</p></article>'
                     for i, p in enumerate(LAB["positions"], 1))
     body = (page_head(f'Join {LAB["short_name"]}', "Information for prospective students, research visitors and collaborators.", "Work with us")
             + f'<div class="shell"><section class="section notice"><p class="kicker">Position announcements</p><h2>Future opportunities</h2>'

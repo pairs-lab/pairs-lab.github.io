@@ -694,19 +694,35 @@
   },
   "positions": [
     {
+      "title": "PhD students",
+      "text": "Students who want to do doctoral research in SLAM, robot perception, robot learning or agentic robotics. Send your CV, research interests and a short research proposal.",
+      "tags": [
+        "Doctoral research",
+        "Onsite / remote"
+      ]
+    },
+    {
       "title": "Master's students",
       "text": "Students who want to do thesis research in SLAM, robot learning or autonomous navigation. Contact us with your research interests before you apply.",
-      "tag": "Thesis research"
+      "tags": [
+        "Thesis research",
+        "Onsite / remote"
+      ]
     },
     {
       "title": "Undergraduate researchers",
       "text": "VNU-UET undergraduates can join ongoing projects, co-author papers and take part in the Student Research Competition.",
-      "tag": "Project-based"
+      "tags": [
+        "Project-based",
+        "Onsite / remote"
+      ]
     },
     {
       "title": "Visiting students & collaborators",
       "text": "Students and researchers at other institutions are welcome to collaborate with us on a clearly scoped research project.",
-      "tag": "Onsite / remote"
+      "tags": [
+        "Onsite / remote"
+      ]
     }
   ],
   "join_topics": [
