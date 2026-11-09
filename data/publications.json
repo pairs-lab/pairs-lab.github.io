@@ -1129,9 +1129,11 @@
       "paper": "",
       "arxiv": "https://arxiv.org/abs/2605.14700",
       "code": "",
-      "website": ""
+      "website": "https://strikerobot.ai/sr-platform"
     },
-    "image": "images/publications/sr-platform.jpg"
+    "image": "",
+    "video": "images/demos/sr-platform.mp4",
+    "poster": "images/demos/sr-platform.jpg"
   },
   {
     "id": "safeguard-asf",
