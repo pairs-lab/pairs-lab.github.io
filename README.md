@@ -30,6 +30,8 @@ Commit the generated HTML together with the data change.
   Without `bio`, the page shows a short factual line and the member's lab publications.
 - **Robots & infrastructure:** add entries to `robots` in `data/lab.json` with `name`, `category`,
   `description`, `image` and optional `url`. They appear on `datasets/#resources`.
+- **Research tools:** entries of `tools` in `data/lab.json` (`name`, `kicker`, `text`, `url`, `label`) appear on
+  `datasets/#tools`, the Resources page.
 - **Publication media:** `image`, or `video` plus `poster`, paths relative to the site root.
 - **Research figures:** each direction's `map` in `data/lab.json` (hub, core goal, two `columns`, `nodes` with
   `name`, `desc`, `thumb`, `papers`, `col`, `short`, and `open` questions) and the lab-wide `overview`

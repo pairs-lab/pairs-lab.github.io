@@ -357,7 +357,7 @@ address { margin-bottom: 16px; font-style: normal; }
   .research-choice { min-height: 190px; }
 }
 
-/* hardware rings (Datasets & Resources) */
+/* hardware rings (Resources) */
 .hw-group { margin-top: 36px; }
 .hw-group + .hw-group { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line); }
 .hw-group-title { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; color: var(--accent-strong); font-size: 1.3rem; }

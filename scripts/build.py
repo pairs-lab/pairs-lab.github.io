@@ -511,15 +511,18 @@ def datasets():
                      f'{carousel(items, LAB["short_name"] + " " + name.lower(), "../", profiles=False)}</div>')
     if not machines:
         machines = '<p class="notice">Our robot platforms, sensors and computing infrastructure will be listed here soon.</p>'
-    body = (page_head("Datasets & Resources", "Research datasets, robot platforms and computing hardware of the lab.", "Open research")
+    tools = "".join(f'<article class="card"><p class="kicker">{esc(t["kicker"])}</p><h3>{esc(t["name"])}</h3><p>{esc(t["text"])}</p>'
+                    f'<div class="chips"><a class="chip-link" href="{esc(t["url"])}">{esc(t["label"])} {EXT}</a></div></article>' for t in LAB.get("tools", []))
+    tools = (f'<section class="section" id="tools">{section_head("Research Tools", kicker="02 / Tools")}<div class="card-grid">{tools}</div></section>' if tools else "")
+    body = (page_head("Resources", "Research datasets, research tools, robot platforms and computing hardware of the lab.", "Open research")
             + f'<div class="shell"><section class="section" id="datasets">{section_head("Datasets", kicker="01 / Data")}'
             f'<div class="notice"><p class="kicker">Dataset releases</p><h3>Coming soon</h3>'
             f'<p>Dataset download links will be listed here when available. For resources associated with an existing paper, see its project page and repository.</p>'
             f'<div class="chips"><a class="chip-link" href="mailto:{esc(LAB["email"])}?subject=Research%20dataset%20inquiry">Ask about research data {EXT}</a>'
             f'<a class="chip-link" href="../publications/">Code is linked from each publication {ARROW}</a><a class="chip-link" href="{esc(LAB["github"])}">GitHub organization {EXT}</a></div></div>'
-            f'<p class="muted">Please consult each repository for its license, usage instructions and citation information.</p></section>'
-            f'<section class="section resources-panel" id="resources">{section_head("Robot Platforms & Computing", kicker="02 / Hardware")}{machines}</section></div>')
-    render("datasets", "Datasets & Resources", "Research datasets, robot platforms and infrastructure of PAIRS Lab.", body)
+            f'<p class="muted">Please consult each repository for its license, usage instructions and citation information.</p></section>{tools}'
+            f'<section class="section resources-panel" id="resources">{section_head("Robot Platforms & Computing", kicker=("03" if tools else "02") + " / Hardware")}{machines}</section></div>')
+    render("datasets", "Resources", "Research datasets, research tools, robot platforms and infrastructure of PAIRS Lab.", body)
 
 
 def life():

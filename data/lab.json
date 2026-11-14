@@ -850,5 +850,21 @@
       "Factory safety",
       "Smart traffic"
     ]
-  }
+  },
+  "tools": [
+    {
+      "name": "Paper Explorer",
+      "kicker": "Literature search",
+      "text": "Search papers from 14 top robotics, computer vision and machine learning venues since 2015 by title, author, venue, year and topic, with similar-paper suggestions.",
+      "url": "https://thanhnguyencanh.github.io/explorer/",
+      "label": "Open the Paper Explorer"
+    },
+    {
+      "name": "Research Trends",
+      "kicker": "Field overview",
+      "text": "Papers per year, topics over time and the rising and fading title terms of the same 14 venues, one view per conference or journal.",
+      "url": "https://thanhnguyencanh.github.io/trends/",
+      "label": "Open Research Trends"
+    }
+  ]
 }
