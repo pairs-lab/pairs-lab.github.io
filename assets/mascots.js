@@ -38,6 +38,7 @@
   }));
   if (!mascots.length) return;
   const byId = Object.fromEntries(mascots.map((m) => [m.id, m]));
+  let pop = null, popFor = null, popOpener = null;  // the care card and the mascot it belongs to
   const size = () => mascots[0].el.offsetWidth || 100;
   const urlOf = (el) => (el.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/) || [])[1];
 
@@ -103,9 +104,17 @@
     m.say.textContent = text;
     m.say.hidden = false;
     m.say.style.removeProperty("--nudge");
-    const r = m.say.getBoundingClientRect(), room = width() - 8;  // keep the bubble inside the window
-    if (r.left < 8) m.say.style.setProperty("--nudge", 8 - r.left + "px");
-    else if (r.right > room) m.say.style.setProperty("--nudge", room - r.right + "px");
+    m.say.style.removeProperty("max-width");
+    let lo = 8, hi = width() - 8;  // the bubble stays inside the window and clear of this mascot's open care card
+    if (pop && !pop.hidden && popFor === m) {
+      const c = pop.getBoundingClientRect(), me = m.el.getBoundingClientRect();
+      if (c.left >= me.right - 1) hi = Math.min(hi, c.left - 8);
+      else if (c.right <= me.left + 1) lo = Math.max(lo, c.right + 8);
+    }
+    m.say.style.maxWidth = Math.max(110, Math.min(220, hi - lo)) + "px";
+    const r = m.say.getBoundingClientRect();
+    if (r.left < lo) m.say.style.setProperty("--nudge", lo - r.left + "px");
+    else if (r.right > hi) m.say.style.setProperty("--nudge", hi - r.right + "px");
     clearTimeout(m.timer);
     m.timer = setTimeout(() => { m.say.hidden = true; }, ms || 2600);
   };
@@ -344,12 +353,19 @@
     document.querySelectorAll("[data-mascot-explored]").forEach((el) => { el.textContent = `${care.explored.length} / ${sections().length}`; });
   };
 
-  let pop = null, popFor = null, popOpener = null;
-  const placePop = () => {
+  const placePop = () => {  // beside the mascot, so its speech bubble, poses and hearts stay in view
     if (!pop || !popFor) return;
-    const S = size(), w = pop.offsetWidth, vw = width();
-    pop.style.left = clamp(popFor.x + S / 2 - w / 2, 8, Math.max(8, vw - w - 8)) + "px";
-    pop.style.bottom = S * (popFor.riding ? 1.55 : 1.08) + 8 + "px";
+    const S = size(), w = pop.offsetWidth, h = pop.offsetHeight, vw = width(), x = popFor.x, gap = 14;
+    let left, bottom = 8;
+    if (x + S + gap + w <= vw - 8) left = x + S + gap;
+    else if (x - gap - w >= 8) left = x - gap - w;
+    else {  // narrow screen: above the mascot, with room for a two-line bubble in between
+      const lift = popFor.riding ? (popFor.ride === "drone" ? 0.49 : 0.27) : 0;
+      left = clamp(x + S / 2 - w / 2, 8, Math.max(8, vw - w - 8));
+      bottom = Math.min(S * (1 + lift) + 74, Math.max(8, window.innerHeight - h - 8));
+    }
+    pop.style.left = left + "px";
+    pop.style.bottom = bottom + "px";
   };
   const closePop = (restore) => {
     if (!pop || pop.hidden) return;
@@ -391,6 +407,9 @@
     m.goal = null;
     set(m, "wave", now());  // then it sits while the card is open (choose)
     refresh();
+    const tip = { hungry: `Hungry: try Feed ${m.foodIcon}`, sleepy: "Sleepy: try Nap ☾", bored: "Bored: pet me or play Landmark Relay",
+      joyful: "Feeling great!", content: "Feeling fine. Pick something to do together." }[moodOf(care.pets[m.id]).key];
+    note(m, tip);
     placePop();
     pop.querySelector('[data-act="feed"]').focus({ preventScroll: true });
   };
@@ -398,8 +417,8 @@
     m.el.addEventListener("click", () => {
       if (pop && !pop.hidden && popFor === m) { closePop(false); return; }
       closePop(false);
-      say(m, m.hello);
       openPop(m, m.el);
+      say(m, m.hello);
     });
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && pop && !pop.hidden && !relay.isOpen()) closePop(true); });
