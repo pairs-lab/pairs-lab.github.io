@@ -730,21 +730,21 @@ def people():
                   f'{carousel(members, LAB["short_name"] + " " + g["group"].lower(), "../")}</section>')
     awards = LAB["student_awards"]
     body = f'''<section class="members-page"><div class="shell">
-<header class="members-intro"><h1>Members</h1><p>Meet the staff, students, alumni and mascots of {esc(LAB["short_name"])}.</p></header>
+<header class="members-intro"><h1>Members</h1><p>Meet the staff, students, mascots and alumni of {esc(LAB["short_name"])}.</p></header>
 <div class="member-tabs" role="tablist" aria-label="Choose directory">
 <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-people" data-tab="people">People</button>
-<button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
 {'<button type="button" role="tab" aria-selected="false" aria-controls="panel-mascots" data-tab="mascots">Mascots</button>' if MASCOTS else ""}
+<button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
 </div>
 <section class="member-panel" id="panel-people" role="tabpanel" data-panel="people">
 {search}
 {rings}
 </section>
+{mascot_panel() if MASCOTS else ""}
 <section class="member-panel" id="panel-alumni" role="tabpanel" data-panel="alumni">
 <div class="panel-heading"><p class="kicker">Former members</p><h2>Alumni</h2></div>
 {carousel(alumni, LAB["short_name"] + " alumni", "../")}
 </section>
-{mascot_panel() if MASCOTS else ""}
 <section class="notice"><h2>Student awards</h2><p>{esc(awards["title"])}:</p><ul>{"".join(f"<li>{esc(x)}</li>" for x in awards["items"])}</ul><a class="text-link" href="../join/">Join the lab {ARROW}</a></section>
 </div></section>'''
     render("people", "Members", "Faculty, students, alumni and mascots of PAIRS Lab.", body)
