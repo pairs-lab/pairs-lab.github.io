@@ -24,6 +24,7 @@ LIFE = json.loads((ROOT / "data/life.json").read_text(encoding="utf-8"))
 NEWS = sorted(json.loads((ROOT / "data/news.json").read_text(encoding="utf-8")), key=lambda n: n["date"], reverse=True)
 PAGES = [("", "Home"), ("research", "Research"), ("publications", "Publications"), ("projects", "Projects"),
          ("datasets", "Resources"), ("news", "News"), ("life", "Lab Life"), ("people", "Members"), ("join", "Join Us")]
+NAV_LINKS = [("Paper Explorer", "https://thanhnguyencanh.github.io/explorer/")]  # external pages shown after the lab's own
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
 HIDDEN_STATUS = {"", "accepted", "published"}
@@ -193,6 +194,7 @@ def render(slug, title, description, body):
     section = slug.split("/")[0]
     current = ' aria-current="page"'
     nav = "".join(f'<a href="{route(s, prefix)}"{current if s == section else ""}>{esc(label)}</a>' for s, label in PAGES)
+    nav += "".join(f'<a href="{esc(url)}">{esc(label)} {EXT}</a>' for label, url in NAV_LINKS)
     aff = LAB["affiliation"]
     office = LAB["office"]
     aff_short = LAB["affiliation"]["institution_short"]

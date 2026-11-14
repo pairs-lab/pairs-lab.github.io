@@ -30,6 +30,8 @@ Commit the generated HTML together with the data change.
   Without `bio`, the page shows a short factual line and the member's lab publications.
 - **Robots & infrastructure:** add entries to `robots` in `data/lab.json` with `name`, `category`,
   `description`, `image` and optional `url`. They appear on `datasets/#resources`.
+- **External links in the top bar:** `NAV_LINKS` in `scripts/build.py` (now the Paper Explorer). With ten links the
+  bar fits on one row from 1220 px; below that it becomes the menu button (`assets/site.css`).
 - **Research tools:** entries of `tools` in `data/lab.json` (`name`, `kicker`, `text`, `url`, `label`) appear on
   `datasets/#tools`, the Resources page.
 - **Publication media:** `image`, or `video` plus `poster`, paths relative to the site root.

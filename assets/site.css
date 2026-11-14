@@ -376,6 +376,8 @@ address { margin-bottom: 16px; font-style: normal; }
 /* responsive */
 @media (max-width: 1080px) {
   .direction-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 1219px) {  /* below this width the ten nav links no longer fit on one row: use the menu button */
   .nav-toggle { display: block; }
   .site-nav { position: fixed; inset: var(--header-h) 0 auto 0; display: none; flex-direction: column; padding: 12px 16px 20px; background: var(--surface); border-bottom: 1px solid var(--line); box-shadow: var(--shadow); }
   .site-nav.open { display: flex; }
@@ -450,6 +452,10 @@ address { margin-bottom: 16px; font-style: normal; }
 .header-tools { display: flex; align-items: center; gap: 8px; }
 .header-row { gap: 18px; }
 .site-nav a { padding-inline: 8px; }
+@media (min-width: 1220px) {  /* ten links, including Paper Explorer, on one row */
+  .site-nav { gap: 0; }
+  .site-nav a { padding-inline: 7px; font-size: 0.92rem; }
+}
 .theme-toggle { margin-left: 0; }
 
 /* dark theme: badges and the call-to-action band keep their own contrast */
