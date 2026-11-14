@@ -892,7 +892,104 @@
       "food": "fish",
       "food_icon": "🐟",
       "ride": "drone",
-      "ride_label": "Fly the drone"
+      "ride_label": "Fly the drone",
+      "move": "walk",
+      "move_labels": [
+        "Walk",
+        "Run",
+        "Sit",
+        "Wave"
+      ],
+      "steps": {
+        "walk": [
+          [
+            0,
+            140
+          ],
+          [
+            1,
+            140
+          ],
+          [
+            2,
+            140
+          ],
+          [
+            3,
+            140
+          ]
+        ],
+        "run": [
+          [
+            0,
+            85
+          ],
+          [
+            1,
+            85
+          ],
+          [
+            2,
+            85
+          ],
+          [
+            3,
+            85
+          ]
+        ],
+        "sit": [
+          [
+            0,
+            2200
+          ],
+          [
+            1,
+            110
+          ],
+          [
+            2,
+            160
+          ],
+          [
+            1,
+            110
+          ],
+          [
+            0,
+            1500
+          ],
+          [
+            3,
+            1300
+          ]
+        ],
+        "wave": [
+          [
+            0,
+            170
+          ],
+          [
+            1,
+            170
+          ],
+          [
+            2,
+            220
+          ],
+          [
+            1,
+            170
+          ],
+          [
+            0,
+            170
+          ],
+          [
+            3,
+            170
+          ]
+        ]
+      }
     },
     {
       "id": "buffalo",
@@ -918,7 +1015,215 @@
       "food": "rice",
       "food_icon": "🌾",
       "ride": "rover",
-      "ride_label": "Drive the rover"
+      "ride_label": "Drive the rover",
+      "move": "walk",
+      "move_labels": [
+        "Walk",
+        "Run",
+        "Sit",
+        "Wave"
+      ],
+      "steps": {
+        "walk": [
+          [
+            0,
+            140
+          ],
+          [
+            1,
+            140
+          ],
+          [
+            2,
+            140
+          ],
+          [
+            3,
+            140
+          ]
+        ],
+        "run": [
+          [
+            0,
+            85
+          ],
+          [
+            1,
+            85
+          ],
+          [
+            2,
+            85
+          ],
+          [
+            3,
+            85
+          ]
+        ],
+        "sit": [
+          [
+            0,
+            2200
+          ],
+          [
+            1,
+            110
+          ],
+          [
+            2,
+            160
+          ],
+          [
+            1,
+            110
+          ],
+          [
+            0,
+            1500
+          ],
+          [
+            3,
+            1300
+          ]
+        ],
+        "wave": [
+          [
+            0,
+            170
+          ],
+          [
+            1,
+            170
+          ],
+          [
+            2,
+            220
+          ],
+          [
+            1,
+            170
+          ],
+          [
+            0,
+            170
+          ],
+          [
+            3,
+            170
+          ]
+        ]
+      }
+    },
+    {
+      "id": "carp",
+      "name": "Golden carp",
+      "vi": "Cá chép",
+      "kicker": "Lab mascot · the water",
+      "bio": "In Vietnamese legend the carp (cá chép) swims upstream and leaps the Dragon Gate to become a dragon, a symbol of perseverance and success in study. Our golden carp wears the lab's blue dress with the PAIRS emblem and waves on the hem. It stands for our underwater robots, which explore where the crane and the buffalo cannot go.",
+      "tags": [
+        "Underwater robots",
+        "Perseverance",
+        "Curiosity"
+      ],
+      "hello": "Xin chào! I'm the PAIRS golden carp.",
+      "alt": "The PAIRS Lab golden carp mascot in a blue dress with the lab emblem, waving a fin",
+      "moods": [
+        "Hello",
+        "Curious",
+        "Surprised",
+        "Thinking",
+        "Calm",
+        "Joy"
+      ],
+      "food": "shrimp",
+      "food_icon": "🦐",
+      "ride": "auv",
+      "ride_label": "Pilot the AUV",
+      "move": "swim",
+      "move_labels": [
+        "Swim",
+        "Swim fast",
+        "Rest",
+        "Fin wave"
+      ],
+      "steps": {
+        "walk": [
+          [
+            0,
+            240
+          ],
+          [
+            1,
+            240
+          ],
+          [
+            2,
+            240
+          ],
+          [
+            3,
+            240
+          ]
+        ],
+        "run": [
+          [
+            0,
+            120
+          ],
+          [
+            1,
+            120
+          ],
+          [
+            2,
+            120
+          ],
+          [
+            3,
+            120
+          ]
+        ],
+        "sit": [
+          [
+            0,
+            1300
+          ],
+          [
+            1,
+            100
+          ],
+          [
+            2,
+            120
+          ],
+          [
+            3,
+            1800
+          ]
+        ],
+        "wave": [
+          [
+            0,
+            400
+          ],
+          [
+            1,
+            160
+          ],
+          [
+            2,
+            160
+          ],
+          [
+            1,
+            160
+          ],
+          [
+            3,
+            600
+          ]
+        ]
+      }
     }
   ],
   "mascot_game": {

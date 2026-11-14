@@ -28,9 +28,15 @@
   const POSES = ["hello", "curious", "surprised", "thinking", "calm", "joy"];  // cells of <id>-moods.webp
   const POSE_LINES = { hello: "Xin chào!", curious: "Ooh, what is this?", surprised: "Whoa!", thinking: "Hmm… let me think.", calm: "So calm… zzz", joy: "Yay!" };
 
+  const movesFor = (el) => {  // the mascot's own frame timing ("steps" in data/lab.json) over the defaults above
+    let steps = {};
+    try { steps = JSON.parse(el.dataset.steps || "{}") || {}; } catch (e) { steps = {}; }
+    return Object.fromEntries(Object.keys(MOVES).map((k) => [k, Object.assign({}, MOVES[k], Array.isArray(steps[k]) && steps[k].length ? { steps: steps[k] } : {})]));
+  };
+  const RIDES = { drone: ["🚁 Fly", "Up we go!", "Landed!"], rover: ["🚜 Drive", "Let's roll!", "Parked!"], auv: ["🌊 Dive", "Dive, dive!", "Surfaced!"] };
   const mascots = [...yard.querySelectorAll("[data-mascot]")].map((el) => ({
     id: el.dataset.mascot, name: el.dataset.name, vi: el.dataset.vi, food: el.dataset.food, foodIcon: el.dataset.foodIcon,
-    ride: el.dataset.ride, rideLabel: el.dataset.rideLabel, hello: el.dataset.hello,
+    ride: el.dataset.ride, rideLabel: el.dataset.rideLabel, hello: el.dataset.hello, move: el.dataset.move || "walk", moves: movesFor(el),
     el, body: el.querySelector(".mascot-body"), sprite: el.querySelector(".mascot-sprite"), pose: el.querySelector(".mascot-pose"),
     vehicle: el.querySelector(".mascot-ride"), say: el.querySelector(".mascot-say"),
     x: 0, fx: 0, dir: 1, state: "walk", step: 0, next: 0, until: 0, shown: "", poseIdx: 0, timer: 0,
@@ -85,7 +91,7 @@
       const key = "p" + m.poseIdx;
       if (key !== m.shown) { m.pose.style.backgroundPosition = m.poseIdx * 20 + "% 0"; m.shown = key; }
     } else {
-      const mv = MOVES[m.state], f = mv.steps[m.step % mv.steps.length][0], key = f + "/" + mv.row;
+      const mv = m.moves[m.state], f = mv.steps[m.step % mv.steps.length][0], key = f + "/" + mv.row;
       if (key !== m.shown) { m.sprite.style.backgroundPosition = (f * 100) / 3 + "% " + (mv.row * 100) / 3 + "%"; m.shown = key; }
     }
     m.el.style.transform = "translateX(" + m.x.toFixed(1) + "px)";
@@ -94,7 +100,7 @@
     m.state = state;
     m.step = 0;
     if (state === "pose" || state === "nap") m.poseIdx = Math.max(0, POSES.indexOf(pose || "calm"));
-    m.next = MOVES[state] ? t + MOVES[state].steps[0][1] : Infinity;
+    m.next = m.moves[state] ? t + m.moves[state].steps[0][1] : Infinity;
     const span = LAST[state] || LAST.pose;
     m.until = t + (ms || rand(span[0], span[1]));
     draw(m);
@@ -154,6 +160,7 @@
     if (next === "pose" && NEED_LINES[mood] && t - m.saidAt > 45000) { m.saidAt = t; say(m, NEED_LINES[mood](m), 3200); }
     if (next === "walk" && (s === "walk" || s === "sit") && Math.random() < 0.4) m.dir = -m.dir;
     set(m, next, t, 0, pose);
+    if (m.move === "swim" && (next === "walk" || next === "run") && Math.random() < 0.6) setTimeout(() => burst(m, ["○", "°", "○"], "bubble"), rand(300, 1500));
   };
 
   // ---------- the loop ----------
@@ -167,7 +174,7 @@
       p.happy = clamp(p.happy - 0.006 * dt, 5, 100);
       const gain = { nap: 5, sit: 0.02, run: -0.05, walk: -0.006 }[m.state] || 0;
       p.energy = clamp(p.energy + gain * dt, 0, 100);
-      const mv = MOVES[m.state];
+      const mv = m.moves[m.state];
       if (m.goal) {
         const d = m.goal.x - m.x;
         if (Math.abs(d) < 3) { m.x = m.goal.x; const then = m.goal.then; m.goal = null; then(m, t); return; }
@@ -188,6 +195,10 @@
 
   // ---------- vehicles (APRL-style ride modes, drawn as SVG) ----------
   const VEHICLES = {
+    auv: '<svg viewBox="0 0 100 34" aria-hidden="true"><path d="M22 9l-7-8h9l6 8zM22 25l-7 8h9l6-8z" fill="currentColor"/>' +
+      '<rect x="14" y="8" width="70" height="18" rx="9" fill="#f5b400"/><path d="M82 8c11 0 15 4 15 9s-4 9-15 9z" fill="#f5b400"/>' +
+      '<rect x="30" y="15" width="44" height="3.2" rx="1.6" fill="#0b55ad"/><circle cx="90" cy="17" r="2.6" fill="#7bcce4"/>' +
+      '<rect x="8" y="13" width="7" height="8" rx="2" fill="currentColor"/><ellipse class="prop" cx="6" cy="17" rx="2" ry="8" fill="currentColor"/></svg>',
     drone: '<svg viewBox="0 0 100 34" aria-hidden="true"><g class="rotor"><ellipse cx="15" cy="5" rx="13" ry="2.4"/><ellipse cx="85" cy="5" rx="13" ry="2.4"/></g>' +
       '<path d="M15 6v6M85 6v6M15 12h70" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>' +
       '<rect x="32" y="9" width="36" height="13" rx="6" fill="#0b55ad"/><rect x="36" y="12" width="28" height="3" rx="1.5" fill="#00b4cc"/>' +
@@ -266,14 +277,14 @@
         m.vehicle.dataset.kind = m.ride;
         care.pets[m.id].rides += 1;
         care.pets[m.id].happy = clamp(care.pets[m.id].happy + 3, 0, 100);
-        if (visible()) { m.goal = null; set(m, "ride", t, m.hold ? 1e9 : 0); say(m, m.ride === "drone" ? "Up we go!" : "Let's roll!"); }
-      } else if (visible()) { set(m, "wave", t); say(m, m.ride === "drone" ? "Landed!" : "Parked!"); }
-      note(m, (m.riding ? `${m.name}: ${m.rideLabel.toLowerCase()}.` : `${m.name} is back on foot.`) + hiddenHint());
+        if (visible()) { m.goal = null; set(m, "ride", t, m.hold ? 1e9 : 0); say(m, (RIDES[m.ride] || RIDES.rover)[1]); }
+      } else if (visible()) { set(m, "wave", t); say(m, (RIDES[m.ride] || RIDES.rover)[2]); }
+      note(m, (m.riding ? `${m.name}: ${m.rideLabel.charAt(0).toLowerCase() + m.rideLabel.slice(1)}.` : `${m.name} is back ${m.move === "swim" ? "to swimming" : "on foot"}.`) + hiddenHint());
     },
   };
-  const teamUp = () => {  // both walk to the middle and share a high five
+  const teamUp = () => {  // they all go to the middle, side by side, and share a high five
     if (mascots.length < 2) return;
-    const [a, b] = mascots.slice().sort((p, q) => p.x - q.x);
+    const crew = mascots.slice().sort((p, q) => p.x - q.x), n = crew.length;
     mascots.forEach((m) => { m.hold = false; m.riding = false; });
     closePop();
     const done = () => {
@@ -283,19 +294,17 @@
       refresh();
     };
     if (!visible()) { done(); mascots.forEach((m) => note(m, "They practised a high five." + hiddenHint())); return; }
-    const S = size(), mid = clamp((a.x + b.x) / 2, S * 0.5, width() - S * 1.5);
+    const S = size(), step = S * 0.8, span = step * (n - 1);
+    const mid = clamp(crew.reduce((sum, m) => sum + m.x, 0) / n, span / 2, Math.max(span / 2, width() - S - span / 2));
     let arrived = 0;
     const meet = (m, t) => {
       arrived += 1;
-      set(m, "wave", t, 8000);  // waits for the other one (gives up after 8 s if it was called away)
-      if (arrived < 2) return;
+      set(m, "wave", t, 8000);  // waits for the others (gives up after 8 s if one was called away)
+      if (arrived < n) return;
       const t2 = now();
-      a.dir = 1;
-      b.dir = -1;
-      set(a, "pose", t2, 2300, "joy");
-      set(b, "pose", t2, 2300, "joy");
-      say(a, "Teamwork! ✋");
-      burst(a, ["✋", "✦", "✦"], "spark");
+      crew.forEach((c, i) => { c.dir = i < (n - 1) / 2 ? 1 : i > (n - 1) / 2 ? -1 : c.dir; set(c, "pose", t2, 2300, "joy"); });
+      say(crew[0], "Teamwork! ✋");
+      burst(crew[Math.floor(n / 2)], ["✋", "✦", "✦"], "spark");
       done();
     };
     const go = (m, x) => {
@@ -303,8 +312,7 @@
       set(m, Math.abs(x - m.x) > S * 2.5 ? "run" : "walk", t, 1e9);
       m.goal = { x: clamp(x, 0, width() - S), then: meet };
     };
-    go(a, mid - S * 0.4);
-    go(b, mid + S * 0.4);
+    crew.forEach((m, i) => go(m, mid - span / 2 + i * step));
   };
 
   // ---------- care cards: the pop-up over a walker and the blocks on the Members page ----------
@@ -322,7 +330,7 @@
       `<button type="button" data-act="pet"><span aria-hidden="true">♡</span> Pet</button>` +
       `<button type="button" data-act="nap"><span aria-hidden="true">☾</span> Nap</button>` +
       `<button type="button" data-act="ride" aria-pressed="false" aria-label="${esc(m.rideLabel)}" title="${esc(m.rideLabel)}">` +
-      `<span aria-hidden="true">${m.ride === "drone" ? "🚁 Fly" : "🚜 Drive"}</span></button></div>` +
+      `<span aria-hidden="true">${(RIDES[m.ride] || ["Ride"])[0]}</span></button></div>` +
       `<p class="mascot-note" role="status" data-care-note="${esc(m.id)}"></p>`;
     box.querySelector(".mascot-mood-face").style.backgroundImage = m.pose.style.backgroundImage;
     box.addEventListener("click", (e) => {
@@ -489,7 +497,7 @@
   let saved = {};
   try { saved = JSON.parse(get("sessionStorage", "mascot-pos")) || {}; } catch (e) { saved = {}; }
   mascots.forEach((m, i) => {
-    const s = Array.isArray(saved[m.id]) ? saved[m.id] : [i ? 0.72 : 0.06, i ? -1 : 1, 0];
+    const s = Array.isArray(saved[m.id]) ? saved[m.id] : [0.06 + (0.8 * i) / Math.max(1, mascots.length - 1), i % 2 ? -1 : 1, 0];
     m.fx = clamp(+s[0] || 0, 0, 1);
     m.dir = s[1] < 0 ? -1 : 1;
     m.riding = !!s[2];

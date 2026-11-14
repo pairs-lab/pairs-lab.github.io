@@ -139,7 +139,7 @@ def webp_size(path):
 # ---------- lab mascots (art: images/mascots/, made by scripts/make_mascots.py) ----------
 
 MASCOTS = LAB.get("mascots", [])
-MOVES = [("walk", "Walk"), ("run", "Run"), ("sit", "Sit"), ("wave", "Wave")]  # the four rows of <id>-sprite.webp
+MOVES = ["walk", "run", "sit", "wave"]  # the four rows of <id>-sprite.webp (a swimmer: swim, swim fast, rest, fin wave)
 
 
 def mascot_file(m, kind=""):
@@ -156,7 +156,8 @@ def mascot_yard(prefix):
     walkers = ""
     for m in MASCOTS:
         data = {"mascot": m["id"], "name": m["name"], "vi": m["vi"], "food": m["food"], "food-icon": m["food_icon"],
-                "ride": m["ride"], "ride-label": m["ride_label"], "hello": m["hello"]}
+                "ride": m["ride"], "ride-label": m["ride_label"], "hello": m["hello"], "move": m.get("move", "walk"),
+                "steps": json.dumps(m["steps"], separators=(",", ":"))}
         attrs = " ".join(f'data-{k}="{esc(v)}"' for k, v in data.items())
         walkers += (f'<button class="mascot" type="button" {attrs} aria-label="{esc(m["name"])}, lab mascot: feed, pet and play">'
                     f'<span class="mascot-say" aria-hidden="true" hidden></span><span class="mascot-body">'
@@ -174,6 +175,21 @@ def mascot_button(prefix):
             f'<img src="{prefix}{fresh("images/mascots/mascot-face.webp")}" alt="" width="30" height="30"></button>')
 
 
+def tile_animation(m):
+    """CSS for the four move tiles of one mascot, from the same frame timing as its walker ("steps" in data/lab.json)."""
+    css = ""
+    for k in MOVES:
+        steps = m["steps"][k]
+        total, t, frames = sum(ms for _, ms in steps), 0, []
+        for f, ms in steps:
+            frames.append(f"{100 * t / total:.2f}%{{background-position-x:{f * 100 / 3:.3f}%}}")
+            t += ms
+        frames.append(f"100%{{background-position-x:{steps[-1][0] * 100 / 3:.3f}%}}")
+        css += (f'@keyframes mascot-{m["id"]}-{k}{{{"".join(frames)}}}'
+                f'#mascot-{m["id"]} .move-{k}{{animation:mascot-{m["id"]}-{k} {total}ms step-end infinite}}')
+    return css
+
+
 def mascot_panel():
     """Members page, Mascots tab: portrait, story, care (mood, needs, actions), the four moves and the six moods of each
     mascot, then the minigame. assets/mascots.js fills the care blocks and makes the mood tiles and play buttons work."""
@@ -182,8 +198,8 @@ def mascot_panel():
         w, h = webp_size(mascot_file(m))
         name = esc(m["name"])
         sprite, mood_sheet = f'background-image:url(../{fresh(mascot_file(m, "-sprite"))})', f'background-image:url(../{fresh(mascot_file(m, "-moods"))})'
-        moves = "".join(f'<figure class="mascot-tile"><span class="mascot-move move-{k}" style="{sprite}" role="img" aria-label="{name}: {label.lower()}"></span>'
-                        f'<figcaption>{label}</figcaption></figure>' for k, label in MOVES)
+        moves = "".join(f'<figure class="mascot-tile"><span class="mascot-move move-{k}" style="{sprite}" role="img" aria-label="{name}: {esc(label.lower())}"></span>'
+                        f'<figcaption>{esc(label)}</figcaption></figure>' for k, label in zip(MOVES, m["move_labels"]))
         moods = "".join(f'<button class="mascot-tile" type="button" data-mascot-mood="{esc(m["id"])}" data-pose="{j}" aria-label="{name}: show {esc(mood.lower())}">'
                         f'<span class="mascot-mood" style="{mood_sheet};--i:{j}"></span><span class="mascot-tile-label">{esc(mood)}</span></button>' for j, mood in enumerate(m["moods"]))
         tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in m["tags"])
@@ -194,7 +210,8 @@ def mascot_panel():
                   f'<div class="mascot-care" data-mascot-care="{esc(m["id"])}" hidden><p class="mascot-label">Care</p></div>'
                   f'<p class="mascot-label">Moves</p><div class="mascot-tiles is-moves">{moves}</div>'
                   f'<p class="mascot-label">Moods <small>click one to see it</small></p><div class="mascot-tiles is-moods">{moods}</div></div></article>')
-    names = " and the ".join(m["name"].lower() for m in MASCOTS)
+    names = [m["name"].lower() for m in MASCOTS]
+    names = ", the ".join(names[:-1]) + " and the " + names[-1] if len(names) > 1 else names[0]
     game = LAB.get("mascot_game")
     play = ""
     if game:
@@ -205,9 +222,9 @@ def mascot_panel():
                 f'<button type="button" class="button button-quiet" data-play="team">Team up: high five</button></div></section>')
     return (f'<section class="member-panel" id="panel-mascots" role="tabpanel" data-panel="mascots">'
             f'<div class="panel-heading"><p class="kicker">Lab mascots</p><h2>Mascots</h2></div>'
-            f'<p class="mascot-intro">The {esc(names)} walk, run, sit and wave along the bottom of every page. Their mood follows how '
-            f'full, rested and happy they are: click one to feed, pet, nap or ride, or hide them with the crane button in the top bar.</p>'
-            f'{cards}{play}</section>')
+            f'<p class="mascot-intro">The {esc(names)} move along the bottom of every page. Their mood follows how full, rested and happy '
+            f'they are: click one to feed, pet, nap or ride, or hide them with the crane button in the top bar.</p>'
+            f'<style>{"".join(tile_animation(m) for m in MASCOTS)}</style>{cards}{play}</section>')
 
 
 def media(p, prefix):
