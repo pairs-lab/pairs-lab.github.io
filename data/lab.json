@@ -888,7 +888,11 @@
         "Thinking",
         "Calm",
         "Joy"
-      ]
+      ],
+      "food": "fish",
+      "food_icon": "🐟",
+      "ride": "drone",
+      "ride_label": "Fly the drone"
     },
     {
       "id": "buffalo",
@@ -910,7 +914,16 @@
         "Thinking",
         "Calm",
         "Joy"
-      ]
+      ],
+      "food": "rice",
+      "food_icon": "🌾",
+      "ride": "rover",
+      "ride_label": "Drive the rover"
     }
-  ]
+  ],
+  "mascot_game": {
+    "name": "Landmark Relay",
+    "text": "The crane flies a drone and drops map landmarks; the buffalo catches them on the ground, like an aerial and a ground robot mapping together. Catch blue landmarks (+1) and gold loop closures (+5), and let red outliers fall (−2 if caught).",
+    "seconds": 45
+  }
 }

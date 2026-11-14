@@ -28,7 +28,7 @@ NAV_LINKS = [("Paper Explorer", "https://thanhnguyencanh.github.io/explorer/")] 
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
 HIDDEN_STATUS = {"", "accepted", "published"}
-REV = hashlib.sha256((ROOT / "assets/site.css").read_bytes() + (ROOT / "assets/site.js").read_bytes()).hexdigest()[:10]
+REV = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in ("assets/site.css", "assets/site.js", "assets/mascots.js"))).hexdigest()[:10]
 ARROW = '<span aria-hidden="true">→</span>'
 EXT = '<span aria-hidden="true">↗</span>'
 
@@ -147,13 +147,23 @@ def mascot_file(m, kind=""):
 
 
 def mascot_yard(prefix):
-    """The mascots that stroll along the bottom of the window (assets/site.js); hidden until the script shows them."""
+    """The mascots that stroll along the bottom of the window (assets/mascots.js); hidden until the script shows them.
+    Each walker is a button that opens its care card. Sprite (moves) and pose (moods) sheets are set inline:
+    url() in a CSS variable would resolve against assets/site.css, not the page."""
     if not MASCOTS:
         return ""
-    # background-image inline, not in a CSS variable: url() in a variable resolves against assets/site.css, not the page
-    walkers = "".join(f'<div class="mascot" data-mascot="{esc(m["id"])}"><span class="mascot-say" hidden>{esc(m["hello"])}</span>'
-                      f'<span class="mascot-sprite" style="background-image:url({prefix}{fresh(mascot_file(m, "-sprite"))})"></span></div>' for m in MASCOTS)
-    return f'\n<div class="mascot-yard" data-mascot-yard hidden aria-hidden="true">{walkers}</div>'
+    game = LAB.get("mascot_game", {})
+    walkers = ""
+    for m in MASCOTS:
+        data = {"mascot": m["id"], "name": m["name"], "vi": m["vi"], "food": m["food"], "food-icon": m["food_icon"],
+                "ride": m["ride"], "ride-label": m["ride_label"], "hello": m["hello"]}
+        attrs = " ".join(f'data-{k}="{esc(v)}"' for k, v in data.items())
+        walkers += (f'<button class="mascot" type="button" {attrs} aria-label="{esc(m["name"])}, lab mascot: feed, pet and play">'
+                    f'<span class="mascot-say" aria-hidden="true" hidden></span><span class="mascot-body">'
+                    f'<span class="mascot-ride" aria-hidden="true"></span>'
+                    f'<span class="mascot-sprite" style="background-image:url({prefix}{fresh(mascot_file(m, "-sprite"))})"></span>'
+                    f'<span class="mascot-pose" style="background-image:url({prefix}{fresh(mascot_file(m, "-moods"))})"></span></span></button>')
+    return f'\n<div class="mascot-yard" data-mascot-yard data-game-seconds="{int(game.get("seconds", 45))}" hidden>{walkers}</div>'
 
 
 def mascot_button(prefix):
@@ -165,7 +175,8 @@ def mascot_button(prefix):
 
 
 def mascot_panel():
-    """Members page, Mascots tab: portrait, story, the four animated moves and the six moods of each mascot."""
+    """Members page, Mascots tab: portrait, story, care (mood, needs, actions), the four moves and the six moods of each
+    mascot, then the minigame. assets/mascots.js fills the care blocks and makes the mood tiles and play buttons work."""
     cards = ""
     for i, m in enumerate(MASCOTS):
         w, h = webp_size(mascot_file(m))
@@ -173,20 +184,30 @@ def mascot_panel():
         sprite, mood_sheet = f'background-image:url(../{fresh(mascot_file(m, "-sprite"))})', f'background-image:url(../{fresh(mascot_file(m, "-moods"))})'
         moves = "".join(f'<figure class="mascot-tile"><span class="mascot-move move-{k}" style="{sprite}" role="img" aria-label="{name}: {label.lower()}"></span>'
                         f'<figcaption>{label}</figcaption></figure>' for k, label in MOVES)
-        moods = "".join(f'<figure class="mascot-tile"><span class="mascot-mood" style="{mood_sheet};--i:{j}" role="img" aria-label="{name}: {esc(mood.lower())}"></span>'
-                        f'<figcaption>{esc(mood)}</figcaption></figure>' for j, mood in enumerate(m["moods"]))
+        moods = "".join(f'<button class="mascot-tile" type="button" data-mascot-mood="{esc(m["id"])}" data-pose="{j}" aria-label="{name}: show {esc(mood.lower())}">'
+                        f'<span class="mascot-mood" style="{mood_sheet};--i:{j}"></span><span class="mascot-tile-label">{esc(mood)}</span></button>' for j, mood in enumerate(m["moods"]))
         tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in m["tags"])
         cards += (f'<article class="mascot-card{" is-flipped" if i % 2 else ""}" id="mascot-{esc(m["id"])}">'
                   f'<div class="mascot-stage"><img src="../{fresh(mascot_file(m))}" alt="{esc(m["alt"])}" width="{w}" height="{h}" loading="lazy" decoding="async"></div>'
                   f'<div class="mascot-info"><p class="kicker">{esc(m["kicker"])}</p><h3>{name} <span class="mascot-vi" lang="vi">{esc(m["vi"])}</span></h3>'
                   f'<p>{esc(m["bio"])}</p><div class="tags">{tags}</div>'
+                  f'<div class="mascot-care" data-mascot-care="{esc(m["id"])}" hidden><p class="mascot-label">Care</p></div>'
                   f'<p class="mascot-label">Moves</p><div class="mascot-tiles is-moves">{moves}</div>'
-                  f'<p class="mascot-label">Moods</p><div class="mascot-tiles is-moods">{moods}</div></div></article>')
+                  f'<p class="mascot-label">Moods <small>click one to see it</small></p><div class="mascot-tiles is-moods">{moods}</div></div></article>')
     names = " and the ".join(m["name"].lower() for m in MASCOTS)
+    game = LAB.get("mascot_game")
+    play = ""
+    if game:
+        play = (f'<section class="mascot-play" data-mascot-play hidden><div><p class="kicker">Minigame</p><h3>{esc(game["name"])}</h3>'
+                f'<p>{esc(game["text"])}</p><p class="mascot-play-best">Best score in this browser: <b data-mascot-best>0</b> · '
+                f'pages explored: <b data-mascot-explored>0</b></p></div><div class="mascot-play-buttons">'
+                f'<button type="button" class="button" data-play="game">Play {esc(game["name"])}</button>'
+                f'<button type="button" class="button button-quiet" data-play="team">Team up: high five</button></div></section>')
     return (f'<section class="member-panel" id="panel-mascots" role="tabpanel" data-panel="mascots">'
             f'<div class="panel-heading"><p class="kicker">Lab mascots</p><h2>Mascots</h2></div>'
-            f'<p class="mascot-intro">The {esc(names)} walk, run, sit and wave along the bottom of every page. Click one to say hello, '
-            f'or hide them with the mascot button in the top bar.</p>{cards}</section>')
+            f'<p class="mascot-intro">The {esc(names)} walk, run, sit and wave along the bottom of every page. Their mood follows how '
+            f'full, rested and happy they are: click one to feed, pet, nap or ride, or hide them with the crane button in the top bar.</p>'
+            f'{cards}{play}</section>')
 
 
 def media(p, prefix):
@@ -283,7 +304,7 @@ def render(slug, title, description, body):
 <link rel="apple-touch-icon" href="{prefix}images/brand/pairs-lab-icon-180.png">
 <link rel="stylesheet" href="{prefix}assets/site.css?v={REV}">
 <script>document.documentElement.classList.add("js");try{{var t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}}catch(e){{}}</script>
-<script src="{prefix}assets/site.js?v={REV}" defer></script>{org_jsonld() if not slug else ""}
+<script src="{prefix}assets/site.js?v={REV}" defer></script>{f'<script src="{prefix}assets/mascots.js?v={REV}" defer></script>' if MASCOTS else ""}{org_jsonld() if not slug else ""}
 </head>
 <body class="page-{section or "home"}">
 <a class="skip-link" href="#main">Skip to content</a>

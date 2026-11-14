@@ -33,10 +33,14 @@ Commit the generated HTML together with the data change.
   `description`, `image` and optional `url`. They appear on `datasets/#resources`.
 - **External links in the top bar:** `NAV_LINKS` in `scripts/build.py` (now the Paper Explorer). With ten links and
   the mascot and theme buttons the bar fits on one row from 1220 px; below that it becomes the menu button (`assets/site.css`).
-- **Lab mascots:** `mascots` in `data/lab.json` (`id`, `name`, `vi`, `kicker`, `bio`, `tags`, `hello`, `alt`, `moods`)
-  fill the Mascots tab of the Members page (`people/#mascots`) and the crane and buffalo that walk, run, sit and wave
-  along the bottom of every page (`assets/site.js`). They are on by default on screens 720 px and wider, off with
-  reduced motion; the crane button in the top bar switches them and the choice is saved per browser.
+- **Lab mascots:** `mascots` in `data/lab.json` (`id`, `name`, `vi`, `kicker`, `bio`, `tags`, `hello`, `alt`, `moods`,
+  `food`, `food_icon`, `ride`, `ride_label`) fill the Mascots tab of the Members page (`people/#mascots`) and the crane
+  and buffalo that walk, run, sit and wave along the bottom of every page (`assets/mascots.js`). They are on by default
+  on screens 720 px and wider, off with reduced motion; the crane button in the top bar switches them and the choice is
+  saved per browser. Click a mascot for its care card: fullness, energy and happiness set its mood (one of the six mood
+  poses), and Feed, Pet, Nap, Ride (drone or rover) and Team up change it; visiting a new page makes them curious.
+  The minigame `mascot_game` (Landmark Relay) runs in a dialog: the crane drops landmarks from a drone, the buffalo
+  catches them. Care and the best score are kept in the browser's localStorage (`mascot-care-v1`).
   New art: put the original PNGs in `images/mascots/` (file names in `scripts/make_mascots.py`), then run
   `python3 scripts/make_mascots.py`. It removes the background-removal glow and writes `<id>-sprite.webp`
   (4 × 4 frames; rows walk, run, sit, wave), `<id>.webp`, `<id>-moods.webp` and `mascot-face.webp`.

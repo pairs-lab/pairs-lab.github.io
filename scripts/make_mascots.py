@@ -6,7 +6,7 @@ about 252 instead of 255. This script maps alpha back to clean edges, then write
 
   <id>-sprite.webp   4 x 4 frames (rows: walk, run, seated idle, wave), CELL px per frame, read by assets/site.js and site.css
   <id>.webp          portrait for the Members page (Mascots tab)
-  <id>-moods.webp    the six poses of the mood sheet in one row, MOOD px per pose
+  <id>-moods.webp    the six poses of the mood sheet in one row of CELL px cells, at the walker's scale (assets/mascots.js)
   mascot-face.webp   the crane's head, the icon of the mascot button in the top bar
 
 Run:  python3 scripts/make_mascots.py   (then python3 scripts/build.py)
@@ -23,7 +23,7 @@ SOURCES = {
     # the buffalo drifts about 15 px to the left from frame to frame of each row: align its frames on the head
     "buffalo": {"portrait": "buffalo.png", "sprite": "Vietnamese Water Buffalo Animation Sprite Sheet.png", "moods": "buffalo_emotion_.png", "align": True},
 }
-CELL, MOOD, PORTRAIT_H, FACE = 200, 260, 760, 96
+CELL, PORTRAIT_H, FACE = 200, 760, 96
 
 
 def clean(im, lo=60, hi=235):
@@ -51,10 +51,11 @@ def bands(mask_1d):
     return out
 
 
-def head_x(alpha):
+def head_x(alpha, band=70):
+    """Mean x of the top `band` rows of a figure: where its head is (horns and crest included)."""
     ys, xs = np.nonzero(alpha > 128)
     top = ys.min()
-    return xs[(ys >= top) & (ys < top + 70)].mean()
+    return xs[(ys >= top) & (ys < top + band)].mean()
 
 
 def sprite(src, align):
@@ -95,22 +96,38 @@ def portrait(src):
     return resize(im, (round(w * PORTRAIT_H / h), PORTRAIT_H))
 
 
-def moods(src):
-    """Six poses on a 3 x 2 sheet -> one row of six square cells, all at one scale and standing on one baseline."""
+def walker_reference(sheet):
+    """Height and head x (cell px) of the first walk frame; the mood poses are drawn to match it."""
+    a = np.array(sheet.crop((0, 0, CELL, CELL)))[..., 3]
+    ys = np.nonzero(a > 128)[0]
+    return ys.max() + 1 - ys.min(), head_x(a, band=30)
+
+
+def moods(src, ref):
+    """Six poses of a 3 x 2 mood sheet (hello, curious, surprised / thinking, calm, joy) -> one row of CELL px cells at the
+    walker's scale: the standing hello pose is as tall as a walk frame and every head sits at the walk frame's x, so the
+    strolling mascot can switch to a mood in place. Poses keep their height above their row's feet line (jumps stay up)."""
+    height, head = ref
     im = clean(Image.open(src))
     a = np.array(im)[..., 3] > 128
-    rows = [b for b in bands(a.any(1)) if b[1] - b[0] > 40]
-    figs = []
-    for y0, y1 in rows:
+    poses = []
+    for y0, y1 in [b for b in bands(a.any(1)) if b[1] - b[0] > 40]:
+        boxes = []
         for x0, x1 in [b for b in bands(a[y0:y1].any(0)) if b[1] - b[0] > 40]:
-            fig = im.crop((x0, y0, x1, y1))
-            figs.append(fig.crop(bbox(fig)))
-    assert len(figs) == 6, f"{src.name}: found {len(figs)} poses, expected 6"
-    scale = 0.94 * MOOD / max(max(f.size) for f in figs)
-    out = Image.new("RGBA", (MOOD * 6, MOOD))
-    for i, f in enumerate(figs):
-        f = resize(f, (max(1, round(f.size[0] * scale)), max(1, round(f.size[1] * scale))))
-        out.paste(f, (i * MOOD + (MOOD - f.size[0]) // 2, MOOD - 4 - f.size[1]), f)
+            ys, xs = np.nonzero(a[y0:y1, x0:x1])
+            boxes.append((x0 + xs.min(), y0 + ys.min(), x0 + xs.max() + 1, y0 + ys.max() + 1))
+        poses += [(box, max(b[3] for b in boxes)) for box in boxes]
+    assert len(poses) == 6, f"{src.name}: found {len(poses)} poses, expected 6"
+    scale = height / (poses[0][0][3] - poses[0][0][1])
+    out = Image.new("RGBA", (CELL * 6, CELL))
+    for i, (box, ground) in enumerate(poses):
+        fig = im.crop(tuple(int(v) for v in box))
+        hx = head_x(np.array(fig)[..., 3], band=50) * scale
+        w, h = max(1, int(round(fig.size[0] * scale))), max(1, int(round(fig.size[1] * scale)))
+        assert w <= CELL and h <= CELL, f"{src.name}: pose {i} is {w}x{h}, larger than a {CELL} px cell"
+        x = min(CELL - w, max(0, int(round(head - hx))))
+        y = max(0, CELL - 2 - h - int(round((ground - box[3]) * scale)))
+        out.paste(resize(fig, (w, h)), (i * CELL + x, y))
     return out
 
 
@@ -128,9 +145,10 @@ def save(im, name):
 
 def main():
     for mid, s in SOURCES.items():
-        save(sprite(DIR / s["sprite"], s["align"]), f"{mid}-sprite.webp")
+        sheet = sprite(DIR / s["sprite"], s["align"])
+        save(sheet, f"{mid}-sprite.webp")
         save(portrait(DIR / s["portrait"]), f"{mid}.webp")
-        save(moods(DIR / s["moods"]), f"{mid}-moods.webp")
+        save(moods(DIR / s["moods"], walker_reference(sheet)), f"{mid}-moods.webp")
     save(face(DIR / SOURCES["crane"]["portrait"]), "mascot-face.webp")
 
 
