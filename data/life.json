@@ -1,14 +1,48 @@
 [
   {
+    "id": "fet-30-years",
+    "title": "30 Years of the Faculty of Electronics and Telecommunications",
+    "date": "14 November 2026",
+    "place": "VNU-UET, Hanoi, Vietnam",
+    "text": "The Faculty of Electronics and Telecommunications (FET) of VNU University of Engineering and Technology celebrated its 30th anniversary (1996–2026). PAIRS Lab joined the celebration with the lab flag, at the anniversary backdrop and the Robotics Engineering booth.",
+    "photos": [
+      {
+        "src": "images/life/fet30-2026-1.jpg",
+        "alt": "PAIRS Lab members holding the lab flag in front of the backdrop for the 30th anniversary of the Faculty of Electronics and Telecommunications (1996–2026), a heart made of photos from the faculty's history."
+      },
+      {
+        "src": "images/life/fet30-2026-2.jpg",
+        "alt": "The same group at the anniversary backdrop, saluting and making V signs."
+      },
+      {
+        "src": "images/life/fet30-2026-3.jpg",
+        "alt": "Lab members with the PAIRS Lab flag at the Robotics Engineering booth, decorated with cardboard robots."
+      },
+      {
+        "src": "images/life/fet30-2026-4.jpg",
+        "alt": "Lab members raising paper cups around small yellow tables at the celebration, with a banner for the faculty's 30 years of alumni behind them."
+      }
+    ]
+  },
+  {
     "id": "party-2026",
     "title": "Party 2026",
     "date": "2026",
     "place": "Hanoi, Vietnam",
     "text": "The lab got together for dinner at a bia hơi restaurant in Hanoi.",
     "photos": [
-      {"src": "images/life/party-2026-1.jpg", "alt": "PAIRS Lab members around a long dinner table in a yellow-walled bia hơi restaurant, several making V signs at the camera."},
-      {"src": "images/life/party-2026-2.jpg", "alt": "The lab dinner from a slightly different angle, members raising their glasses."},
-      {"src": "images/life/party-2026-3.jpg", "alt": "A third group photo of the lab dinner, members smiling at the camera."}
+      {
+        "src": "images/life/party-2026-1.jpg",
+        "alt": "PAIRS Lab members around a long dinner table in a yellow-walled bia hơi restaurant, several making V signs at the camera."
+      },
+      {
+        "src": "images/life/party-2026-2.jpg",
+        "alt": "The lab dinner from a slightly different angle, members raising their glasses."
+      },
+      {
+        "src": "images/life/party-2026-3.jpg",
+        "alt": "A third group photo of the lab dinner, members smiling at the camera."
+      }
     ]
   }
 ]

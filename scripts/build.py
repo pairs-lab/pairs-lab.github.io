@@ -23,7 +23,7 @@ PAPERS = json.loads((ROOT / "data/publications.json").read_text(encoding="utf-8"
 LIFE = json.loads((ROOT / "data/life.json").read_text(encoding="utf-8"))
 NEWS = sorted(json.loads((ROOT / "data/news.json").read_text(encoding="utf-8")), key=lambda n: n["date"], reverse=True)
 PAGES = [("", "Home"), ("research", "Research"), ("publications", "Publications"), ("projects", "Projects"),
-         ("datasets", "Datasets & Resources"), ("news", "News"), ("life", "Lab Life"), ("people", "Members"), ("join", "Join Us")]
+         ("datasets", "Resources"), ("news", "News"), ("life", "Lab Life"), ("people", "Members"), ("join", "Join Us")]
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
 HIDDEN_STATUS = {"", "accepted", "published"}
