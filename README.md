@@ -3,13 +3,14 @@
 Website of the Perception, Autonomy, and Intelligent Robotics Systems Lab (PAIRS Lab),
 Robotics Department, VNU University of Engineering and Technology.
 
-Static HTML, built from JSON with the Python 3 standard library. No other dependencies.
+Static HTML, built from JSON with the Python 3 standard library. No other dependencies
+(only `scripts/make_mascots.py`, which redraws the mascot art, needs Pillow and NumPy).
 
 ## Edit and build
 
 | To change | Edit |
 |---|---|
-| Lab name, research directions, people, projects, positions, robots | `data/lab.json` |
+| Lab name, research directions, people, projects, positions, robots, mascots | `data/lab.json` |
 | Publications | `data/publications.json` |
 | News | `data/news.json` |
 | Look and behavior | `assets/site.css`, `assets/site.js` |
@@ -30,8 +31,15 @@ Commit the generated HTML together with the data change.
   Without `bio`, the page shows a short factual line and the member's lab publications.
 - **Robots & infrastructure:** add entries to `robots` in `data/lab.json` with `name`, `category`,
   `description`, `image` and optional `url`. They appear on `datasets/#resources`.
-- **External links in the top bar:** `NAV_LINKS` in `scripts/build.py` (now the Paper Explorer). With ten links the
-  bar fits on one row from 1220 px; below that it becomes the menu button (`assets/site.css`).
+- **External links in the top bar:** `NAV_LINKS` in `scripts/build.py` (now the Paper Explorer). With ten links and
+  the mascot and theme buttons the bar fits on one row from 1220 px; below that it becomes the menu button (`assets/site.css`).
+- **Lab mascots:** `mascots` in `data/lab.json` (`id`, `name`, `vi`, `kicker`, `bio`, `tags`, `hello`, `alt`, `moods`)
+  fill the Mascots tab of the Members page (`people/#mascots`) and the crane and buffalo that walk, run, sit and wave
+  along the bottom of every page (`assets/site.js`). They are on by default on screens 720 px and wider, off with
+  reduced motion; the crane button in the top bar switches them and the choice is saved per browser.
+  New art: put the original PNGs in `images/mascots/` (file names in `scripts/make_mascots.py`), then run
+  `python3 scripts/make_mascots.py`. It removes the background-removal glow and writes `<id>-sprite.webp`
+  (4 × 4 frames; rows walk, run, sit, wave), `<id>.webp`, `<id>-moods.webp` and `mascot-face.webp`.
 - **Research tools:** entries of `tools` in `data/lab.json` (`name`, `kicker`, `text`, `url`, `label`) appear on
   `datasets/#tools`, the Resources page.
 - **Publication media:** `image`, or `video` plus `poster`, paths relative to the site root.

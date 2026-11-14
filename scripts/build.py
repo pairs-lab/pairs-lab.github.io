@@ -122,6 +122,73 @@ def fresh(path):
     return f"{path}?v={hashlib.sha256(f.read_bytes()).hexdigest()[:8]}" if f.is_file() else path
 
 
+def webp_size(path):
+    """(width, height) of a WebP file, read from its header (lossy, lossless or extended)."""
+    b = (ROOT / path).read_bytes()[:32]
+    kind = b[12:16]
+    if kind == b"VP8X":
+        return 1 + int.from_bytes(b[24:27], "little"), 1 + int.from_bytes(b[27:30], "little")
+    if kind == b"VP8 ":
+        return int.from_bytes(b[26:28], "little") & 0x3FFF, int.from_bytes(b[28:30], "little") & 0x3FFF
+    if kind == b"VP8L":
+        bits = int.from_bytes(b[21:25], "little")
+        return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+    raise ValueError(f"{path}: not a WebP file")
+
+
+# ---------- lab mascots (art: images/mascots/, made by scripts/make_mascots.py) ----------
+
+MASCOTS = LAB.get("mascots", [])
+MOVES = [("walk", "Walk"), ("run", "Run"), ("sit", "Sit"), ("wave", "Wave")]  # the four rows of <id>-sprite.webp
+
+
+def mascot_file(m, kind=""):
+    return f'images/mascots/{m["id"]}{kind}.webp'
+
+
+def mascot_yard(prefix):
+    """The mascots that stroll along the bottom of the window (assets/site.js); hidden until the script shows them."""
+    if not MASCOTS:
+        return ""
+    # background-image inline, not in a CSS variable: url() in a variable resolves against assets/site.css, not the page
+    walkers = "".join(f'<div class="mascot" data-mascot="{esc(m["id"])}"><span class="mascot-say" hidden>{esc(m["hello"])}</span>'
+                      f'<span class="mascot-sprite" style="background-image:url({prefix}{fresh(mascot_file(m, "-sprite"))})"></span></div>' for m in MASCOTS)
+    return f'\n<div class="mascot-yard" data-mascot-yard hidden aria-hidden="true">{walkers}</div>'
+
+
+def mascot_button(prefix):
+    """Top-bar switch that shows or hides the strolling mascots (the choice is saved per browser)."""
+    if not MASCOTS:
+        return ""
+    return (f'<button class="mascot-toggle" type="button" data-mascot-toggle aria-pressed="false" aria-label="Show the lab mascots" hidden>'
+            f'<img src="{prefix}{fresh("images/mascots/mascot-face.webp")}" alt="" width="30" height="30"></button>')
+
+
+def mascot_panel():
+    """Members page, Mascots tab: portrait, story, the four animated moves and the six moods of each mascot."""
+    cards = ""
+    for i, m in enumerate(MASCOTS):
+        w, h = webp_size(mascot_file(m))
+        name = esc(m["name"])
+        sprite, mood_sheet = f'background-image:url(../{fresh(mascot_file(m, "-sprite"))})', f'background-image:url(../{fresh(mascot_file(m, "-moods"))})'
+        moves = "".join(f'<figure class="mascot-tile"><span class="mascot-move move-{k}" style="{sprite}" role="img" aria-label="{name}: {label.lower()}"></span>'
+                        f'<figcaption>{label}</figcaption></figure>' for k, label in MOVES)
+        moods = "".join(f'<figure class="mascot-tile"><span class="mascot-mood" style="{mood_sheet};--i:{j}" role="img" aria-label="{name}: {esc(mood.lower())}"></span>'
+                        f'<figcaption>{esc(mood)}</figcaption></figure>' for j, mood in enumerate(m["moods"]))
+        tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in m["tags"])
+        cards += (f'<article class="mascot-card{" is-flipped" if i % 2 else ""}" id="mascot-{esc(m["id"])}">'
+                  f'<div class="mascot-stage"><img src="../{fresh(mascot_file(m))}" alt="{esc(m["alt"])}" width="{w}" height="{h}" loading="lazy" decoding="async"></div>'
+                  f'<div class="mascot-info"><p class="kicker">{esc(m["kicker"])}</p><h3>{name} <span class="mascot-vi" lang="vi">{esc(m["vi"])}</span></h3>'
+                  f'<p>{esc(m["bio"])}</p><div class="tags">{tags}</div>'
+                  f'<p class="mascot-label">Moves</p><div class="mascot-tiles is-moves">{moves}</div>'
+                  f'<p class="mascot-label">Moods</p><div class="mascot-tiles is-moods">{moods}</div></div></article>')
+    names = " and the ".join(m["name"].lower() for m in MASCOTS)
+    return (f'<section class="member-panel" id="panel-mascots" role="tabpanel" data-panel="mascots">'
+            f'<div class="panel-heading"><p class="kicker">Lab mascots</p><h2>Mascots</h2></div>'
+            f'<p class="mascot-intro">The {esc(names)} walk, run, sit and wave along the bottom of every page. Click one to say hello, '
+            f'or hide them with the mascot button in the top bar.</p>{cards}</section>')
+
+
 def media(p, prefix):
     if p.get("image"):
         return f'<img src="{esc(prefix + fresh(p["image"]))}" alt="" loading="lazy" decoding="async">'
@@ -223,7 +290,7 @@ def render(slug, title, description, body):
 <header class="site-header"><div class="shell header-row">
 <a class="brand" href="{route("", prefix)}"><img class="logo-light" src="{prefix}images/brand/pairs-lab-horizontal.png" width="164" height="48" alt="{esc(LAB["short_name"])} — {esc(LAB["name"])}"><img class="logo-dark" src="{prefix}images/brand/pairs-lab-horizontal-dark.png" width="164" height="48" alt="{esc(LAB["short_name"])} — {esc(LAB["name"])}"></a>
 <nav class="site-nav" id="site-nav" aria-label="Main navigation">{nav}</nav>
-<div class="header-tools"><button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<div class="header-tools">{mascot_button(prefix)}<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
 <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span></span><span></span><span></span></button></div>
 </div></header>
 <main id="main" tabindex="-1">
@@ -234,7 +301,7 @@ def render(slug, title, description, body):
 <p>{esc(LAB["name"])}<br><a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a>, <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a></p></div>
 <div><p class="footer-label">Visit</p><p>Room {esc(office["room"])}, {esc(office["building"])}<br>{esc(office["city"])}</p><a href="{esc(office["maps_url"])}">Google Maps {EXT}</a></div>
 <div><p class="footer-label">Connect</p><p><a href="mailto:{esc(LAB["email"])}">{esc(LAB["email"])}</a><br><a href="{esc(LAB["github"])}">GitHub {EXT}</a><br><a href="{esc(LAB["youtube"])}">YouTube {EXT}</a><br><a href="{route("join", prefix)}">Join us {ARROW}</a></p></div>
-</div><div class="shell footer-bottom">© {datetime.date.today().year} {esc(LAB["short_name"])}</div></footer>
+</div><div class="shell footer-bottom">© {datetime.date.today().year} {esc(LAB["short_name"])}</div></footer>{mascot_yard(prefix)}
 </body>
 </html>
 '''
@@ -625,10 +692,11 @@ def people():
                   f'{carousel(members, LAB["short_name"] + " " + g["group"].lower(), "../")}</section>')
     awards = LAB["student_awards"]
     body = f'''<section class="members-page"><div class="shell">
-<header class="members-intro"><h1>Members</h1><p>Meet the staff, students and alumni of {esc(LAB["short_name"])}.</p></header>
+<header class="members-intro"><h1>Members</h1><p>Meet the staff, students, alumni and mascots of {esc(LAB["short_name"])}.</p></header>
 <div class="member-tabs" role="tablist" aria-label="Choose directory">
 <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-people" data-tab="people">People</button>
 <button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
+{'<button type="button" role="tab" aria-selected="false" aria-controls="panel-mascots" data-tab="mascots">Mascots</button>' if MASCOTS else ""}
 </div>
 <section class="member-panel" id="panel-people" role="tabpanel" data-panel="people">
 {search}
@@ -638,9 +706,10 @@ def people():
 <div class="panel-heading"><p class="kicker">Former members</p><h2>Alumni</h2></div>
 {carousel(alumni, LAB["short_name"] + " alumni", "../")}
 </section>
+{mascot_panel() if MASCOTS else ""}
 <section class="notice"><h2>Student awards</h2><p>{esc(awards["title"])}:</p><ul>{"".join(f"<li>{esc(x)}</li>" for x in awards["items"])}</ul><a class="text-link" href="../join/">Join the lab {ARROW}</a></section>
 </div></section>'''
-    render("people", "Members", "Faculty, students and alumni of PAIRS Lab.", body)
+    render("people", "Members", "Faculty, students, alumni and mascots of PAIRS Lab.", body)
     for r in records:
         profile(r)
 

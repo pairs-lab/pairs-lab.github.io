@@ -866,5 +866,51 @@
       "url": "https://thanhnguyencanh.github.io/trends/",
       "label": "Open Research Trends"
     }
+  ],
+  "mascots": [
+    {
+      "id": "crane",
+      "name": "Crane",
+      "vi": "Hạc",
+      "kicker": "Lab mascot · the sky",
+      "bio": "In Vietnamese temples the crane (hạc) stands on the back of a turtle as a symbol of long life and grace. Our crane wears the lab's blue dress with the PAIRS emblem on the chest and a lotus at the hem. It stands for our aerial robots, which explore and map the world from above.",
+      "tags": [
+        "Aerial robots",
+        "Exploration",
+        "Sharp eyes"
+      ],
+      "hello": "Xin chào! I'm the PAIRS crane.",
+      "alt": "The PAIRS Lab crane mascot in a blue dress with the lab emblem, waving one wing",
+      "moods": [
+        "Hello",
+        "Curious",
+        "Surprised",
+        "Thinking",
+        "Calm",
+        "Joy"
+      ]
+    },
+    {
+      "id": "buffalo",
+      "name": "Buffalo",
+      "vi": "Trâu",
+      "kicker": "Lab mascot · the field",
+      "bio": "The water buffalo (trâu) has worked Vietnam's rice fields for centuries and is a symbol of hard work and patience. Our buffalo wears a checked scarf and a blue vest with the PAIRS emblem, and carries a conical hat (nón lá). It stands for our mobile robots, which work on the ground, step by step.",
+      "tags": [
+        "Mobile robots",
+        "Hard work",
+        "Patience"
+      ],
+      "hello": "Xin chào! I'm the PAIRS buffalo.",
+      "alt": "The PAIRS Lab buffalo mascot in a checked scarf and blue vest, waving and holding a conical hat",
+      "moods": [
+        "Hello",
+        "Curious",
+        "Surprised",
+        "Thinking",
+        "Calm",
+        "Joy"
+      ]
+    }
   ]
 }
