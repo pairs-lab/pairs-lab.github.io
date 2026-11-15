@@ -648,3 +648,9 @@ html.mascot-game-open { overflow: hidden; }
 .mascot-game-legend .is-out { background: #e53935; border-radius: 50%; }
 .mascot-game-help { margin: 10px 0 0; color: var(--muted); font-size: 0.82rem; }
 @media (max-width: 540px) { .mascot-game { padding: 8px; } .mascot-game-box { padding: 14px 12px 10px; } .mascot-game-hud { margin-left: 0; } }
+
+/* contact links with icons (footer, Join page) */
+.contact-links { display: grid; gap: 8px; margin: 0 0 12px; padding: 0; list-style: none; }
+.contact-link { display: inline-flex; align-items: center; gap: 9px; }
+.contact-link svg { width: 20px; height: 20px; flex: none; }
+.contact-link span { overflow-wrap: anywhere; }

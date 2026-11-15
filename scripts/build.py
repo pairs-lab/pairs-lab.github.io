@@ -142,6 +142,24 @@ MASCOTS = LAB.get("mascots", [])
 MOVES = ["walk", "run", "sit", "wave"]  # the four rows of <id>-sprite.webp (a swimmer: swim, swim fast, rest, fin wave)
 
 
+# ---------- contact links with icons (footer, Join page) ----------
+
+ICONS = {
+    "email": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>',
+    "github": '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>',
+    "youtube": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="5" width="21" height="14" rx="4.2" fill="#ff0000"/><path d="M10 9.1v5.8l5.1-2.9z" fill="#fff"/></svg>',
+    "facebook": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1877f2"/><path d="M13.3 19.6v-6.2h2.1l.32-2.45H13.3V9.4c0-.7.2-1.2 1.2-1.2h1.3V6c-.22-.03-.98-.1-1.86-.1-1.85 0-3.1 1.13-3.1 3.2v1.85H8.7v2.45h2.14v6.2z" fill="#fff"/></svg>',
+}
+SOCIAL = [("github", "GitHub"), ("youtube", "YouTube"), ("facebook", "Facebook")]
+
+
+def contact_links():
+    """Email and social links, each with its icon: the footer of every page and the Join page."""
+    out = f'<li><a class="contact-link" href="mailto:{esc(LAB["email"])}">{ICONS["email"]}<span>{esc(LAB["email"])}</span></a></li>'
+    out += "".join(f'<li><a class="contact-link" href="{esc(LAB[k])}">{ICONS[k]}<span>{label}</span> {EXT}</a></li>' for k, label in SOCIAL if LAB.get(k))
+    return f'<ul class="contact-links">{out}</ul>'
+
+
 def mascot_file(m, kind=""):
     return f'images/mascots/{m["id"]}{kind}.webp'
 
@@ -286,7 +304,7 @@ def org_jsonld():
             "parentOrganization": {"@type": "CollegeOrUniversity", "name": aff["institution"], "alternateName": aff["institution_short"], "url": aff["institution_url"]},
             "address": {"@type": "PostalAddress", "streetAddress": f'Room {LAB["office"]["room"]}, {LAB["office"]["building"]}', "addressLocality": "Hanoi", "addressCountry": "VN"},
             "founder": {"@type": "Person", "name": lead["name"], "url": lead["url"]},
-            "sameAs": [LAB["github"], LAB["youtube"]]}
+            "sameAs": [LAB[k] for k, _ in SOCIAL if LAB.get(k)]}
     return '\n<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
 
 
@@ -344,7 +362,7 @@ def render(slug, title, description, body):
 <div><a class="footer-logo" href="{route("", prefix)}"><img class="logo-light" src="{prefix}images/brand/pairs-lab-horizontal.png" width="164" height="48" alt="{esc(LAB["short_name"])}"><img class="logo-dark" src="{prefix}images/brand/pairs-lab-horizontal-dark.png" width="164" height="48" alt="{esc(LAB["short_name"])}"></a>
 <p>{esc(LAB["name"])}<br><a href="{esc(aff["department_url"])}">{esc(aff["department"])}</a>, <a href="{esc(aff["institution_url"])}">{esc(aff["institution"])}</a></p></div>
 <div><p class="footer-label">Visit</p><p>Room {esc(office["room"])}, {esc(office["building"])}<br>{esc(office["city"])}</p><a href="{esc(office["maps_url"])}">Google Maps {EXT}</a></div>
-<div><p class="footer-label">Connect</p><p><a href="mailto:{esc(LAB["email"])}">{esc(LAB["email"])}</a><br><a href="{esc(LAB["github"])}">GitHub {EXT}</a><br><a href="{esc(LAB["youtube"])}">YouTube {EXT}</a><br><a href="{route("join", prefix)}">Join us {ARROW}</a></p></div>
+<div><p class="footer-label">Connect</p>{contact_links()}<p><a href="{route("join", prefix)}">Join us {ARROW}</a></p></div>
 </div><div class="shell footer-bottom">© {datetime.date.today().year} {esc(LAB["short_name"])}</div></footer>{mascot_yard(prefix)}
 </body>
 </html>
@@ -793,7 +811,7 @@ def join():
             f'<section class="section two-col"><div><h2>Research topics</h2><ul class="topic-list">{"".join(f"<li>{esc(t)}</li>" for t in LAB["join_topics"])}</ul></div>'
             f'<div><h2>In your inquiry</h2><p>A brief introduction, your research interests, and links to relevant projects or publications will help start the discussion. Please write in English.</p>'
             f'<a class="button" href="mailto:{esc(LAB["email"])}?subject=PAIRS%20Lab%20inquiry">Email us {EXT}</a></div></section>'
-            f'<section class="section two-col" id="contact"><div><h2>Contact</h2><p><a href="mailto:{esc(LAB["email"])}">{esc(LAB["email"])}</a></p>'
+            f'<section class="section two-col" id="contact"><div><h2>Contact</h2>{contact_links()}'
             f'<address>Room {esc(office["room"])}, {esc(office["building"])}<br>{esc(aff["institution"])}<br>{esc(office["city"])}</address>'
             f'<p class="chips"><a class="chip-link" href="{esc(office["maps_url"])}">Google Maps {EXT}</a><a class="chip-link" href="{esc(aff["institution_url"])}">{esc(aff["institution_short"])} admissions &amp; info {EXT}</a></p></div>'
             f'<iframe class="map" title="Map of {esc(aff["institution_short"])}" src="{esc(office["embed_url"])}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></section></div>')
