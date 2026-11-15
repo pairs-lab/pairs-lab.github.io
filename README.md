@@ -40,8 +40,9 @@ Commit the generated HTML together with the data change.
   on screens 720 px and wider, off with reduced motion; the crane button in the top bar switches them and the choice is
   saved per browser. Click a mascot for its care card: fullness, energy and happiness set its mood (one of the six mood
   poses), and Feed, Pet, Nap, Ride (drone or rover) and Team up change it; visiting a new page makes them curious.
-  The minigame `mascot_game` (Landmark Relay) runs in a dialog: the crane drops landmarks from a drone, the buffalo
-  catches them. Care and the best score are kept in the browser's localStorage (`mascot-care-v1`).
+  The minigames in `mascot_games` run in one dialog (`assets/mascots.js`): Landmark Relay (the crane drops landmarks from a
+  drone, the buffalo catches them) and Dragon Gate (Vượt Vũ Môn: the carp leaps over rocks and logs up the river, grabs the
+  crane's rope over tall rocks and leaps through the gate). Care and best scores stay in the browser (`mascot-care-v1`).
   New art: put the original PNGs in `images/mascots/` (file names in `scripts/make_mascots.py`: a 4 × 4 motion sheet and
   a 3 × 2 mood sheet, or separate frame and mood PNGs like `Chep_Moods_Animations/`), then run
   `python3 scripts/make_mascots.py`. It removes the background-removal glow and writes `<id>-sprite.webp`

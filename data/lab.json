@@ -1227,9 +1227,27 @@
       }
     }
   ],
-  "mascot_game": {
-    "name": "Landmark Relay",
-    "text": "The crane flies a drone and drops map landmarks; the buffalo catches them on the ground, like an aerial and a ground robot mapping together. Catch blue landmarks (+1) and gold loop closures (+5), and let red outliers fall (−2 if caught).",
-    "seconds": 45
-  }
+  "mascot_games": [
+    {
+      "id": "relay",
+      "players": [
+        "crane",
+        "buffalo"
+      ],
+      "name": "Landmark Relay",
+      "text": "The crane flies a drone and drops map landmarks; the buffalo catches them on the ground, like an aerial and a ground robot mapping together. Catch blue landmarks (+1) and gold loop closures (+5), and let red outliers fall (−2 if caught).",
+      "seconds": 45
+    },
+    {
+      "id": "gate",
+      "name": "Dragon Gate",
+      "vi": "Vượt Vũ Môn",
+      "players": [
+        "carp",
+        "crane"
+      ],
+      "text": "The golden carp swims up the river to the Dragon Gate. Leap over rocks and logs. Before a tall rock the crane flies over and lowers a rope: leap, grab the ring and fly across. Reach the gate and the carp becomes a dragon.",
+      "meters": 1000
+    }
+  ]
 }

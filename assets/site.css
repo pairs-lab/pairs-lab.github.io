@@ -602,12 +602,18 @@ button.mascot-tile:hover .mascot-mood, button.mascot-tile:focus-visible .mascot-
 .move-sit { background-position-y: 66.667%; }
 .move-wave { background-position-y: 100%; }
 .mascot-mood { background-size: 600% 100%; background-position: calc(var(--i) * 20%) 0; }
-.mascot-play { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; margin-bottom: 36px; padding: 26px 32px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(120deg, var(--accent-soft), var(--cyan-soft)); }
-.mascot-play > div:first-child { flex: 1 1 420px; }
-.mascot-play h3 { margin: 0 0 8px; color: var(--accent-strong); font-size: 1.5rem; }
-.mascot-play p { margin: 0 0 8px; }
+/* minigames: one card per game, then the team-up line */
+.mascot-play { margin-bottom: 36px; }
+.mascot-play-games { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.mascot-play-card { display: flex; flex-direction: column; align-items: flex-start; padding: 24px 26px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(120deg, var(--accent-soft), var(--cyan-soft)); }
+.mascot-play-card .button { margin-top: auto; }
+.mascot-play-faces { display: flex; gap: 6px; margin-bottom: 8px; }
+.mascot-play-faces img { width: auto; height: 64px; filter: drop-shadow(0 6px 8px rgba(6, 26, 54, 0.18)); }
+.mascot-play h3 { margin: 0 0 8px; color: var(--accent-strong); font-size: 1.45rem; }
+.mascot-play h3 span { color: var(--muted); font-size: 0.65em; font-weight: 600; }
+.mascot-play p { margin: 0 0 10px; }
 .mascot-play-best { color: var(--muted); font-size: 0.9rem; }
-.mascot-play-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+.mascot-play-team { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px; margin: 16px 0 0; color: var(--muted); font-size: 0.92rem; }
 @media (prefers-reduced-motion: reduce) { .mascot-move { animation: none !important; } }
 @media (max-width: 820px) {
   .mascot-card { grid-template-columns: 1fr; gap: 20px; padding: 22px 18px; }
@@ -622,19 +628,19 @@ button.mascot-tile:hover .mascot-mood, button.mascot-tile:focus-visible .mascot-
   .mascot-pick-name span { display: block; }
   .mascot-pick-role { font-size: 0.72rem; }
   .mascot-tiles.is-moods { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .mascot-play { padding: 22px 18px; }
+  .mascot-play-card { padding: 20px 18px; }
 }
 
 /* Landmark Relay (minigame) */
 html.mascot-game-open { overflow: hidden; }
 .mascot-game { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 16px; background: rgba(6, 26, 54, 0.55); backdrop-filter: blur(3px); }
-.mascot-game-box { width: min(820px, 100%); max-height: calc(100vh - 32px); overflow: auto; padding: 18px 20px 14px; border-radius: 16px; color: var(--text); background: var(--surface); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); }
-.mascot-game-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 18px; margin-bottom: 12px; }
+.mascot-game-box { position: relative; width: min(820px, 100%); max-height: calc(100vh - 32px); overflow: auto; padding: 18px 20px 14px; border-radius: 16px; color: var(--text); background: var(--surface); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); }
+.mascot-game-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 18px; margin-bottom: 12px; padding-right: 46px; }
 .mascot-game-head h2 { margin: 0; color: var(--accent-strong); font-size: 1.4rem; }
 .mascot-game-head .kicker { margin-bottom: 2px; }
 .mascot-game-hud { display: flex; gap: 16px; margin: 0 0 0 auto; color: var(--muted); font-size: 0.9rem; }
 .mascot-game-hud b { color: var(--ink); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
-.mascot-game-close { width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--surface); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+.mascot-game-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--surface); font-size: 1.3rem; line-height: 1; cursor: pointer; }
 .mascot-game-stage { position: relative; height: clamp(300px, 58vh, 440px); overflow: hidden; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); }
 .mascot-game-stage canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
 .mascot-game-stage canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
@@ -648,6 +654,9 @@ html.mascot-game-open { overflow: hidden; }
 .mascot-game-legend .is-land { background: #1e88e5; }
 .mascot-game-legend .is-loop { background: #f5b400; }
 .mascot-game-legend .is-out { background: #e53935; border-radius: 50%; }
+.mascot-game-legend .is-rock { background: #7c8794; border-radius: 3px 8px 2px 6px; transform: none; }
+.mascot-game-legend .is-ring { border: 3px solid #f5b400; border-radius: 50%; background: none; transform: none; }
+.mascot-game-legend .is-pearl { background: radial-gradient(circle at 35% 35%, #fff 0 18%, #ffca28 22%); border-radius: 50%; transform: none; }
 .mascot-game-help { margin: 10px 0 0; color: var(--muted); font-size: 0.82rem; }
 @media (max-width: 540px) { .mascot-game { padding: 8px; } .mascot-game-box { padding: 14px 12px 10px; } .mascot-game-hud { margin-left: 0; } }
 

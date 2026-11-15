@@ -67,7 +67,8 @@
       p.energy = clamp(p.energy + away * 0.5, 0, 100);  // but they rest
       s.pets[m.id] = p;
     });
-    s.best = +s.best || 0;
+    s.best = +s.best || 0;  // Landmark Relay
+    s.bestGate = +s.bestGate || 0;  // Dragon Gate
     s.games = +s.games || 0;
     s.together = +s.together || 0;
     s.explored = Array.isArray(s.explored) ? s.explored.filter((x) => typeof x === "string") : [];
@@ -360,7 +361,7 @@
       });
       box.querySelector('[data-act="ride"]').setAttribute("aria-pressed", String(m.riding));
     });
-    document.querySelectorAll("[data-mascot-best]").forEach((el) => { el.textContent = care.best; });
+    document.querySelectorAll("[data-mascot-best]").forEach((el) => { el.textContent = el.dataset.mascotBest === "gate" ? care.bestGate : care.best; });
     document.querySelectorAll("[data-mascot-explored]").forEach((el) => { el.textContent = `${care.explored.length} / ${sections().length}`; });
   };
 
@@ -400,16 +401,16 @@
     pop.innerHTML = `<header><h2 id="mascot-pop-title">${esc(m.name)} <span lang="vi">${esc(m.vi)}</span></h2>` +
       `<button type="button" class="mascot-pop-close" aria-label="Close">×</button></header>`;
     pop.appendChild(careUI(m));
-    const extra = document.createElement("div");
+    const extra = document.createElement("div"), mine = GAMES.filter((x) => (x.players || []).includes(m.id));  // the games this mascot plays in
     extra.className = "mascot-pop-more";
     extra.innerHTML = (mascots.length > 1 ? `<button type="button" data-more="team"><span aria-hidden="true">✋</span> Team up</button>` : "") +
-      `<button type="button" data-more="play" aria-label="Play Landmark Relay, the minigame"><span aria-hidden="true">🎮</span> Landmark Relay</button>` +
-      `<p>Pages explored: <b data-mascot-explored></b> · Best relay score: <b data-mascot-best></b></p>`;
+      mine.map((x) => `<button type="button" data-more="game:${esc(x.id)}" aria-label="Play ${esc(x.name)}, a minigame"><span aria-hidden="true">${x.id === "gate" ? "🐉" : "🎮"}</span> ${esc(x.name)}</button>`).join("") +
+      `<p>Pages explored: <b data-mascot-explored></b>${mine.map((x) => ` · Best ${esc(x.name)}: <b data-mascot-best="${esc(x.id)}"></b>`).join("")}</p>`;
     extra.addEventListener("click", (e) => {
       const b = e.target.closest("[data-more]");
       if (!b) return;
       if (b.dataset.more === "team") teamUp();
-      else { closePop(false); relay.open(b); }
+      else { const game = games[b.dataset.more.slice(5)]; if (game) { closePop(false); game.open(b); } }
     });
     pop.appendChild(extra);
     pop.querySelector(".mascot-pop-close").addEventListener("click", () => closePop(true));
@@ -432,7 +433,7 @@
       say(m, m.hello);
     });
   });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && pop && !pop.hidden && !relay.isOpen()) closePop(true); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && pop && !pop.hidden && !anyGameOpen()) closePop(true); });
 
   // ---------- exploring the site: a new page makes them curious ----------
   const sections = () => [...document.querySelectorAll(".site-nav a")].filter((a) => a.origin === location.origin).map((a) => a.pathname);
@@ -505,7 +506,7 @@
       const b = e.target.closest("[data-play]");
       if (!b) return;
       if (b.dataset.play === "team") teamUp();
-      else relay.open(b);
+      else if (games[b.dataset.play]) games[b.dataset.play].open(b);
     });
   });
 
@@ -560,91 +561,146 @@
     put("sessionStorage", "mascot-pos", JSON.stringify(pos));
   });
 
-  // ---------- Landmark Relay (minigame) ----------
-  const relay = (() => {
-    const SECONDS = +yard.dataset.gameSeconds || 45;
-    const crane = byId.crane || mascots[0], buffalo = byId.buffalo || mascots[mascots.length - 1];
-    let box = null, cv = null, ctx = null, screen = null, hud = {}, opener = null, st = null, raf2 = 0, last2 = 0;
-    let W = 760, H = 440, u = 1, kx = 1, ky = 1, dpr = 1, tufts = [], paused = false;  // u: sizes, kx and ky: speeds across and down
-    const img = {};
-    const image = (key, url) => { if (!img[key]) { img[key] = new Image(); img[key].src = url; } return img[key]; };
-    const colors = () => {
-      const dark = document.documentElement.dataset.theme === "dark";
-      return dark
-        ? { sky0: "#1d2a35", sky1: "#24323d", field: "#2f4a2a", water: "#2a4256", tuft: "#7fb069", text: "#e8e8e8", dot: "#7bcce4", shade: "rgba(0,0,0,.35)", arm: "#9fb3c8", rotor: "rgba(190,205,220,.55)" }
-        : { sky0: "#dcecfb", sky1: "#f7fbff", field: "#9ccc65", water: "#b3e5fc", tuft: "#558b2f", text: "#0a2342", dot: "#0b55ad", shade: "rgba(6,26,54,.18)", arm: "#24364f", rotor: "rgba(36,54,79,.55)" };
-    };
-    let col = colors();
+  // ---------- minigames ("mascot_games" in data/lab.json): one dialog shell, Landmark Relay and Dragon Gate ----------
+  const GAMES = (() => { try { return JSON.parse(yard.dataset.games || "[]"); } catch (e) { return []; } })();
+  const img = {};
+  const image = (key, url) => { if (!img[key]) { img[key] = new Image(); img[key].src = url; } return img[key]; };
+  const dark = () => document.documentElement.dataset.theme === "dark";
+  const drawSprite = (ctx, im, cx, by, s, face, col, row) => {  // one 200 px cell of a sheet, bottom-centred at (cx, by)
+    if (!im.complete || !im.naturalWidth) return;
+    ctx.save();
+    ctx.translate(cx, by);
+    if (face < 0) ctx.scale(-1, 1);
+    ctx.drawImage(im, col * 200, row * 200, 200, 200, -s / 2, -s, s, s);
+    ctx.restore();
+  };
+  const roundRect = (ctx, x, y, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); };
 
+  // The dialog every game runs in: header with score boxes, a canvas, a message screen, keys, pause, focus trap, resize.
+  const gameDialog = (o) => {
+    let box = null, raf = 0, last = 0, opener = null;
+    const g = { W: 760, H: 440, u: 1, kx: 1, ky: 1, dpr: 1, paused: false, cv: null, ctx: null, screen: null, hud: {} };
+    const isOpen = () => !!box && !box.hidden;
+    g.show = (html) => {
+      g.screen.innerHTML = html;
+      g.screen.hidden = !html;
+      const b = g.screen.querySelector("button");
+      if (b) b.focus({ preventScroll: true });
+    };
+    g.pause = () => { if (!o.running() || g.paused) return; g.paused = true; g.show(`<h3>Paused</h3><button type="button" class="button" data-g="resume">Resume</button>`); };
+    g.resume = () => { g.paused = false; last = 0; g.show(""); g.cv.focus({ preventScroll: true }); };
+    g.togglePause = () => (g.paused ? g.resume() : g.pause());
+    const fit = () => {
+      const stage = g.cv.parentElement, oldW = g.W;
+      g.W = Math.round(stage.clientWidth);
+      g.H = Math.round(stage.clientHeight);
+      g.kx = g.W / 760;
+      g.ky = g.H / 440;
+      g.u = Math.max(0.68, g.kx);  // phones: the field shrinks, the mascots stay readable
+      g.dpr = Math.min(2, window.devicePixelRatio || 1);
+      g.cv.width = Math.round(g.W * g.dpr);
+      g.cv.height = Math.round(g.H * g.dpr);
+      o.fit(oldW);
+    };
+    const loop = (t) => {
+      const dt = last ? Math.min(0.1, (t - last) / 1000) : 0;  // slow frames slow the game a little, never jump it
+      last = t;
+      if (!g.paused) o.step(dt);
+      o.paint();
+      o.hud();
+      raf = window.requestAnimationFrame(loop);
+    };
     const build = () => {
       box = document.createElement("div");
       box.className = "mascot-game";
       box.hidden = true;
-      box.innerHTML = `<div class="mascot-game-box" role="dialog" aria-modal="true" aria-labelledby="mascot-game-title">` +
-        `<header class="mascot-game-head"><div><p class="kicker">Lab mascots · minigame</p><h2 id="mascot-game-title">Landmark Relay</h2></div>` +
-        `<p class="mascot-game-hud" aria-live="off"><span>Score <b data-g="score">0</b></span><span>Time <b data-g="time">${SECONDS}</b></span><span>Best <b data-g="best">0</b></span></p>` +
+      const tid = "mascot-game-title-" + o.id;
+      box.innerHTML = `<div class="mascot-game-box" role="dialog" aria-modal="true" aria-labelledby="${tid}">` +
+        `<header class="mascot-game-head"><div><p class="kicker">Lab mascots · minigame</p><h2 id="${tid}">${esc(o.title)}</h2></div>` +
+        `<p class="mascot-game-hud" aria-live="off">${o.boxes.map(([k, label]) => `<span>${esc(label)} <b data-g="${k}"></b></span>`).join("")}</p>` +
         `<button type="button" class="mascot-game-close" data-g="close" aria-label="Close the game">×</button></header>` +
-        `<div class="mascot-game-stage"><canvas tabindex="0" role="img" aria-label="Game field: the crane drops landmarks from a drone, the buffalo catches them"></canvas>` +
+        `<div class="mascot-game-stage"><canvas tabindex="0" role="img" aria-label="${esc(o.label)}"></canvas>` +
         `<div class="mascot-game-screen" data-g="screen" role="status"></div></div>` +
-        `<p class="mascot-game-help">Move the buffalo with ← → or A D, or with the mouse or a finger. Space pauses, Esc closes.</p></div>`;
+        `<p class="mascot-game-help">${esc(o.help)}</p></div>`;
       document.body.appendChild(box);
-      cv = box.querySelector("canvas");
-      ctx = cv.getContext("2d");
-      screen = box.querySelector('[data-g="screen"]');
-      ["score", "time", "best"].forEach((k) => { hud[k] = box.querySelector(`[data-g="${k}"]`); });
+      g.cv = box.querySelector("canvas");
+      g.ctx = g.cv.getContext("2d");
+      g.screen = box.querySelector('[data-g="screen"]');
+      o.boxes.forEach(([k]) => { g.hud[k] = box.querySelector(`[data-g="${k}"]`); });
       box.addEventListener("click", (e) => {
         const b = e.target.closest("[data-g]");
         if (!b) { if (e.target === box) close(); return; }
         if (b.dataset.g === "close") close();
-        if (b.dataset.g === "start") start();
-        if (b.dataset.g === "resume") resume();
+        if (b.dataset.g === "start") { g.paused = false; last = 0; g.show(""); o.start(); g.cv.focus({ preventScroll: true }); }
+        if (b.dataset.g === "resume") g.resume();
       });
-      const aim = (e) => { if (!st) return; const r = cv.getBoundingClientRect(); st.target = clamp(e.clientX - r.left, 0, W); st.keys.l = st.keys.r = false; };
-      cv.addEventListener("pointermove", aim);
-      cv.addEventListener("pointerdown", (e) => { aim(e); if (cv.setPointerCapture) cv.setPointerCapture(e.pointerId); });
+      ["pointerdown", "pointermove", "pointerup", "pointercancel"].forEach((type) => g.cv.addEventListener(type, (e) => {
+        if (type === "pointerdown" && g.cv.setPointerCapture) g.cv.setPointerCapture(e.pointerId);
+        o.pointer(type, e);
+      }));
       box.addEventListener("keydown", (e) => {
         if (e.key === "Escape") { e.preventDefault(); close(); return; }
         if (e.key === "Tab") {  // keep the focus inside the dialog
-          const f = [...box.querySelectorAll("button:not([hidden])")].filter((b) => b.offsetParent);
+          const f = [...box.querySelectorAll("button")].filter((b) => b.offsetParent);
           if (f.length && e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
           else if (f.length && !e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
           return;
         }
-        if (!st || st.over) return;
-        const k = e.key.toLowerCase();
-        if (k === "arrowleft" || k === "a") { st.keys.l = true; st.target = null; e.preventDefault(); }
-        if (k === "arrowright" || k === "d") { st.keys.r = true; st.target = null; e.preventDefault(); }
-        if (k === " " && !e.target.closest("button")) { e.preventDefault(); paused ? resume() : pause(); }
+        if ((e.key === " " || e.key === "Enter") && e.target.closest("button")) return;  // Space and Enter press buttons
+        o.key(e, true);
       });
-      box.addEventListener("keyup", (e) => {
-        if (!st) return;
-        const k = e.key.toLowerCase();
-        if (k === "arrowleft" || k === "a") st.keys.l = false;
-        if (k === "arrowright" || k === "d") st.keys.r = false;
-      });
-      document.addEventListener("visibilitychange", () => { if (document.hidden && st && !st.over) pause(); });
-      window.addEventListener("resize", () => { if (!box.hidden) { fit(); paint(); } });
+      box.addEventListener("keyup", (e) => o.key(e, false));
+      document.addEventListener("visibilitychange", () => { if (document.hidden && isOpen()) g.pause(); });
+      window.addEventListener("resize", () => { if (isOpen()) { fit(); o.paint(); } });
     };
-    const fit = () => {
-      const stage = cv.parentElement, oldW = W;
-      W = Math.round(stage.clientWidth);
-      H = Math.round(stage.clientHeight);
-      kx = W / 760;
-      ky = H / 440;
-      u = Math.max(0.68, kx);  // phones: the field shrinks, the mascots and landmarks stay readable
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-      cv.width = Math.round(W * dpr);
-      cv.height = Math.round(H * dpr);
-      tufts = Array.from({ length: Math.ceil(W / (16 * u)) }, (_, i) => ({ x: i * 16 * u + rand(-4, 4) * u, h: rand(9, 16) * u, lean: rand(-3, 3) * u }));
-      if (st && oldW && oldW !== W) {  // keep everything where it was, in proportion
-        const k = W / oldW;
-        st.buf.x *= k; st.crane.x *= k; st.items.forEach((it) => { it.x *= k; });
-        if (st.target != null) st.target *= k;
-      }
+    const close = () => {
+      if (!isOpen()) return;
+      window.cancelAnimationFrame(raf);
+      box.hidden = true;
+      document.documentElement.classList.remove("mascot-game-open");
+      o.close();
+      if (opener && opener.focus) opener.focus({ preventScroll: true });
     };
+    g.open = (from) => {
+      if (!box) build();
+      opener = from || document.activeElement;
+      g.paused = false;
+      box.hidden = false;
+      document.documentElement.classList.add("mascot-game-open");
+      fit();
+      o.open();
+      last = 0;
+      window.cancelAnimationFrame(raf);
+      raf = window.requestAnimationFrame(loop);
+    };
+    g.close = close;
+    g.isOpen = isOpen;
+    return g;
+  };
+  const cheer = (players) => {  // after a game: happier, a little tired and hungry
+    players.forEach((m) => {
+      const p = care.pets[m.id];
+      p.happy = clamp(p.happy + 15, 0, 100);
+      p.energy = clamp(p.energy - 12, 0, 100);
+      p.full = clamp(p.full - 8, 0, 100);
+    });
+    care.games += 1;
+    save();
+    refresh();
+  };
+
+  // ---------- Landmark Relay: the crane drops landmarks from a drone, the buffalo catches them ----------
+  const relay = (() => {
+    const info = GAMES.find((x) => x.id === "relay") || {}, SECONDS = +info.seconds || 45;
+    const crane = byId.crane || mascots[0], buffalo = byId.buffalo || mascots[mascots.length - 1];
+    let st = null, tufts = [], col = null, W = 760, H = 440, u = 1, kx = 1, ky = 1, dpr = 1, ctx = null;
+    const colors = () => (dark()
+      ? { sky0: "#1d2a35", sky1: "#24323d", field: "#2f4a2a", water: "#2a4256", tuft: "#7fb069", text: "#e8e8e8", dot: "#7bcce4", shade: "rgba(0,0,0,.35)", arm: "#9fb3c8", rotor: "rgba(190,205,220,.55)" }
+      : { sky0: "#dcecfb", sky1: "#f7fbff", field: "#9ccc65", water: "#b3e5fc", tuft: "#558b2f", text: "#0a2342", dot: "#0b55ad", shade: "rgba(6,26,54,.18)", arm: "#24364f", rotor: "rgba(36,54,79,.55)" });
     const G = () => H - 38 * u;            // ground line
     const BUF = () => Math.max(60, 98 * u);  // buffalo size
     const DRONE_Y = () => 82 * u;
+    const sprite = (im, cx, by, s, face, c, r) => drawSprite(ctx, im, cx, by, s, face, c, r);
 
     const newRound = () => ({
       t: 0, left: SECONDS, score: 0, caught: 0, dropped: 0, loops: 0, outCaught: 0, over: false, countdown: 1.8, shake: 0,
@@ -665,6 +721,7 @@
       if (loop && k > 4) st.closures.push([k, Math.floor(rand(0, k - 3))]);
     };
     const step = (dt) => {
+      if (!st || st.over) return;
       if (st.countdown > 0) { st.countdown -= dt; return; }
       st.t += dt;
       st.left = Math.max(0, SECONDS - st.t);
@@ -708,7 +765,6 @@
     };
 
     // drawing
-    const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); };
     const cube = (x, y, r, top, left, right) => {
       const w = r * 0.87;
       const face = (pts, fill) => { ctx.beginPath(); pts.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.closePath(); ctx.fillStyle = fill; ctx.fill(); ctx.stroke(); };
@@ -748,14 +804,6 @@
         ctx.restore();
       }
     };
-    const sprite = (im, cx, by, s, face, col2, row) => {
-      if (!im.complete || !im.naturalWidth) return;
-      ctx.save();
-      ctx.translate(cx, by);
-      if (face < 0) ctx.scale(-1, 1);
-      ctx.drawImage(im, col2 * 200, row * 200, 200, 200, -s / 2, -s, s, s);
-      ctx.restore();
-    };
     const drone = (x, y, t) => {
       ctx.save();
       ctx.translate(x, y);
@@ -767,23 +815,23 @@
       ctx.fillStyle = col.rotor;
       const w = 13 + 3 * Math.sin(t * 50);
       ctx.beginPath(); ctx.ellipse(-36, -6, w, 2.3, 0, 0, Math.PI * 2); ctx.ellipse(36, -6, w, 2.3, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "#0b55ad"; rr(-19, -4, 38, 13, 6); ctx.fill();
-      ctx.fillStyle = "#00b4cc"; rr(-15, -1, 30, 3, 1.5); ctx.fill();
+      ctx.fillStyle = "#0b55ad"; roundRect(ctx, -19, -4, 38, 13, 6); ctx.fill();
+      ctx.fillStyle = "#00b4cc"; roundRect(ctx, -15, -1, 30, 3, 1.5); ctx.fill();
       ctx.fillStyle = col.arm; ctx.beginPath(); ctx.arc(0, 12, 4.2, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     };
     const paint = () => {
       if (!ctx) return;
-      const t = now() / 1000, S = BUF(), g = G();
+      const t = now() / 1000, S = BUF(), gl = G();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       if (st && st.shake > 0) ctx.translate(rand(-3, 3) * u, rand(-2, 2) * u);
-      const sky = ctx.createLinearGradient(0, 0, 0, g);
+      const sky = ctx.createLinearGradient(0, 0, 0, gl);
       sky.addColorStop(0, col.sky0);
       sky.addColorStop(1, col.sky1);
       ctx.fillStyle = sky;
       ctx.fillRect(-10, -10, W + 20, H + 20);
       if (st && st.graph.length) {  // the map they are building: a pose graph with landmarks and loop closures
-        const P = (n) => [n.x * W, n.y * g], L = (n) => [n.lx * W, n.ly * g];
+        const P = (n) => [n.x * W, n.y * gl], L = (n) => [n.lx * W, n.ly * gl];
         ctx.lineWidth = 1;
         ctx.strokeStyle = col.dot;
         ctx.globalAlpha = 0.14;
@@ -810,13 +858,13 @@
         ctx.globalAlpha = 1;
       }
       ctx.fillStyle = col.field;
-      ctx.fillRect(-10, g, W + 20, H - g + 10);
+      ctx.fillRect(-10, gl, W + 20, H - gl + 10);
       ctx.fillStyle = col.water;
-      ctx.fillRect(-10, g + 16 * u, W + 20, 5 * u);
+      ctx.fillRect(-10, gl + 16 * u, W + 20, 5 * u);
       ctx.strokeStyle = col.tuft;
       ctx.lineWidth = 1.6 * u;
       ctx.beginPath();
-      tufts.forEach((f) => { ctx.moveTo(f.x, g + 2 * u); ctx.lineTo(f.x + f.lean - 3 * u, g - f.h); ctx.moveTo(f.x, g + 2 * u); ctx.lineTo(f.x + f.lean + 3 * u, g - f.h * 0.85); });
+      tufts.forEach((f) => { ctx.moveTo(f.x, gl + 2 * u); ctx.lineTo(f.x + f.lean - 3 * u, gl - f.h); ctx.moveTo(f.x, gl + 2 * u); ctx.lineTo(f.x + f.lean + 3 * u, gl - f.h * 0.85); });
       ctx.stroke();
       const c = st ? st.crane : { x: W * 0.3, dir: 1 };
       const cy = DRONE_Y() + Math.sin(t * 3) * 3 * u;
@@ -827,14 +875,14 @@
       const b = st ? st.buf : { x: W / 2, vx: 0, face: 1, step: 0, joy: 0, oops: 0 };
       ctx.fillStyle = col.shade;
       ctx.beginPath();
-      ctx.ellipse(b.x, g + 3 * u, S * 0.3, 5 * u, 0, 0, Math.PI * 2);
+      ctx.ellipse(b.x, gl + 3 * u, S * 0.3, 5 * u, 0, 0, Math.PI * 2);
       ctx.fill();
       const moods = image("buffalo-moods", urlOf(buffalo.pose)), walk = image("buffalo-sprite", urlOf(buffalo.sprite));
-      if (b.oops > 0) sprite(moods, b.x, g + 4 * u, S, b.face, 2, 0);
-      else if (b.joy > 0) sprite(moods, b.x, g + 4 * u, S, b.face, 5, 0);
-      else if (Math.abs(b.vx) > 220 * kx) sprite(walk, b.x, g + 4 * u, S, b.face, Math.floor(b.step) % 4, 1);
-      else if (Math.abs(b.vx) > 20 * kx) sprite(walk, b.x, g + 4 * u, S, b.face, Math.floor(b.step) % 4, 0);
-      else sprite(moods, b.x, g + 4 * u, S, b.face, 0, 0);
+      if (b.oops > 0) sprite(moods, b.x, gl + 4 * u, S, b.face, 2, 0);
+      else if (b.joy > 0) sprite(moods, b.x, gl + 4 * u, S, b.face, 5, 0);
+      else if (Math.abs(b.vx) > 220 * kx) sprite(walk, b.x, gl + 4 * u, S, b.face, Math.floor(b.step) % 4, 1);
+      else if (Math.abs(b.vx) > 20 * kx) sprite(walk, b.x, gl + 4 * u, S, b.face, Math.floor(b.step) % 4, 0);
+      else sprite(moods, b.x, gl + 4 * u, S, b.face, 0, 0);
       if (st) {
         ctx.textAlign = "center";
         st.fx.forEach((f) => {
@@ -851,82 +899,492 @@
         }
       }
     };
-    const loop = (t) => {
-      const dt = last2 ? Math.min(0.1, (t - last2) / 1000) : 0;  // slow frames slow the game a little, never jump it
-      last2 = t;
-      if (st && !st.over && !paused) step(dt);
-      paint();
-      if (st) {
-        hud.score.textContent = st.score;
-        hud.time.textContent = Math.ceil(st.left);
-      }
-      raf2 = window.requestAnimationFrame(loop);
-    };
-    const showScreen = (html) => {
-      screen.innerHTML = html;
-      screen.hidden = !html;
-      const b = screen.querySelector("button");
-      if (b) b.focus({ preventScroll: true });
-    };
-    const intro = () => showScreen(
-      `<h3>Map the lab together</h3><p>The crane flies the drone and drops landmarks. Catch them with the buffalo.</p>` +
-      `<ul class="mascot-game-legend"><li><i class="is-land"></i>Landmark <b>+1</b></li><li><i class="is-loop"></i>Loop closure <b>+5</b></li>` +
-      `<li><i class="is-out"></i>Outlier <b>−2</b>, let it fall</li></ul><button type="button" class="button" data-g="start">Start · ${SECONDS} s</button>`);
-    const start = () => {
-      st = newRound();
-      paused = false;
-      showScreen("");
-      cv.focus({ preventScroll: true });
-    };
-    const pause = () => { if (!st || st.over || paused) return; paused = true; showScreen(`<h3>Paused</h3><button type="button" class="button" data-g="resume">Resume</button>`); };
-    const resume = () => { paused = false; last2 = 0; showScreen(""); cv.focus({ preventScroll: true }); };
     const finish = () => {
       st.over = true;
       const best = st.score > care.best;
       care.best = Math.max(care.best, st.score);
-      care.games += 1;
-      [crane, buffalo].forEach((m) => {
-        const p = care.pets[m.id];
-        p.happy = clamp(p.happy + 15, 0, 100);
-        p.energy = clamp(p.energy - 12, 0, 100);
-        p.full = clamp(p.full - 8, 0, 100);
-      });
-      save();
-      refresh();
-      hud.best.textContent = care.best;
+      cheer([crane, buffalo]);
+      g.hud.best.textContent = care.best;
       const built = st.dropped ? Math.round((100 * st.caught) / st.dropped) : 0;
-      showScreen(`<h3>Map built: ${built}%</h3><p class="mascot-game-score">Score <b>${st.score}</b>${best ? " · new best!" : ` · best ${care.best}`}</p>` +
+      g.show(`<h3>Map built: ${built}%</h3><p class="mascot-game-score">Score <b>${st.score}</b>${best ? " · new best!" : ` · best ${care.best}`}</p>` +
         `<p>${st.caught} of ${st.dropped} landmarks caught (${st.loops} loop closure${st.loops === 1 ? "" : "s"}); ${st.outCaught} outlier${st.outCaught === 1 ? "" : "s"} caught.</p>` +
         `<p class="mascot-game-small">Playing makes them hungry: feed them after the game.</p>` +
         `<button type="button" class="button" data-g="start">Play again</button> <button type="button" class="button button-quiet" data-g="close">Close</button>`);
     };
-    const open = (from) => {
-      if (!box) build();
-      opener = from || document.activeElement;
-      col = colors();
-      st = null;
-      paused = false;
-      box.hidden = false;
-      document.documentElement.classList.add("mascot-game-open");
-      fit();
-      hud.best.textContent = care.best;
-      hud.score.textContent = 0;
-      hud.time.textContent = SECONDS;
-      intro();
-      last2 = 0;
-      window.cancelAnimationFrame(raf2);
-      raf2 = window.requestAnimationFrame(loop);
-    };
-    const close = () => {
-      if (!box || box.hidden) return;
-      window.cancelAnimationFrame(raf2);
-      box.hidden = true;
-      document.documentElement.classList.remove("mascot-game-open");
-      const score = st && st.over ? st.score : null;
-      st = null;
-      if (opener && opener.focus) opener.focus({ preventScroll: true });
-      if (score !== null && visible()) { react(buffalo, "joy", `Great mapping! ${score} points.`, 2600); react(crane, "joy", null, 2600); }
-    };
-    return { open, close, isOpen: () => !!box && !box.hidden };
+    const aim = (e) => { if (!st) return; const r = g.cv.getBoundingClientRect(); st.target = clamp(e.clientX - r.left, 0, W); st.keys.l = st.keys.r = false; };
+    const g = gameDialog({
+      id: "relay", title: info.name || "Landmark Relay",
+      label: "Game field: the crane drops landmarks from a drone, the buffalo catches them",
+      help: "Move the buffalo with ← → or A D, or with the mouse or a finger. Space pauses, Esc closes.",
+      boxes: [["score", "Score"], ["time", "Time"], ["best", "Best"]],
+      fit: (oldW) => {
+        ({ W, H, u, kx, ky, dpr, ctx } = g);
+        tufts = Array.from({ length: Math.ceil(W / (16 * u)) }, (_, i) => ({ x: i * 16 * u + rand(-4, 4) * u, h: rand(9, 16) * u, lean: rand(-3, 3) * u }));
+        if (st && oldW && oldW !== W) {  // keep everything where it was, in proportion
+          const k = W / oldW;
+          st.buf.x *= k; st.crane.x *= k; st.items.forEach((it) => { it.x *= k; });
+          if (st.target != null) st.target *= k;
+        }
+      },
+      open: () => {
+        col = colors();
+        st = null;
+        g.hud.best.textContent = care.best;
+        g.hud.score.textContent = 0;
+        g.hud.time.textContent = SECONDS;
+        g.show(`<h3>Map the lab together</h3><p>The crane flies the drone and drops landmarks. Catch them with the buffalo.</p>` +
+          `<ul class="mascot-game-legend"><li><i class="is-land"></i>Landmark <b>+1</b></li><li><i class="is-loop"></i>Loop closure <b>+5</b></li>` +
+          `<li><i class="is-out"></i>Outlier <b>−2</b>, let it fall</li></ul><button type="button" class="button" data-g="start">Start · ${SECONDS} s</button>`);
+      },
+      start: () => { st = newRound(); },
+      running: () => !!st && !st.over,
+      step,
+      paint,
+      hud: () => { if (st) { g.hud.score.textContent = st.score; g.hud.time.textContent = Math.ceil(st.left); } },
+      key: (e, down) => {
+        if (!st || st.over) return;
+        const k = e.key.toLowerCase();
+        if (k === "arrowleft" || k === "a") { st.keys.l = down; if (down) { st.target = null; e.preventDefault(); } }
+        if (k === "arrowright" || k === "d") { st.keys.r = down; if (down) { st.target = null; e.preventDefault(); } }
+        if (k === " " && down) { e.preventDefault(); g.togglePause(); }
+      },
+      pointer: (type, e) => { if (type === "pointermove" || type === "pointerdown") aim(e); },
+      close: () => {
+        const score = st && st.over ? st.score : null;
+        st = null;
+        if (score !== null && visible()) { react(buffalo, "joy", `Great mapping! ${score} points.`, 2600); react(crane, "joy", null, 2600); }
+      },
+    });
+    return g;
   })();
+
+  // ---------- Dragon Gate (Vượt Vũ Môn): the carp swims up the river to the Dragon Gate ----------
+  // Leap over rocks and logs. Before each tall rock the crane flies over and lowers a rope: leap, grab the ring at the top
+  // of the leap, and the crane carries the carp across. Three lives; pearls on the way; reach the gate to become a dragon.
+  const dragonGate = (() => {
+    const info = GAMES.find((x) => x.id === "gate") || {}, METERS = +info.meters || 1000;
+    const carp = byId.carp, crane = byId.crane;
+    if (!carp || !crane) return null;
+    let st = null, col = null, W = 760, H = 440, u = 1, dpr = 1, ctx = null, ridges = { far: [], near: [] }, reeds = [];
+    const colors = () => (dark()
+      ? { sky0: "#132230", sky1: "#24384a", far: "#2b3f50", near: "#2d4838", bank: "#35552f", reed: "#6f9a5b", water0: "#1f5a78", water1: "#0e2a3a",
+          wave: "rgba(170,220,245,.38)", front: "rgba(16,58,82,.55)", text: "#eef2f5", sun: "#e9edf2", rock: "#76828e", rockHi: "#97a2ad",
+          log: "#7d5034", logHi: "#a06c45", moss: "#5d8c4a", rope: "#c9a27a", gold: "#f5b400", pearl: "#ffd54f", bar: "rgba(255,255,255,.18)", fill: "#7bcce4", drop: "#9fd8f0" }
+      : { sky0: "#b9e0fa", sky1: "#eef8ff", far: "#a6c6d6", near: "#8dbd98", bank: "#79b26a", reed: "#4e8a3e", water0: "#4fb3d9", water1: "#1f78a8",
+          wave: "rgba(255,255,255,.6)", front: "rgba(38,138,188,.5)", text: "#0a2342", sun: "#ffd166", rock: "#7c8794", rockHi: "#a3adb8",
+          log: "#8d5a36", logHi: "#b07a4f", moss: "#6aa84f", rope: "#8d6e63", gold: "#f5b400", pearl: "#ffca28", bar: "rgba(6,26,54,.14)", fill: "#0b55ad", drop: "#d6f1fb" });
+    const WATER = () => H * 0.68;            // river surface
+    const SZ = () => 80 * u;                 // carp size
+    const CX = () => W * 0.24;               // carp's screen x (sprite centre)
+    const PXM = () => 14 * u;                // world px per metre
+    const END = () => METERS * PXM();        // the gate's world x
+    const base = () => WATER() + 0.3 * SZ(); // sprite bottom while swimming
+    const JUMP = () => 640 * u, GRAV = () => 1600 * u;
+    const sx = (x) => x - st.x + CX();       // world x -> screen x
+    const meters = () => Math.min(METERS, Math.round((st ? st.x : 0) / PXM()));
+    const total = () => (st ? Math.floor(meters() / 10) + st.score + (st.won ? 50 : 0) : 0);
+    const sprite = (im, cx, by, s, face, c, r) => drawSprite(ctx, im, cx, by, s, face, c, r);
+
+    const newRound = () => ({
+      t: 0, x: 0, speed: 280 * u, lives: 3, score: 0, pearls: 0, vaults: 0, over: false, won: false, done: false, endIn: 0,
+      countdown: 1.8, shake: 0, leap: false, next: W * 1.15, ropeAt: 2500 * u,
+      carp: { y: 0, vy: 0, air: false, rope: null, inv: 0, oops: 0, step: 0 },
+      obs: [], gems: [], cranes: [], fx: [], drops: [],
+    });
+    const text = (x, y, s, color, big, life) => st.fx.push({ x, y, s, color, big: !!big, age: 0, life: life || 1 });
+    const splash = (n) => {
+      if (calm) return;
+      const x = CX() + 0.05 * SZ(), y = WATER();
+      for (let i = 0; i < n; i += 1) st.drops.push({ x: x + rand(-14, 14) * u, y, vx: rand(-110, 110) * u, vy: -rand(110, 280) * u, life: rand(0.45, 0.8) });
+    };
+    const spawn = () => {  // the next obstacle pattern at world x st.next
+      const s = st.speed, x = st.next;
+      if (x > END() - 700 * u) { st.next = Infinity; return; }  // a clear run-up to the gate
+      const gap = () => s * rand(0.95, 1.6) + 70 * u;
+      if (x >= st.ropeAt) {  // the crane brings a rope before a tall rock
+        const px = x + s * 0.55, pillar = { kind: "pillar", x: px, w: 80 * u, h: 104 * u };
+        st.obs.push(pillar);
+        st.cranes.push({ x, state: "wait", ringY: WATER() - 165 * u, len: 55 * u, carry: 0, pillar });  // the crane carries the carp over this rock
+        [0, 1, 2].forEach((k) => st.gems.push({ x: px - 10 * u + k * 45 * u, y: -150 * u }));
+        st.next = px + 80 * u + gap();
+        st.ropeAt = st.next + s * rand(7, 10);
+        return;
+      }
+      const add = (kind, at) => {
+        const o = kind === "rock" ? { kind, x: at, w: 52 * u, h: 40 * u } : { kind, x: at, w: 94 * u, h: 22 * u };
+        st.obs.push(o);
+        if (Math.random() < 0.6) [-0.6, 0, 0.6].forEach((f) => st.gems.push({ x: at + o.w / 2 + f * 55 * u, y: -(o.h + 58 * u + (1 - Math.abs(f)) * 26 * u) }));
+        return o;
+      };
+      if (st.x > END() * 0.35 && Math.random() < 0.3) {  // later on: a rock, then a log right after
+        add("rock", x);
+        add("log", x + s * 1.15 + 30 * u);
+        st.next = x + s * 1.15 + 124 * u + gap();
+      } else {
+        const o = add(Math.random() < 0.55 ? "rock" : "log", x);
+        st.next = x + o.w + gap();
+      }
+    };
+    const press = (repeat) => {
+      if (!st || st.over || st.countdown > 0 || g.paused || repeat) return;
+      const c = st.carp;
+      if (!c.air && !c.rope) { c.air = true; c.vy = JUMP(); splash(7); }
+    };
+    const release = () => {  // a short tap gives a lower leap
+      if (!st) return;
+      const c = st.carp;
+      if (c.air && !c.rope && c.vy > 260 * u) c.vy = 260 * u;
+    };
+    const hit = () => {
+      const c = st.carp;
+      c.inv = 1.4;
+      c.oops = 0.6;
+      st.lives -= 1;
+      st.shake = calm ? 0 : 0.3;
+      text(CX(), base() - SZ() * 1.15, "−1 ♥", "#d32f2f");
+      if (st.lives <= 0) { st.over = true; st.endIn = 1.1; }
+    };
+    const step = (dt) => {
+      if (!st || st.done) return;
+      const c = st.carp, S = SZ(), b = base();
+      st.fx = st.fx.filter((f) => (f.age += dt) < f.life);
+      st.drops = st.drops.filter((d) => { d.vy += 900 * u * dt; d.x += d.vx * dt; d.y += d.vy * dt; d.life -= dt; return d.life > 0; });
+      c.inv = Math.max(0, c.inv - dt);
+      c.oops = Math.max(0, c.oops - dt);
+      st.shake = Math.max(0, st.shake - dt);
+      if (st.countdown > 0) { st.countdown -= dt; c.step += dt * 7; return; }
+      // the carp: in the water, in the air, or hanging on the crane's rope
+      if (c.rope) {
+        const cr = c.rope;
+        cr.carry += dt;
+        cr.ringY += (WATER() - 175 * u - cr.ringY) * Math.min(1, dt * 6);
+        cr.len += (38 * u - cr.len) * Math.min(1, dt * 5);
+        c.y = b - (cr.ringY + 0.88 * S);
+        if (sx(cr.pillar.x) + cr.pillar.w < CX() - 0.3 * S || cr.carry > 3) {  // let go once its tall rock is behind the carp
+          c.rope = null;
+          c.air = true;
+          c.vy = 60 * u;
+          cr.state = "leave";
+          st.vaults += 1;
+          st.score += 5;
+          text(CX(), b - c.y - S * 1.1, "+5 rope vault!", "#b77900", true);
+        }
+      } else if (c.air) {
+        c.vy -= GRAV() * dt;
+        c.y += c.vy * dt;
+        if (c.y <= 0 && c.vy < 0) { c.y = 0; c.vy = 0; c.air = false; splash(9); }
+      }
+      c.step += dt * (c.air || c.rope ? 0 : 9);
+      if (st.over) {  // lost, or through the gate: the river stops, the last moment plays out
+        st.endIn -= dt;
+        if (st.endIn <= 0) finish();
+        return;
+      }
+      st.t += dt;
+      st.speed = (280 + 90 * Math.min(1, st.x / END())) * u;
+      st.x += st.speed * dt;
+      while (st.next < st.x + W + 300 * u) spawn();
+      // the cranes: wait with the rope down, carry the carp, then fly away
+      const gx = CX() + 0.18 * S, gy = b - c.y - 0.88 * S;  // where the carp grabs: the raised fin above its head
+      st.cranes = st.cranes.filter((cr) => {
+        if (cr.state === "wait") {
+          cr.ringY = WATER() - 165 * u + Math.sin(st.t * 2.2 + cr.x) * 4 * u;
+          if (c.air && !c.rope && Math.abs(gx - sx(cr.x)) < 28 * u && Math.abs(gy - cr.ringY) < 30 * u) {
+            c.rope = cr;
+            c.air = false;
+            c.vy = 0;
+            cr.state = "carry";
+            text(CX(), cr.ringY - 40 * u, "Grab!", "#0b55ad");
+          }
+          return sx(cr.x) > -140 * u;
+        }
+        if (cr.state === "carry") { cr.x = st.x + 0.18 * S; return true; }
+        cr.x += st.speed * 0.7 * dt;  // leave: up and ahead
+        cr.ringY -= 190 * u * dt;
+        cr.len += (12 * u - cr.len) * Math.min(1, dt * 4);
+        return cr.ringY > -160 * u;
+      });
+      // rocks, logs and tall rocks
+      const hx = CX() + 0.06 * S, hy = b - c.y - 0.5 * S, r = 0.25 * S;
+      if (!c.rope && c.inv <= 0) {
+        for (const o of st.obs) {
+          const pad = o.kind === "rock" ? 6 * u : 2 * u, x0 = sx(o.x) + pad, x1 = sx(o.x) + o.w - pad, y0 = WATER() - o.h, y1 = WATER() + 30 * u;
+          const nx = clamp(hx, x0, x1), ny = clamp(hy, y0, y1);
+          if ((hx - nx) ** 2 + (hy - ny) ** 2 < r * r) { hit(); break; }
+        }
+      }
+      st.gems = st.gems.filter((p) => {
+        const px = sx(p.x), py = WATER() + p.y;
+        if ((hx - px) ** 2 + (hy - py) ** 2 < (r + 9 * u) ** 2) { st.pearls += 1; st.score += 1; text(px, py - 10 * u, "+1", "#b77900"); return false; }
+        return px > -30 * u;
+      });
+      st.obs = st.obs.filter((o) => sx(o.x) + o.w > -60 * u);
+      // the Dragon Gate: one big leap through it
+      const gxs = sx(END());
+      if (!st.leap && gxs - CX() < st.speed * 0.62 && !c.air && !c.rope) { st.leap = true; c.air = true; c.vy = 760 * u; splash(12); }
+      if (gxs < CX() - 30 * u && !st.won) {  // past the gate (with or without the big leap)
+        st.won = true;
+        st.over = true;
+        st.endIn = 2.4;
+        text(W / 2, H * 0.3, "Cá chép hóa rồng!", "#f5b400", true, 2.4);
+        if (!calm) for (let i = 0; i < 26; i += 1) st.drops.push({ x: CX() + rand(-60, 60) * u, y: b - c.y - S * 0.6, vx: rand(-160, 160) * u, vy: -rand(100, 320) * u, life: rand(0.8, 1.6), gold: true });
+      }
+    };
+
+    // drawing
+    const ridge = (color, baseY, par, pts, amp) => {
+      const P = Math.max(W, 600 * u) * 1.5, stp = P / pts.length, off = -(((st ? st.x : 0) * par) % P);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(-10, WATER());
+      for (let k = 0; k <= pts.length * 2; k += 1) ctx.lineTo(off + k * stp, baseY - pts[k % pts.length] * amp);
+      ctx.lineTo(W + 10, WATER());
+      ctx.closePath();
+      ctx.fill();
+    };
+    const rock = (x, wy, w, h, tall) => {
+      ctx.fillStyle = col.rock;
+      ctx.beginPath();
+      ctx.moveTo(x, wy + 10 * u);
+      ctx.lineTo(x + w * 0.08, wy - h * 0.55);
+      ctx.lineTo(x + w * 0.3, wy - h);
+      ctx.lineTo(x + w * 0.72, wy - h * 0.94);
+      ctx.lineTo(x + w * 0.95, wy - h * 0.45);
+      ctx.lineTo(x + w, wy + 10 * u);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = col.rockHi;
+      ctx.beginPath();
+      ctx.moveTo(x + w * 0.3, wy - h);
+      ctx.lineTo(x + w * 0.5, wy - h * 0.96);
+      ctx.lineTo(x + w * 0.36, wy - h * 0.4);
+      ctx.lineTo(x + w * 0.16, wy - h * 0.5);
+      ctx.closePath();
+      ctx.fill();
+      if (tall) { ctx.fillStyle = col.moss; ctx.beginPath(); ctx.ellipse(x + w * 0.5, wy - h * 0.97, w * 0.28, 6 * u, 0, 0, Math.PI * 2); ctx.fill(); }
+    };
+    const log = (x, wy, w, h) => {
+      ctx.fillStyle = col.log;
+      roundRect(ctx, x, wy - h, w, h + 8 * u, (h + 8 * u) / 2);
+      ctx.fill();
+      ctx.fillStyle = col.logHi;
+      ctx.beginPath();
+      ctx.ellipse(x + w - (h + 8 * u) / 2, wy - h / 2 + 4 * u, (h + 8 * u) / 2.6, (h + 8 * u) / 2.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = col.log;
+      ctx.lineWidth = 1.5 * u;
+      ctx.beginPath();
+      ctx.arc(x + w - (h + 8 * u) / 2, wy - h / 2 + 4 * u, (h + 8 * u) / 5, 0, Math.PI * 2);
+      ctx.stroke();
+    };
+    const gateArt = (gx, wy) => {
+      if (gx < -260 * u || gx > W + 260 * u) return;
+      const ph = 175 * u, half = 82 * u;
+      ctx.fillStyle = "rgba(255,255,255,.55)";  // white water under the gate
+      for (let i = 0; i < 9; i += 1) ctx.fillRect(gx - half + i * 20 * u, wy - 4 * u + ((st ? st.t : 0) * 60 + i * 13) % 10 * u, 10 * u, 3 * u);
+      ctx.fillStyle = "#c62828";
+      roundRect(ctx, gx - half - 10 * u, wy - ph, 20 * u, ph + 14 * u, 3 * u); ctx.fill();
+      roundRect(ctx, gx + half - 10 * u, wy - ph, 20 * u, ph + 14 * u, 3 * u); ctx.fill();
+      ctx.fillStyle = "#8e1b1b";
+      ctx.fillRect(gx - half - 14 * u, wy - ph + 22 * u, 2 * half + 28 * u, 10 * u);
+      ctx.fillStyle = "#d4a017";  // the curved roof
+      ctx.beginPath();
+      ctx.moveTo(gx - half - 44 * u, wy - ph - 20 * u);
+      ctx.quadraticCurveTo(gx - half - 22 * u, wy - ph + 2 * u, gx - half, wy - ph - 2 * u);
+      ctx.lineTo(gx + half, wy - ph - 2 * u);
+      ctx.quadraticCurveTo(gx + half + 22 * u, wy - ph + 2 * u, gx + half + 44 * u, wy - ph - 20 * u);
+      ctx.lineTo(gx + half + 20 * u, wy - ph - 30 * u);
+      ctx.lineTo(gx - half - 20 * u, wy - ph - 30 * u);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = "#0b2a4a";
+      roundRect(ctx, gx - 40 * u, wy - ph + 2 * u, 80 * u, 20 * u, 4 * u);
+      ctx.fill();
+      ctx.fillStyle = "#f5b400";
+      ctx.textAlign = "center";
+      ctx.font = `800 ${Math.round(12 * u)}px system-ui, sans-serif`;
+      ctx.fillText("VŨ MÔN", gx, wy - ph + 16 * u);
+    };
+    const craneArt = (cr, t) => {
+      const x = sx(cr.x), feet = cr.ringY - cr.len, sway = Math.sin(t * 2 + cr.x) * 5 * u;
+      ctx.strokeStyle = col.rope;
+      ctx.lineWidth = 2.2 * u;
+      ctx.beginPath();
+      ctx.moveTo(x, feet);
+      ctx.quadraticCurveTo(x + sway, (feet + cr.ringY) / 2, x, cr.ringY - 9 * u);
+      ctx.stroke();
+      ctx.strokeStyle = col.gold;
+      ctx.lineWidth = 3 * u;
+      ctx.beginPath();
+      ctx.arc(x, cr.ringY, 9 * u, 0, Math.PI * 2);
+      ctx.stroke();
+      const flap = Math.floor(t * 7) % 2, cs = 72 * u;  // wings up (joy pose) and spread (run frame) in turn
+      if (flap) sprite(image("crane-moods", urlOf(crane.pose)), x - 4 * u, feet + 10 * u, cs, 1, 5, 0);
+      else sprite(image("crane-sprite", urlOf(crane.sprite)), x - 4 * u, feet + 10 * u, cs, 1, 1, 1);
+    };
+    const paint = () => {
+      if (!ctx) return;
+      const t = now() / 1000, S = SZ(), wy = WATER(), X = st ? st.x : 0;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (st && st.shake > 0) ctx.translate(rand(-3, 3) * u, rand(-2, 2) * u);
+      const sky = ctx.createLinearGradient(0, 0, 0, wy);
+      sky.addColorStop(0, col.sky0);
+      sky.addColorStop(1, col.sky1);
+      ctx.fillStyle = sky;
+      ctx.fillRect(-10, -10, W + 20, wy + 10);
+      ctx.fillStyle = col.sun;
+      ctx.beginPath();
+      ctx.arc(W * 0.86, H * 0.15, 22 * u, 0, Math.PI * 2);
+      ctx.fill();
+      ridge(col.far, wy - 70 * u, 0.08, ridges.far, 70 * u);
+      ridge(col.near, wy - 20 * u, 0.25, ridges.near, 42 * u);
+      ctx.fillStyle = col.bank;
+      ctx.fillRect(-10, wy - 9 * u, W + 20, 12 * u);
+      ctx.strokeStyle = col.reed;
+      ctx.lineWidth = 1.4 * u;
+      ctx.beginPath();
+      const rp = Math.max(W, 600 * u), roff = -((X * 0.6) % rp);
+      reeds.forEach((r) => { const x = (((r.x + roff) % rp) + rp) % rp; ctx.moveTo(x, wy - 6 * u); ctx.lineTo(x + r.lean, wy - 6 * u - r.h); });
+      ctx.stroke();
+      const water = ctx.createLinearGradient(0, wy, 0, H);
+      water.addColorStop(0, col.water0);
+      water.addColorStop(1, col.water1);
+      ctx.fillStyle = water;
+      ctx.fillRect(-10, wy, W + 20, H - wy + 10);
+      ctx.strokeStyle = col.wave;
+      ctx.lineWidth = 1.5 * u;
+      for (let row = 0; row < 3; row += 1) {
+        const y = wy + (18 + row * 24) * u;
+        ctx.beginPath();
+        for (let x = -10; x <= W + 10; x += 14 * u) {
+          const yy = y + Math.sin((x + X * (0.9 - row * 0.15)) / (26 * u) + row) * 2.4 * u;
+          x === -10 ? ctx.moveTo(x, yy) : ctx.lineTo(x, yy);
+        }
+        ctx.stroke();
+      }
+      if (st) {
+        gateArt(sx(END()), wy);
+        st.obs.forEach((o) => (o.kind === "log" ? log(sx(o.x), wy, o.w, o.h) : rock(sx(o.x), wy, o.w, o.h, o.kind === "pillar")));
+        st.gems.forEach((p) => {
+          const px = sx(p.x), py = wy + p.y;
+          ctx.fillStyle = col.pearl;
+          ctx.beginPath(); ctx.arc(px, py, 7 * u, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "rgba(255,255,255,.85)";
+          ctx.beginPath(); ctx.arc(px - 2.2 * u, py - 2.2 * u, 2.2 * u, 0, Math.PI * 2); ctx.fill();
+        });
+        st.cranes.forEach((cr) => craneArt(cr, t));
+      }
+      // the carp
+      const c = st ? st.carp : { y: 0, air: false, rope: null, inv: 0, oops: 0, step: t * 7 };
+      const bottom = base() - c.y + (c.air || c.rope ? 0 : Math.sin(t * 3) * 2 * u);
+      const swim = image("carp-sprite", urlOf(carp.sprite)), moods = image("carp-moods", urlOf(carp.pose));
+      if (st && st.won) {
+        const glow = ctx.createRadialGradient(CX(), bottom - S * 0.5, 4 * u, CX(), bottom - S * 0.5, S);
+        glow.addColorStop(0, "rgba(255,213,79,.8)");
+        glow.addColorStop(1, "rgba(255,213,79,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath(); ctx.arc(CX(), bottom - S * 0.5, S, 0, Math.PI * 2); ctx.fill();
+      }
+      if (!(c.inv > 0 && Math.floor(t * 12) % 2)) {
+        if (c.oops > 0) sprite(moods, CX(), bottom, S, 1, 2, 0);
+        else if (c.rope) sprite(moods, CX(), bottom, S, 1, 0, 0);
+        else if (c.air) sprite(moods, CX(), bottom, S, 1, 5, 0);
+        else sprite(swim, CX(), bottom, S, 1, Math.floor(c.step) % 4, 1);
+      }
+      ctx.fillStyle = col.front;  // the river in front: the carp and the rocks sit in the water
+      ctx.fillRect(-10, wy + 3 * u, W + 20, H - wy);
+      ctx.strokeStyle = col.wave;
+      ctx.lineWidth = 2 * u;
+      ctx.beginPath();
+      for (let x = -10; x <= W + 10; x += 12 * u) { const yy = wy + 2 * u + Math.sin((x + X) / (20 * u)) * 1.6 * u; x === -10 ? ctx.moveTo(x, yy) : ctx.lineTo(x, yy); }
+      ctx.stroke();
+      if (!st) return;
+      st.drops.forEach((d) => { ctx.fillStyle = d.gold ? col.gold : col.drop; ctx.beginPath(); ctx.arc(d.x, d.y, (d.gold ? 3 : 2.4) * u, 0, Math.PI * 2); ctx.fill(); });
+      ctx.textAlign = "center";
+      st.fx.forEach((f) => {
+        ctx.globalAlpha = Math.max(0, 1 - f.age / f.life);
+        ctx.fillStyle = f.color;
+        ctx.font = `800 ${Math.round((f.big ? (f.life > 2 ? 30 : 17) : 15) * Math.max(0.8, u))}px system-ui, sans-serif`;
+        ctx.fillText(f.s, f.x, f.y - (f.life > 2 ? 0 : f.age * 40 * u));
+      });
+      ctx.globalAlpha = 1;
+      // the way to the gate
+      const bx = 12 * u, bw = Math.min(W * 0.42, 300 * u), by = 14 * u, frac = meters() / METERS;
+      ctx.fillStyle = col.bar;
+      roundRect(ctx, bx, by, bw, 7 * u, 3.5 * u); ctx.fill();
+      ctx.fillStyle = col.fill;
+      roundRect(ctx, bx, by, Math.max(7 * u, bw * frac), 7 * u, 3.5 * u); ctx.fill();
+      ctx.fillStyle = "#c62828";
+      ctx.fillRect(bx + bw + 6 * u, by - 4 * u, 4 * u, 15 * u);
+      ctx.fillRect(bx + bw + 16 * u, by - 4 * u, 4 * u, 15 * u);
+      ctx.fillStyle = "#d4a017";
+      ctx.fillRect(bx + bw + 3 * u, by - 7 * u, 20 * u, 4 * u);
+      if (st.countdown > 0 && !st.over) {
+        ctx.fillStyle = col.text;
+        ctx.font = `800 ${Math.round(54 * Math.max(0.7, u))}px system-ui, sans-serif`;
+        ctx.fillText(st.countdown > 1.2 ? "3" : st.countdown > 0.6 ? "2" : "1", W / 2, H * 0.4);
+      }
+    };
+    const finish = () => {
+      st.done = true;
+      const score = total(), best = score > care.bestGate;
+      care.bestGate = Math.max(care.bestGate, score);
+      cheer([carp, crane]);
+      g.hud.best.textContent = care.bestGate;
+      const head = st.won ? `<h3>Vượt Vũ Môn!</h3><p>The carp leapt through the Dragon Gate and became a dragon.</p>`
+        : `<h3>Swam ${meters()} of ${METERS} m</h3><p>The river won this time. Leap a little earlier, hold for higher leaps, and grab the crane's rope before tall rocks.</p>`;
+      g.show(head + `<p class="mascot-game-score">Score <b>${score}</b>${best ? " · new best!" : ` · best ${care.bestGate}`}</p>` +
+        `<p>${st.pearls} pearl${st.pearls === 1 ? "" : "s"}, ${st.vaults} rope vault${st.vaults === 1 ? "" : "s"}.</p>` +
+        `<button type="button" class="button" data-g="start">Play again</button> <button type="button" class="button button-quiet" data-g="close">Close</button>`);
+    };
+    const g = gameDialog({
+      id: "gate", title: (info.name || "Dragon Gate") + (info.vi ? " · " + info.vi : ""),
+      label: "Game field: the golden carp swims up the river to the Dragon Gate; the crane lowers a rope over tall rocks",
+      help: "Leap: Space, ↑ or tap; hold for a higher leap. Touch the crane's ring at the top of a leap to be carried. P pauses, Esc closes.",
+      boxes: [["score", "Score"], ["dist", "Distance"], ["lives", "Lives"], ["best", "Best"]],
+      fit: () => {
+        ({ W, H, u, dpr, ctx } = g);
+        ridges = { far: Array.from({ length: 14 }, () => rand(0.35, 1)), near: Array.from({ length: 20 }, () => rand(0.3, 1)) };
+        reeds = Array.from({ length: Math.ceil(Math.max(W, 600 * u) / (9 * u)) }, (_, i) => ({ x: i * 9 * u + rand(-3, 3) * u, h: rand(6, 15) * u, lean: rand(-3, 3) * u }));
+      },
+      open: () => {
+        col = colors();
+        st = null;
+        g.hud.best.textContent = care.bestGate;
+        g.hud.score.textContent = 0;
+        g.hud.dist.textContent = "0 m";
+        g.hud.lives.textContent = "♥♥♥";
+        g.show(`<h3>Swim to the Dragon Gate</h3><p>Leap over rocks and logs. Before a tall rock the crane lowers a rope: leap and grab the ring to fly across.</p>` +
+          `<ul class="mascot-game-legend"><li><i class="is-rock"></i>Rock or log: leap over it</li><li><i class="is-ring"></i>Crane's ring: grab it <b>+5</b></li>` +
+          `<li><i class="is-pearl"></i>Pearl <b>+1</b></li></ul><button type="button" class="button" data-g="start">Start · ${METERS} m</button>`);
+      },
+      start: () => { st = newRound(); },
+      running: () => !!st && !st.over,
+      step,
+      paint,
+      hud: () => {
+        if (!st) return;
+        g.hud.score.textContent = total();
+        g.hud.dist.textContent = meters() + " m";
+        g.hud.lives.textContent = "♥".repeat(Math.max(0, st.lives)) + "♡".repeat(3 - Math.max(0, st.lives));
+      },
+      key: (e, down) => {
+        const k = e.key.toLowerCase();
+        if (k === " " || k === "arrowup" || k === "w") { e.preventDefault(); if (down) press(e.repeat); else release(); }
+        if (k === "p" && down) g.togglePause();
+      },
+      pointer: (type) => { if (type === "pointerdown") press(false); if (type === "pointerup" || type === "pointercancel") release(); },
+      close: () => {
+        const ended = st && st.done ? st : null;
+        st = null;
+        if (ended && visible()) {
+          react(carp, ended.won ? "joy" : "thinking", ended.won ? "I passed the Dragon Gate!" : "So close! Let's try again.", 2800);
+          react(crane, "joy", null, 2600);
+        }
+      },
+    });
+    return g;
+  })();
+  const games = { relay, gate: dragonGate };
+  const anyGameOpen = () => Object.values(games).some((x) => x && x.isOpen());
 })();

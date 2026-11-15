@@ -171,7 +171,7 @@ def mascot_yard(prefix):
     url() in a CSS variable would resolve against assets/site.css, not the page."""
     if not MASCOTS:
         return ""
-    game = LAB.get("mascot_game", {})
+    games = [{k: g[k] for k in ("id", "name", "vi", "players", "seconds", "meters") if k in g} for g in LAB.get("mascot_games", [])]
     walkers = ""
     for m in MASCOTS:
         data = {"mascot": m["id"], "name": m["name"], "vi": m["vi"], "food": m["food"], "food-icon": m["food_icon"],
@@ -183,7 +183,7 @@ def mascot_yard(prefix):
                     f'<span class="mascot-ride" aria-hidden="true"></span>'
                     f'<span class="mascot-sprite" style="background-image:url({prefix}{fresh(mascot_file(m, "-sprite"))})"></span>'
                     f'<span class="mascot-pose" style="background-image:url({prefix}{fresh(mascot_file(m, "-moods"))})"></span></span></button>')
-    return f'\n<div class="mascot-yard" data-mascot-yard data-game-seconds="{int(game.get("seconds", 45))}" hidden>{walkers}</div>'
+    return f'\n<div class="mascot-yard" data-mascot-yard data-games="{esc(json.dumps(games, ensure_ascii=False, separators=(",", ":")))}" hidden>{walkers}</div>'
 
 
 def mascot_button(prefix):
@@ -236,14 +236,21 @@ def mascots_page():
                   f'<p class="mascot-label">Moods <small>click one to see it</small></p><div class="mascot-tiles is-moods">{moods}</div></div></article>')
     names = [m["name"].lower() for m in MASCOTS]
     names = ", the ".join(names[:-1]) + " and the " + names[-1] if len(names) > 1 else names[0]
-    game = LAB.get("mascot_game")
     play = ""
-    if game:
-        play = (f'<section class="mascot-play" data-mascot-play hidden><div><p class="kicker">Minigame</p><h3>{esc(game["name"])}</h3>'
-                f'<p>{esc(game["text"])}</p><p class="mascot-play-best">Best score in this browser: <b data-mascot-best>0</b> · '
-                f'pages explored: <b data-mascot-explored>0</b></p></div><div class="mascot-play-buttons">'
-                f'<button type="button" class="button" data-play="game">Play {esc(game["name"])}</button>'
-                f'<button type="button" class="button button-quiet" data-play="team">Team up: high five</button></div></section>')
+    if LAB.get("mascot_games"):  # one card per minigame, then the team-up button
+        by_id = {m["id"]: m for m in MASCOTS}
+        cards_g = ""
+        for g in LAB["mascot_games"]:
+            faces = "".join(f'<img src="../{fresh(mascot_file(by_id[p]))}" alt="" width="{webp_size(mascot_file(by_id[p]))[0]}" '
+                            f'height="{webp_size(mascot_file(by_id[p]))[1]}" loading="lazy">' for p in g["players"] if p in by_id)
+            vi = f' <span lang="vi">{esc(g["vi"])}</span>' if g.get("vi") else ""
+            cards_g += (f'<article class="mascot-play-card"><div class="mascot-play-faces" aria-hidden="true">{faces}</div>'
+                        f'<p class="kicker">Minigame</p><h3>{esc(g["name"])}{vi}</h3><p>{esc(g["text"])}</p>'
+                        f'<p class="mascot-play-best">Best score in this browser: <b data-mascot-best="{esc(g["id"])}">0</b></p>'
+                        f'<button type="button" class="button" data-play="{esc(g["id"])}">Play {esc(g["name"])}</button></article>')
+        play = (f'<section class="mascot-play" data-mascot-play hidden><div class="mascot-play-games">{cards_g}</div>'
+                f'<p class="mascot-play-team"><span>Pages explored in this browser: <b data-mascot-explored>0</b></span>'
+                f'<button type="button" class="button button-quiet" data-play="team">Team up: high five</button></p></section>')
     intro = (f"The {esc(names)} move along the bottom of every page. Their mood follows how full, rested and happy they are: "
              f"click one to feed, pet, nap or ride, or hide them with the crane button in the top bar.")
     body = (page_head("Lab Mascots", intro, "Meet our mascots")
