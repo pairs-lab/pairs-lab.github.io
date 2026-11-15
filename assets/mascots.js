@@ -333,7 +333,7 @@
       `<button type="button" data-act="pet"><span aria-hidden="true">♡</span> Pet</button>` +
       `<button type="button" data-act="nap"><span aria-hidden="true">☾</span> Nap</button>` +
       `<button type="button" data-act="ride" aria-pressed="false" aria-label="${esc(m.rideLabel)}" title="${esc(m.rideLabel)}">` +
-      `<span aria-hidden="true">${(RIDES[m.ride] || ["Ride"])[0]}</span></button></div>` +
+      `${(RIDES[m.ride] || ["🚗 Ride"])[0].split(" ").map((x) => `<span aria-hidden="true">${x}</span>`).join("")}</button></div>` +
       `<p class="mascot-note" role="status" data-care-note="${esc(m.id)}"></p>`;
     box.querySelector(".mascot-mood-face").style.backgroundImage = m.pose.style.backgroundImage;
     box.addEventListener("click", (e) => {
