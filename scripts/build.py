@@ -191,9 +191,10 @@ def tile_animation(m):
 
 
 def mascot_panel():
-    """Members page, Mascots tab: portrait, story, care (mood, needs, actions), the four moves and the six moods of each
-    mascot, then the minigame. assets/mascots.js fills the care blocks and makes the mood tiles and play buttons work."""
-    cards = ""
+    """Members page, Mascots tab: a picker with all mascots side by side, then one card per mascot (portrait and care on
+    the left; story, moves and moods on the right), then the minigame. assets/mascots.js shows the picked card only (all
+    cards show without JavaScript), fills the care blocks and makes the mood tiles and play buttons work."""
+    cards, picks = "", ""
     for i, m in enumerate(MASCOTS):
         w, h = webp_size(mascot_file(m))
         name = esc(m["name"])
@@ -203,11 +204,15 @@ def mascot_panel():
         moods = "".join(f'<button class="mascot-tile" type="button" data-mascot-mood="{esc(m["id"])}" data-pose="{j}" aria-label="{name}: show {esc(mood.lower())}">'
                         f'<span class="mascot-mood" style="{mood_sheet};--i:{j}"></span><span class="mascot-tile-label">{esc(mood)}</span></button>' for j, mood in enumerate(m["moods"]))
         tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in m["tags"])
-        cards += (f'<article class="mascot-card{" is-flipped" if i % 2 else ""}" id="mascot-{esc(m["id"])}">'
-                  f'<div class="mascot-stage"><img src="../{fresh(mascot_file(m))}" alt="{esc(m["alt"])}" width="{w}" height="{h}" loading="lazy" decoding="async"></div>'
+        portrait = f'../{fresh(mascot_file(m))}'
+        picks += (f'<button type="button" role="tab" aria-selected="{"true" if i == 0 else "false"}" aria-controls="mascot-{esc(m["id"])}" data-pick="{esc(m["id"])}">'
+                  f'<img src="{portrait}" alt="" width="{w}" height="{h}" decoding="async"><span class="mascot-pick-name">{name} '
+                  f'<span lang="vi">{esc(m["vi"])}</span></span><span class="mascot-pick-role">{esc(m["tags"][0])}</span></button>')
+        cards += (f'<article class="mascot-card" id="mascot-{esc(m["id"])}" role="tabpanel" aria-label="{name}">'
+                  f'<div class="mascot-side"><div class="mascot-stage"><img src="{portrait}" alt="{esc(m["alt"])}" width="{w}" height="{h}" loading="lazy" decoding="async"></div>'
+                  f'<div class="mascot-care" data-mascot-care="{esc(m["id"])}" hidden><p class="mascot-label">Care</p></div></div>'
                   f'<div class="mascot-info"><p class="kicker">{esc(m["kicker"])}</p><h3>{name} <span class="mascot-vi" lang="vi">{esc(m["vi"])}</span></h3>'
                   f'<p>{esc(m["bio"])}</p><div class="tags">{tags}</div>'
-                  f'<div class="mascot-care" data-mascot-care="{esc(m["id"])}" hidden><p class="mascot-label">Care</p></div>'
                   f'<p class="mascot-label">Moves</p><div class="mascot-tiles is-moves">{moves}</div>'
                   f'<p class="mascot-label">Moods <small>click one to see it</small></p><div class="mascot-tiles is-moods">{moods}</div></div></article>')
     names = [m["name"].lower() for m in MASCOTS]
@@ -224,7 +229,8 @@ def mascot_panel():
             f'<div class="panel-heading"><p class="kicker">Lab mascots</p><h2>Mascots</h2></div>'
             f'<p class="mascot-intro">The {esc(names)} move along the bottom of every page. Their mood follows how full, rested and happy '
             f'they are: click one to feed, pet, nap or ride, or hide them with the crane button in the top bar.</p>'
-            f'<style>{"".join(tile_animation(m) for m in MASCOTS)}</style>{cards}{play}</section>')
+            f'<style>{"".join(tile_animation(m) for m in MASCOTS)}</style>'
+            f'<div class="mascot-picker" role="tablist" aria-label="Choose a mascot" data-mascot-picker hidden>{picks}</div>{cards}{play}</section>')
 
 
 def media(p, prefix):

@@ -449,7 +449,39 @@
     }, 1800);
   };
 
-  // ---------- Members page: care blocks, mood buttons, team up and the game ----------
+  // ---------- Members page: picker, care blocks, mood buttons, team up and the game ----------
+  const picker = document.querySelector("[data-mascot-picker]");
+  if (picker) {  // show one mascot card at a time; without JavaScript all cards stay visible
+    const picks = [...picker.querySelectorAll("[data-pick]")];
+    const pick = (id) => {
+      picks.forEach((b) => { const on = b.dataset.pick === id; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; });
+      document.querySelectorAll(".mascot-card").forEach((c) => { c.hidden = c.id !== "mascot-" + id; });
+    };
+    picks.forEach((b, i) => {
+      b.addEventListener("click", () => {
+        pick(b.dataset.pick);
+        const m = byId[b.dataset.pick];
+        if (m && visible()) react(m, "hello", m.hello, 2400);  // the walker on the page says hello too
+      });
+      b.addEventListener("keydown", (e) => {
+        const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (!k) return;
+        e.preventDefault();
+        const next = picks[(i + k + picks.length) % picks.length];
+        pick(next.dataset.pick);
+        next.focus();
+      });
+    });
+    picker.hidden = false;
+    const linked = (location.hash.match(/^#mascot-([\w-]+)$/) || [])[1];
+    pick(linked && picks.some((b) => b.dataset.pick === linked) ? linked : picks[0].dataset.pick);
+    if (linked) {
+      const tab = document.querySelector('[data-tab="mascots"]');
+      if (tab) tab.click();
+      // after the browser's own jump to the card: show the picker with the card under it
+      window.addEventListener("load", () => setTimeout(() => picker.scrollIntoView({ block: "start", behavior: "instant" }), 0), { once: true });
+    }
+  }
   document.querySelectorAll("[data-mascot-care]").forEach((slot) => {
     const m = byId[slot.dataset.mascotCare];
     if (!m) return;
