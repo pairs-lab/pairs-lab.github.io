@@ -23,7 +23,8 @@ PAPERS = json.loads((ROOT / "data/publications.json").read_text(encoding="utf-8"
 LIFE = json.loads((ROOT / "data/life.json").read_text(encoding="utf-8"))
 NEWS = sorted(json.loads((ROOT / "data/news.json").read_text(encoding="utf-8")), key=lambda n: n["date"], reverse=True)
 PAGES = [("", "Home"), ("research", "Research"), ("publications", "Publications"), ("projects", "Projects"),
-         ("datasets", "Resources"), ("news", "News"), ("life", "Lab Life"), ("people", "Members"), ("join", "Join Us")]
+         ("datasets", "Resources"), ("news", "News"), ("life", "Lab Life"), ("people", "Members"), ("mascots", "Mascots"), ("join", "Join Us")]
+PAGES = [p for p in PAGES if p[0] != "mascots" or LAB.get("mascots")]  # the Mascots page exists only with mascots in data/lab.json
 NAV_LINKS = [("Paper Explorer", "https://thanhnguyencanh.github.io/explorer/")]  # external pages shown after the lab's own
 TYPE_LABEL = {"journal": "Journal", "conference": "Conference", "preprint": "Preprint"}
 TYPE_ORDER = {"journal": 0, "conference": 1, "preprint": 2}
@@ -208,7 +209,7 @@ def tile_animation(m):
     return css
 
 
-def mascot_panel():
+def mascots_page():
     """Members page, Mascots tab: a picker with all mascots side by side, then one card per mascot (portrait and care on
     the left; story, moves and moods on the right), then the minigame. assets/mascots.js shows the picked card only (all
     cards show without JavaScript), fills the care blocks and makes the mood tiles and play buttons work."""
@@ -243,12 +244,12 @@ def mascot_panel():
                 f'pages explored: <b data-mascot-explored>0</b></p></div><div class="mascot-play-buttons">'
                 f'<button type="button" class="button" data-play="game">Play {esc(game["name"])}</button>'
                 f'<button type="button" class="button button-quiet" data-play="team">Team up: high five</button></div></section>')
-    return (f'<section class="member-panel" id="panel-mascots" role="tabpanel" data-panel="mascots">'
-            f'<div class="panel-heading"><p class="kicker">Lab mascots</p><h2>Mascots</h2></div>'
-            f'<p class="mascot-intro">The {esc(names)} move along the bottom of every page. Their mood follows how full, rested and happy '
-            f'they are: click one to feed, pet, nap or ride, or hide them with the crane button in the top bar.</p>'
-            f'<style>{"".join(tile_animation(m) for m in MASCOTS)}</style>'
-            f'<div class="mascot-picker" role="tablist" aria-label="Choose a mascot" data-mascot-picker hidden>{picks}</div>{cards}{play}</section>')
+    intro = (f"The {esc(names)} move along the bottom of every page. Their mood follows how full, rested and happy they are: "
+             f"click one to feed, pet, nap or ride, or hide them with the crane button in the top bar.")
+    body = (page_head("Lab Mascots", intro, "Meet our mascots")
+            + f'<section class="section mascots-page"><div class="shell"><style>{"".join(tile_animation(m) for m in MASCOTS)}</style>'
+            f'<div class="mascot-picker" role="tablist" aria-label="Choose a mascot" data-mascot-picker hidden>{picks}</div>{cards}{play}</div></section>')
+    render("mascots", "Mascots", f"The lab mascots of {LAB['short_name']}: the {names}, with their moods, care and a minigame.", body)
 
 
 def media(p, prefix):
@@ -754,24 +755,22 @@ def people():
                   f'{carousel(members, LAB["short_name"] + " " + g["group"].lower(), "../")}</section>')
     awards = LAB["student_awards"]
     body = f'''<section class="members-page"><div class="shell">
-<header class="members-intro"><h1>Members</h1><p>Meet the staff, students, mascots and alumni of {esc(LAB["short_name"])}.</p></header>
+<header class="members-intro"><h1>Members</h1><p>Meet the staff, students and alumni of {esc(LAB["short_name"])}.</p></header>
 <div class="member-tabs" role="tablist" aria-label="Choose directory">
 <button class="is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-people" data-tab="people">People</button>
-{'<button type="button" role="tab" aria-selected="false" aria-controls="panel-mascots" data-tab="mascots">Mascots</button>' if MASCOTS else ""}
 <button type="button" role="tab" aria-selected="false" aria-controls="panel-alumni" data-tab="alumni">Alumni</button>
 </div>
 <section class="member-panel" id="panel-people" role="tabpanel" data-panel="people">
 {search}
 {rings}
 </section>
-{mascot_panel() if MASCOTS else ""}
 <section class="member-panel" id="panel-alumni" role="tabpanel" data-panel="alumni">
 <div class="panel-heading"><p class="kicker">Former members</p><h2>Alumni</h2></div>
 {carousel(alumni, LAB["short_name"] + " alumni", "../")}
 </section>
 <section class="notice"><h2>Student awards</h2><p>{esc(awards["title"])}:</p><ul>{"".join(f"<li>{esc(x)}</li>" for x in awards["items"])}</ul><a class="text-link" href="../join/">Join the lab {ARROW}</a></section>
 </div></section>'''
-    render("people", "Members", "Faculty, students, alumni and mascots of PAIRS Lab.", body)
+    render("people", "Members", "Faculty, students and alumni of PAIRS Lab.", body)
     for r in records:
         profile(r)
 
@@ -830,6 +829,8 @@ def main():
     make_direction_figures.main()
     for build in (home, research, publications, projects, strike_robot, datasets, news, life, people, join):
         build()
+    if MASCOTS:
+        mascots_page()
     seo_files()
     print(f"Built {len(PAGES)} pages and {sum(len(g['members']) for g in LAB['people'])} member profiles from {len(PAPERS)} publications and {len(NEWS)} news items.")
 

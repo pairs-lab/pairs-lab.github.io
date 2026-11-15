@@ -32,10 +32,10 @@ Commit the generated HTML together with the data change.
 - **Robots & infrastructure:** add entries to `robots` in `data/lab.json` with `name`, `category`,
   `description`, `image` and optional `url`. They appear on `datasets/#resources`.
 - **External links in the top bar:** `NAV_LINKS` in `scripts/build.py` (now the Paper Explorer). With ten links and
-  the mascot and theme buttons the bar fits on one row from 1220 px; below that it becomes the menu button (`assets/site.css`).
+  the mascot and theme buttons the bar (up to 1240 px wide) fits on one row from 1280 px; below that it becomes the menu button (`assets/site.css`).
 - **Lab mascots:** `mascots` in `data/lab.json` (`id`, `name`, `vi`, `kicker`, `bio`, `tags`, `hello`, `alt`, `moods`,
   `food`, `food_icon`, `ride` (drone, rover or auv), `ride_label`, `move` (walk or swim), `move_labels`, `steps`: frame
-  timing of the four motion rows) fill the Mascots tab of the Members page (`people/#mascots`) and the crane, buffalo and
+  timing of the four motion rows) fill the Mascots page (`mascots/`, in the top bar; old `people/#mascots` links redirect there) and the crane, buffalo and
   golden carp that walk, swim, rest and wave along the bottom of every page (`assets/mascots.js`). They are on by default
   on screens 720 px and wider, off with reduced motion; the crane button in the top bar switches them and the choice is
   saved per browser. Click a mascot for its care card: fullness, energy and happiness set its mood (one of the six mood

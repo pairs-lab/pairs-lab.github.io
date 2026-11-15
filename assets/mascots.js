@@ -4,6 +4,9 @@
 // Landmark Relay is the minigame: the crane drops map landmarks from a drone and the buffalo catches them. No dependencies.
 (() => {
   "use strict";
+  // the mascots moved from a Members tab to their own page: send old links (people/#mascots, people/#mascot-carp) there
+  const moved = location.hash.match(/^#mascots?(-[\w-]+)?$/), home = document.querySelector('.site-nav a[href$="mascots/"]');
+  if (moved && home && /\/people\/$/.test(location.pathname)) { location.replace(home.href + (moved[1] ? "#mascot" + moved[1] : "")); return; }
   const yard = document.querySelector("[data-mascot-yard]");
   if (!yard) return;
   const toggle = document.querySelector("[data-mascot-toggle]");
